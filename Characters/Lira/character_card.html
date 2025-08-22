@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <title>Карточка персонажа — Лира</title>
+        <style>
+            * {
+                box-sizing: border-box;
+            }
+
+            body {
+                margin: 0;
+                font-family: 'Segoe UI', sans-serif;
+                background-color: #f4f4f4;
+                color: #333;
+                display: flex;
+            }
+
+            /* Левая панель с портретом */
+            .portrait-container {
+                width: 50%;
+                background-color: #e1dedb;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 20px;
+                border-right: 2px solid #ccc;
+                height: 100vh;
+                position: sticky;
+                top: 0;
+            }
+
+            .portrait-container img {
+                max-width: 100%;
+                border-radius: 16px;
+                box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+            }
+
+            /* Контейнер со всем остальным */
+            .content {
+                width: 50%;
+                background-color: #e1dedb;
+                padding: 40px;
+                overflow-y: auto;
+                height: 100vh;
+            }
+
+            h1, h2, h3 {
+                margin-top: 1em;
+                color: #222;
+            }
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin: 20px 0;
+                background-color: #fff;
+                box-shadow: 0 0 8px rgba(0,0,0,0.1);
+            }
+
+            th, td {
+                padding: 12px 16px;
+                border: 1px solid #ccc;
+            }
+
+            th {
+                background-color: #eee;
+                text-align: left;
+            }
+
+            .section {
+                margin-bottom: 40px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="portrait-container">
+            <img src="character_image.jpg" alt="Портрет Артура">
+        </div>
+
+        <div class="content">
+            <h1>Карточка персонажа — Лира</h1>
+
+            <div class="section">
+                <h2>Основная информация</h2>
+                <div class="section">
+                    <p><strong>Класс:</strong> Следопыт (Ranger)</p>
+                    <p><strong>Предыстория:</strong> Пастушья семья, сирота</p>
+                    <p><strong>Мировоззрение:</strong> Упорядоченный добрый</p>
+                    <p><strong>Раса:</strong> Человек</p>
+                    <p><strong>Уровень:</strong> 1</p>
+                    <p><strong>Опыт:</strong> 25</p>
+                </div>
+
+                <div class="section">
+                    <div class="section-title"><h2>Характеристики</h2></div>
+                    <div class="stats-grid">
+                        <div class="stat"><p><strong>Сила:</strong> 8 (-1)</div>
+                        <div class="stat"><p><strong>Ловкость:</strong> 16 (+3)</div>
+                        <div class="stat"><p><strong>Телосложение:</strong> 12 (+1)</div>
+                        <div class="stat"><p><strong>Интеллект:</strong> 10 (+0)</div>
+                        <div class="stat"><p><strong>Мудрость:</strong> 15 (+2)</div>
+                        <div class="stat"><p><strong>Харизма:</strong> 13 (+1)</div>
+                        <br>
+                        <div class="stat"><p><strong>Класс доспеха (КБ):</strong> 14 (Постушья одежда + Ловкость)</p></div>
+                        <div class="stat"><p><strong>КЗ (HP):</strong> 9 (8 + Телосложение)</p></div>
+                        <div class="stat"><p><strong>Инициатива:</strong> +3</p></div>
+                        <div class="stat"><p><strong>Скорость:</strong> 25 фт (40 верхом на мастифе)</p></div>
+                        <br>
+                    </div>
+                    <br>
+
+                    <div class="section">
+                        <div class="section-title"><h3>Оружие</h3></div>
+                        <ul>
+                            <li><p><strong>Рогатка:</strong> 1d4 дробящего урона, дальность 30/90, ловкость</p></li>
+                            <li><p><strong>Нож охотничий:</strong> 1d4 колющего, finesse, легкое</p></li>
+                        </ul>
+                    </div>
+
+                    <div class="section">
+                        <div class="section-title"><h3>Доп. снаряжение</h3></div>
+                        <ul>
+                            <li><p><strong>Свисток на шее</strong> Управление собаками</p></li>
+                            <li><p><strong>Плащ-покрывало</strong> Дает +1 к Скрытности при неподвижности</p></li>
+                        </ul>
+                    </div>
+
+                    <div class="section">
+                        <div class="section-title"><h3>Доспехи</h3></div>
+                        <ul>
+                            <li><p><strong>Постушья одежда:</strong> +1 к КБ, легкая защита</p></li>
+                        </ul>
+                    </div>
+
+                    <div class="section">
+                        <div class="section-title"><h3>Навыки</h3></div>
+                        <ul>
+                            <li><p><strong>Внимание:</strong> +4</p></li>
+                            <li><p><strong>Скрытность:</strong> +5</p></li>
+                            <li><p><strong>Акробатика:</strong> +5</p></li>
+                            <li><p><strong>Выживание:</strong> +4</p></li>
+                            <li><p><strong>Уход за животными:</strong> +4</p></li>
+                            <li><p><strong>Чтение следов:</strong> +4</p></li>
+                            <li><p><strong>Проницательность:</strong> +2</p></li>
+                        </ul>
+                    </div>
+
+                    <div class="section">
+                        <div class="section-title"><h3>Черты характера</h3></div>
+                        <p><strong>Положительные:</strong> Смышлёная, храбрая, преданная</p>
+                        <p><strong>Отрицательные:</strong> Доверчивая, боится быть брошенной, быстро привязывается к животным и людям</p>
+                    </div>
+
+                    <div class="section">
+                        <h2>Особенности</h2>
+                        <ul>
+                            <li><strong>Избранный враг:</strong> Животные (волки, и другие хищники)</li>
+                            <li><strong>Команда псам (бонусное действие):</strong> "Фас", "Охраняй", "Ко мне", "Искать"</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <h2>Карточка питомца — Граф (Мастиф)</h2>
+            <div class="section">
+                <h2>Основная информация</h2>
+                <div class="section">
+                    <p><strong>Тип:</strong> Боевой пёс</p>
+                    <p><strong>Размер:</strong> Большой</p>
+                    <p><strong>Опыт:</strong> 25</p>
+                </div>
+
+                <div class="stat"><p><strong>Класс доспеха (КБ):</strong> 13 (толстая шкура + шипастый ошейник)</p></div>
+                <div class="stat"><p><strong>КЗ (HP):</strong> 18</p></div>
+                <div class="stat"><p><strong>Инициатива:</strong> +3</p></div>
+                <div class="stat"><p><strong>Скорость:</strong> 40 футов</p></div>
+
+
+                Здоровье    18 HP
+                Класс брони    13 (толстая шкура + шипастый ошейник)
+                Передвижение    40 футов
+                Атака    Укус: +4 к попаданию, 1d6+2 проникающего урона
+                Особенности    Зажим челюстей (при попадании – проверка STR, если провален — цель опрокинута)
+    </body>
+</html>
