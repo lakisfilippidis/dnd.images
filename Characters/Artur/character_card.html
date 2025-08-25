@@ -1,165 +1,158 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
     <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-        <title>Карточка персонажа — Артур</title>
+        <meta charset="UTF-8"></meta>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
+        <title>Карточка персонажа</title>
         <style>
-            * {
+            body {
+                margin: 0;
+                font-family: Arial, sans-serif;
+            }
+
+            .container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .portrait {
+                object-fit: cover;
+                padding: 16px;
+                border-radius: 32px;
+            }
+
+            .content {
+                margin-top: 16px;
+                margin-bottom: 16px;
+                background: white;
+                border-radius: 16px;
+                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
                 box-sizing: border-box;
             }
 
-            body {
-                margin: 0;
-                font-family: 'Segoe UI', sans-serif;
-                background-color: #f4f4f4;
-                color: #333;
-                display: flex;
+            @media (orientation: portrait) {
+                .container {
+                    flex-direction: column;
+                }
+
+                .portrait {
+                    width: 98vw;
+                    height: 98vw;
+                }
+
+                .content {
+                    width: 98vw;
+                    padding: 16px;
+                }
             }
 
-            /* Левая панель с портретом */
-            .portrait-container {
-                width: 50%;
-                background-color: #e1dedb;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                padding: 20px;
-                border-right: 2px solid #ccc;
-                height: 100vh;
-                position: sticky;
-                top: 0;
-            }
+            @media (orientation: landscape) {
+                .container {
+                    flex-direction: row;
+                    align-items: flex-start;
+                }
 
-            .portrait-container img {
-                max-width: 100%;
-                border-radius: 16px;
-                box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
-            }
+                .portrait {
+                    width: 30vw;
+                    height: 30vw;
+                }
 
-            /* Контейнер со всем остальным */
-            .content {
-                width: 50%;
-                background-color: #e1dedb;
-                padding: 40px;
-                overflow-y: auto;
-                height: 100vh;
-            }
-
-            h1, h2, h3 {
-                margin-top: 1em;
-                color: #222;
-            }
-
-            table {
-                width: 100%;
-                border-collapse: collapse;
-                margin: 20px 0;
-                background-color: #fff;
-                box-shadow: 0 0 8px rgba(0,0,0,0.1);
-            }
-
-            th, td {
-                padding: 12px 16px;
-                border: 1px solid #ccc;
-            }
-
-            th {
-                background-color: #eee;
-                text-align: left;
-            }
-
-            .section {
-                margin-bottom: 40px;
+                .content {
+                    width: 67%;
+                    padding: 16px;
+                    box-sizing: border-box;
+                }
             }
         </style>
     </head>
     <body>
-        <div class="portrait-container">
-            <img src="https://raw.githubusercontent.com/lakisfilippidis/dnd.images/main/Characters/Artur/character_image.jpg" alt="Портрет Артура">
-        </div>
-
-        <div class="content">
-            <h1>Карточка персонажа — Артур</h1>
-
-            <div class="section">
-                <h2>Основная информация</h2>
+        <div class="container">
+            <img class="portrait" src="https://raw.githubusercontent.com/lakisfilippidis/dnd.images/main/Characters/Artur/character_image.jpg" alt="Портрет Артура"></img>
+            <div class="content">
+                <h1>Карточка персонажа — Артур</h1>
                 <div class="section">
-                    <p><strong>Класс:</strong> Боец (Fighter)</p>
-                    <p><strong>Предыстория:</strong> Дворянин, торговец, на хорошем счету в крепости</p>
-                    <p><strong>Мировоззрение:</strong> Упорядоченный нейтральный</p>
-                    <p><strong>Раса:</strong> Человек</p>
-                    <p><strong>Уровень:</strong> 2</p>
-                    <p><strong>Опыт:</strong> 100</p>
-                </div>
+                    <h2>Основная информация</h2>
+                    <div class="section">
+                        <p><strong>Класс:</strong> Боец (Fighter)</p>
+                        <p><strong>Предыстория:</strong> Дворянин, торговец, на хорошем счету в крепости</p>
+                        <p><strong>Мировоззрение:</strong> Упорядоченный нейтральный</p>
+                        <p><strong>Раса:</strong> Человек</p>
+                        <p><strong>Уровень:</strong> 2</p>
+                        <p><strong>Опыт:</strong> 100</p>
+                    </div>
 
-                <div class="section">
-                    <div class="section-title"><h2>Характеристики</h2></div>
-                    <div class="stats-grid">
-                        <div class="stat"><p><strong>Сила:</strong> 13 (+1)</div>
-                        <div class="stat"><p><strong>Ловкость:</strong> 14 (+2)</div>
-                        <div class="stat"><p><strong>Телосложение:</strong> 14 (+2)</div>
-                        <div class="stat"><p><strong>Интеллект:</strong> 12 (+1)</div>
-                        <div class="stat"><p><strong>Мудрость:</strong> 10 (0)</div>
-                        <div class="stat"><p><strong>Харизма:</strong> 16 (+3)</div>
+                    <div class="section">
+                        <div class="section-title"><h2>Характеристики</h2></div>
+                        <div class="stats-grid">
+                            <div class="stat"><p><strong>Сила:</strong> 13 (+1)</div>
+                            <div class="stat"><p><strong>Ловкость:</strong> 14 (+2)</div>
+                            <div class="stat"><p><strong>Телосложение:</strong> 14 (+2)</div>
+                            <div class="stat"><p><strong>Интеллект:</strong> 12 (+1)</div>
+                            <div class="stat"><p><strong>Мудрость:</strong> 10 (0)</div>
+                            <div class="stat"><p><strong>Харизма:</strong> 16 (+3)</div>
+                            <br>
+                            <div class="stat"><p><strong>Класс доспеха (КБ):</strong> 13 (Кожаный нагрудник + 1, Ловкость + 2)</p></div>
+                            <div class="stat"><p><strong>КЗ (HP):</strong> 18 (1-lvl-10, 2-lvl-6, телосложение +2)</p></div>
+                            <div class="stat"><p><strong>Инициатива:</strong> +2</p></div>
+                            <div class="stat"><p><strong>Скорость:</strong> 30 фт</p></div>
+                        </div>
                         <br>
-                        <div class="stat"><p><strong>Класс доспеха (КБ):</strong> 13 (Кожаный нагрудник + 1, Ловкость + 2)</p></div>
-                        <div class="stat"><p><strong>КЗ (HP):</strong> 18 (1-lvl-10, 2-lvl-6, телосложение +2)</p></div>
-                        <div class="stat"><p><strong>Инициатива:</strong> +2</p></div>
-                        <div class="stat"><p><strong>Скорость:</strong> 30 фт</p></div>
-                    </div>
-                    <br>
 
-                    <div class="section">
-                        <div class="section-title"><h3>Оружие</h3></div>
-                        <ul>
-                            <li><p><strong>Рапира:</strong> 1к8 колющий урон, фехтовальное, одноручное (бонус урона +2 от дуэлянта)</p></li>
-                            <li><p><strong>Кинжал:</strong> 1к4 колющий урон, легкое, метательное (дист. 20/60)</p></li>
-                        </ul>
-                    </div>
+                        <div class="section">
+                            <div class="section-title"><h3>Оружие</h3></div>
+                            <ul>
+                                <li><p><strong>Рапира:</strong> 1к8 колющий урон, фехтовальное, одноручное (бонус урона +2 от дуэлянта)</p></li>
+                                <li><p><strong>Кинжал:</strong> 1к4 колющий урон, легкое, метательное (дист. 20/60)</p></li>
+                            </ul>
+                        </div>
 
-                    <div class="section">
-                        <div class="section-title"><h3>Доп. снаряжение</h3></div>
-                        <ul>
-                            <li><p><strong>Набор путешественника</strong> (еда, вода, палатка, верёвка)</p></li>
-                            <li><p><strong>Письменные принадлежности</strong></p></li>
-                            <li><p><strong>100 золотых</strong></p></li>
-                            <li><p><strong>Конь верховой:</strong> скорость 60 фт, седло, сидельные сумки</p></li>
-                        </ul>
-                    </div>
+                        <div class="section">
+                            <div class="section-title"><h3>Доп. снаряжение</h3></div>
+                            <ul>
+                                <li><p><strong>Набор путешественника</strong> (еда, вода, палатка, верёвка)</p></li>
+                                <li><p><strong>Письменные принадлежности</strong></p></li>
+                                <li><p><strong>100 золотых</strong></p></li>
+                                <li><p><strong>Конь верховой:</strong> скорость 60 фт, седло, сидельные сумки</p></li>
+                            </ul>
+                        </div>
 
-                    <div class="section">
-                        <div class="section-title"><h3>Доспехи</h3></div>
-                        <ul>
-                            <li><p><strong>Кожаный дублет:</strong> +1 к КБ, легкая защита</p></li>
-                        </ul>
-                    </div>
+                        <div class="section">
+                            <div class="section-title"><h3>Доспехи</h3></div>
+                            <ul>
+                                <li><p><strong>Кожаный дублет:</strong> +1 к КБ, легкая защита</p></li>
+                            </ul>
+                        </div>
 
-                    <div class="section">
-                        <div class="section-title"><h3>Навыки</h3></div>
-                        <ul>
-                            <li><p><strong>Убеждение:</strong> +5</p></li>
-                            <li><p><strong>Проницательность:</strong> +2</p></li>
-                            <li><p><strong>История:</strong> +3</p></li>
-                            <li><p><strong>Атлетика:</strong> +3</p></li>
-                            <li><p><strong>Уход за животными:</strong> +2</p></li>
-                        </ul>
-                    </div>
+                        <div class="section">
+                            <div class="section-title"><h3>Навыки</h3></div>
+                            <ul>
+                                <li><p><strong>Убеждение:</strong> +5</p></li>
+                                <li><p><strong>Проницательность:</strong> +2</p></li>
+                                <li><p><strong>История:</strong> +3</p></li>
+                                <li><p><strong>Атлетика:</strong> +3</p></li>
+                                <li><p><strong>Уход за животными:</strong> +2</p></li>
+                            </ul>
+                        </div>
 
-                    <div class="section">
-                        <div class="section-title"><h3>Черты характера</h3></div>
-                        <p><strong>Положительные:</strong> Красноречивый и дипломатичный, умело пользуется связями и репутацией, стратегически мыслит, привык к переговорам и компромиссам</p>
-                        <p><strong>Отрицательные:</strong> Избегает грязной работы — как в бою, так и в делах, скрытный, заносчивый и гордый</p>
-                    </div>
+                        <div class="section">
+                            <div class="section-title"><h3>Черты характера</h3></div>
+                            <p><strong>Положительные:</strong> Красноречивый и дипломатичный, умело пользуется связями и репутацией, стратегически мыслит, привык к переговорам и компромиссам</p>
+                            <p><strong>Отрицательные:</strong> Избегает грязной работы — как в бою, так и в делах, скрытный, заносчивый и гордый</p>
+                        </div>
 
-                    <div class="section">
-                        <h2>Особенности</h2>
-                        <ul>
-                            <li><strong>Боевой стиль:</strong> Дуэлянт — +2 к урону с одноручным оружием c пустой второй рукой или вспомогательным предметом</li>
-                            <li><strong>Второе дыхание:</strong> Восстановление 1d10 + уровень ХП бонусным действием (1/короткий или длинный отдых)</li>
-                            <li><strong>Экшен-сурж:</strong> Дополнительное действие 1/день</li>
-                        </ul>
+                        <div class="section">
+                            <h2>Особенности</h2>
+                            <ul>
+                                <li><strong>Боевой стиль:</strong> Дуэлянт — +2 к урону с одноручным оружием c пустой второй рукой или вспомогательным предметом</li>
+                                <li><strong>Второе дыхание:</strong> Восстановление 1d10 + уровень ХП бонусным действием (1/короткий или длинный отдых)</li>
+                                <li><strong>Экшен-сурж:</strong> Дополнительное действие 1/день</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
+            </div>
+        </div>
     </body>
 </html>
