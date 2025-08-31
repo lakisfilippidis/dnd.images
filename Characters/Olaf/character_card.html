@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8"></meta>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
+        <title>Карточка персонажа</title>
+        <style>
+            body {
+                margin: 0;
+                font-family: Arial, sans-serif;
+            }
+
+            .container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .portrait {
+                object-fit: cover;
+                padding: 16px;
+                border-radius: 32px;
+            }
+
+            .content {
+                margin-top: 16px;
+                margin-bottom: 16px;
+                background: white;
+                border-radius: 16px;
+                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+                box-sizing: border-box;
+            }
+
+            @media (orientation: portrait) {
+                .container {
+                    flex-direction: column;
+                }
+
+                .portrait {
+                    width: 98vw;
+                    height: 98vw;
+                }
+
+                .content {
+                    width: 98vw;
+                    padding: 16px;
+                }
+            }
+
+            @media (orientation: landscape) {
+                .container {
+                    flex-direction: row;
+                    align-items: flex-start;
+                }
+
+                .portrait {
+                    width: 30vw;
+                    height: 30vw;
+                }
+
+                .content {
+                    width: 67%;
+                    padding: 16px;
+                    box-sizing: border-box;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <img class="portrait" src="character_image.jpg" alt="Портрет Олафа"></img>
+            <div class="content">
+                <h1>Карточка персонажа — Олаф</h1>
+                <div class="section">
+                    <h2>Основная информация</h2>
+                    <div class="section">
+                        <p><strong>Класс:</strong> Боец (Fighter)</p>
+                        <p><strong>Предыстория:</strong> Наёмник (Mercenary Veteran)</p>
+                        <p><strong>Мировоззрение:</strong> Законопослушный нейтральный</p>
+                        <p><strong>Раса:</strong> Человек</p>
+                        <p><strong>Уровень:</strong> 2</p>
+                        <p><strong>Опыт:</strong> 150</p>
+                    </div>
+
+                    <div class="section">
+                        <div class="section-title"><h2>Характеристики</h2></div>
+                        <div class="stats-grid">
+                            <div class="stat"><p><strong>Сила:</strong> 16 (+3)</div>
+                            <div class="stat"><p><strong>Ловкость:</strong> 12 (+1)</div>
+                            <div class="stat"><p><strong>Телосложение:</strong> 15 (+3)</div>
+                            <div class="stat"><p><strong>Интеллект:</strong> 10 (+0)</div>
+                            <div class="stat"><p><strong>Мудрость:</strong> 13 (+2)</div>
+                            <div class="stat"><p><strong>Харизма:</strong> 11 (+1)</div>
+                            <br>
+                            <div class="stat"><p><strong>Класс доспеха (КБ):</strong> 18 (Кольчужный доспех + Ловкость + Щит)</p></div>
+                            <div class="stat"><p><strong>КЗ (HP):</strong> 20 (2-lvl-17, телосложение +3)</p></div>
+                            <div class="stat"><p><strong>Инициатива:</strong> +1</p></div>
+                            <div class="stat"><p><strong>Скорость:</strong> 30 фт</p></div>
+                        </div>
+                        <br>
+
+                        <div class="section">
+                            <div class="section-title"><h3>Оружие</h3></div>
+                            <ul>
+                                <li><p><strong>Одноручный меч:</strong> 1d8 режущий урон, +4 (сила + владение)</p></li>
+                                <li><p><strong>Метательное копье (2):</strong> 1d6 колющий урон, +2 (сила + владение), Дистанция: 20/60 футов</p></li>
+                            </ul>
+                        </div>
+
+                        <div class="section">
+                            <div class="section-title"><h3>Доп. снаряжение</h3></div>
+                            <ul>
+                                <li><p><strong>Набор путешественника</strong> (еда, вода, палатка, верёвка)</p></li>
+                                <li><p><strong>Круглый щит</strong></p></li>
+                                <li><p><strong>15 золотых монет</strong></p></li>
+                            </ul>
+                        </div>
+
+                        <div class="section">
+                            <div class="section-title"><h3>Доспехи</h3></div>
+                            <ul>
+                                <li><p><strong>Кольчужный доспех:</strong> +6 к КБ, средняя защита</p></li>
+                            </ul>
+                        </div>
+
+                        <div class="section">
+                            <div class="section-title"><h3>Навыки</h3></div>
+                            <ul>
+                                <li><p><strong>Выживание:</strong> +3</p></li>
+                                <li><p><strong>Атлетика:</strong> +4</p></li>
+                            </ul>
+                        </div>
+
+                        <div class="section">
+                            <div class="section-title"><h3>Черты характера</h3></div>
+                            <p><strong>Положительные:</strong> Опытный, уверенный в своих силах, стратегически мыслящий.</p>
+                            <p><strong>Отрицательные:</strong> Бывший пьяница, склонный к одиночным действиям, трудно доверяет другим.</p>
+                        </div>
+
+                        <div class="section">
+                            <h2>Особенности</h2>
+                            <ul>
+                                <li><strong>Боевой стиль:</strong> Защита (Defense) +1 к КД при ношении брони</li>
+                                <li><strong>Второе дыхание:</strong> Восстановление 1d10 + уровень ХП бонусным действием (1/короткий или длинный отдых)</li>
+                                <li><strong>Экшен-сурж:</strong> Дополнительное действие 1/день</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+    </body>
+</html>
