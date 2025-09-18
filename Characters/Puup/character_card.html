@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8"></meta>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
+        <title>Карточка персонажа</title>
+        <style>
+            body {
+                margin: 0;
+                font-family: Arial, sans-serif;
+            }
+
+            .container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .portrait {
+                object-fit: cover;
+                padding: 16px;
+                border-radius: 32px;
+            }
+
+            .content {
+                margin-top: 16px;
+                margin-bottom: 16px;
+                background: white;
+                border-radius: 16px;
+                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+                box-sizing: border-box;
+            }
+
+            @media (orientation: portrait) {
+                .container {
+                    flex-direction: column;
+                }
+
+                .portrait {
+                    width: 98vw;
+                    height: 98vw;
+                }
+
+                .content {
+                    width: 98vw;
+                    padding: 16px;
+                }
+            }
+
+            @media (orientation: landscape) {
+                .container {
+                    flex-direction: row;
+                    align-items: flex-start;
+                }
+
+                .portrait {
+                    width: 30vw;
+                    height: 30vw;
+                }
+
+                .content {
+                    width: 67%;
+                    padding: 16px;
+                    box-sizing: border-box;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <img class="portrait" src="character_image.jpg" alt="Портрет"></img>
+            <div class="content">
+                <h1>Карточка персонажа — Пуупь</h1>
+                <div class="section">
+                    <h2>Основная информация</h2>
+                    <div class="section">
+                        <p><strong>Класс:</strong><strong><a href="https://lakisfilippidis.github.io/dnd.images/Classes/savage.html"> Дикарь (Savage)</a></strong>
+                        <p><strong>Предыстория:</strong> Цирковой силач</p>
+                        <p><strong>Мировоззрение:</strong> Хаотичный добрый</p>
+                        <p><strong>Раса:</strong> Человек</p>
+                        <p><strong>Уровень:</strong> 1</p>
+                        <p><strong>Опыт:</strong> 25</p>
+                        <p><strong>Возраст:</strong> около 20 лет</p>
+                        <p><strong>Рост:</strong> 2,20 метра</p>
+                    </div>
+
+                    <div class="section">
+                        <div class="section-title"><h2>Характеристики</h2></div>
+                        <div class="stats-grid">
+                            <div class="stat"><p><strong>Сила:</strong> 17 (+3)</div>
+                            <div class="stat"><p><strong>Ловкость:</strong> 12 (+1)</div>
+                            <div class="stat"><p><strong>Телосложение:</strong> 16 (+3)</div>
+                            <div class="stat"><p><strong>Интеллект:</strong> 8 (-1)</div>
+                            <div class="stat"><p><strong>Мудрость:</strong> 11 (0)</div>
+                            <div class="stat"><p><strong>Харизма:</strong> 10 (0)</div>
+                            <br>
+                            <div class="stat"><p><strong>Класс доспеха (КБ):</strong> 15 (без доспеха, Телосложение + 2, Ловкость + 3)</p></div>
+                            <div class="stat"><p><strong>КЗ (HP):</strong> 15 (1-lvl-12, телосложение +3)</p></div>
+                            <div class="stat"><p><strong>Инициатива:</strong> +1</p></div>
+                            <div class="stat"><p><strong>Скорость:</strong> 30 фт</p></div>
+                            <div class="stat"><p><strong>Спасброски:</strong> Сила, Ловкость</p></div>
+                        </div>
+                        <br>
+
+                        <div class="section">
+                            <div class="section-title"><h3>Оружие</h3></div>
+                            <ul>
+                                <li><p><strong>Дубовая палица (ножка от стола):</strong> +3 к атаке, 1d12 + 3 дробящего урона</p></li>
+                                <li><p><strong>Метательные камни (его любимый трюк):</strong> +3 к атаке, 1d6 + 3 урона дробящий, дистанция 20/60</p></li>
+                            </ul>
+                        </div>
+
+                        <div class="section">
+                            <div class="section-title"><h3>Доп. снаряжение</h3></div>
+                            <ul>
+                                <li><p><strong>Набор путешественника</strong> (еда, вода, цирковая палатка, верёвка)</p></li>
+                                <li><p><strong>Огромный мешок</strong> в нем он носит «камни для тренировок»</strong></p></li>
+                                <li><p><strong>Кусок сахара для лошади</strong></p></li>
+                            </ul>
+                        </div>
+
+                        <div class="section">
+                            <div class="section-title"><h3>Доспехи</h3></div>
+                            <ul>
+                                <li><p><strong>Цирковой костюм (рваный, но яркий):</strong> +0 к КБ, легкая защита</p></li>
+                            </ul>
+                        </div>
+
+                        <div class="section">
+                            <div class="section-title"><h3>Навыки</h3></div>
+                            <ul>
+                                <li><p><strong>Атлетика:</strong> +5</p></li>
+                                <li><p><strong>Выживание:</strong> +2</p></li>
+                                <li><p><strong>Запугивание:</strong> +2 (обычно не со зла, а от роста и силы)</p></li>
+                            </ul>
+                        </div>
+
+                        <div class="section">
+                            <div class="section-title"><h3>Черты характера</h3></div>
+                            <p><strong>Положительные:</strong> Добрый, любит выступать и удивлять людей, верный, как пёс</p>
+                            <p><strong>Отрицательные:</strong> Доверчивый, боится магии и колдовских вещей, переоценивает свою силу и попадает в глупые ситуации</p>
+                        </div>
+
+                        <div class="section">
+                            <h2>Особенности</h2>
+                            <ul>
+                                <li><p><strong><a href="https://lakisfilippidis.github.io/dnd.images/Classes/savage.html#rage">Ярость (2/день): бонусное действие, +2 к урону в ближнем бою, сопротивление урону от оружия, преимущество на проверки силы. Длится 1 минуту.</a></strong></p></li>
+                                <li><p><strong><a href="https://lakisfilippidis.github.io/dnd.images/Classes/savage.html#defense">Защита без доспеха: КБ = 10 + Лов + Телосложение = 14</a></strong></p></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
