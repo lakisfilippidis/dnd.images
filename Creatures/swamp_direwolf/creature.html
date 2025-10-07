@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Существо — Название</title>
+                <link href="https://fonts.googleapis.com/css2?family=Uncial+Antiqua&display=swap" rel="stylesheet">
+
+                    <style>
+                        body {
+                            margin: 0;
+                            padding: 0;
+                            background-color: #f4f4f4;
+                            font-family: 'Segoe UI', sans-serif;
+                            color: #333;
+                            display: flex;
+                            justify-content: center;
+                        }
+
+                        .creature-card {
+                            background: #e1dedb;
+                            border: 2px solid #999;
+                            border-radius: 12px;
+                            overflow: hidden;
+                            box-shadow: 0 0 8px rgba(0,0,0,0.2);
+                            margin: 20px;
+                        }
+
+                        .creature-header {
+                            background: #d4cfc9;
+                            padding: 20px;
+                            text-align: center;
+                        }
+
+                        .creature-header h1 {
+                            margin: 0;
+                            font-family: 'Uncial Antiqua', cursive;
+                            font-size: 2em;
+                            color: #2b1f1f;
+                        }
+
+                        .creature-header .subinfo {
+                            font-size: 0.9em;
+                            color: #666;
+                            margin-top: 4px;
+                        }
+
+                        .creature-body {
+                            display: flex;
+                            flex-wrap: wrap;
+                        }
+
+                        .portrait-container {
+                            justify-content: center;
+                            align-items: center;
+                            padding: 20px;
+                            background: #ccc;
+                        }
+
+                        .portrait-container img {
+                            max-width: 100%;
+                            border-radius: 12px;
+                            box-shadow: 0 0 8px rgba(0,0,0,0.3);
+                        }
+
+                        .details {
+                            flex: 1 1 400px;
+                            padding: 20px;
+                        }
+
+                        .details h2 {
+                            margin-top: 0;
+                            font-family: 'Uncial Antiqua', cursive;
+                            color: #4a2c2c;
+                        }
+
+                        .details table {
+                            width: 100%;
+                            border-collapse: collapse;
+                            margin: 16px 0;
+                            background: #fff;
+                        }
+
+                        .details th, .details td {
+                            padding: 8px 12px;
+                            border: 1px solid #aaa;
+                        }
+
+                        .details th {
+                            background: #ddd;
+                        }
+
+                        .section {
+                            margin: 24px 0;
+                        }
+
+                        .section h3 {
+                            margin-bottom: 8px;
+                            font-family: 'Uncial Antiqua', cursive;
+                            color: #5a3d3d;
+                        }
+
+                        .section p, .section ul {
+                            margin: 0;
+                            padding: 0;
+                        }
+
+                        .section ul {
+                            list-style: disc;
+                            margin-left: 20px;
+                        }
+
+                        @media (orientation: portrait) {
+                            .creature-body {
+                                flex-direction: column;
+                            }
+                            .portrait-container, .details {
+                                width: 100% - 20px;
+                            }
+                        }
+
+                        @media (orientation: landscape) {
+                            .creature-body {
+                                flex-direction: row;
+                            }
+                            .portrait-container, .details {
+                                width: 30%;
+                            }
+                        }
+                    </style>
+    </head>
+
+    <body>
+        <div class="creature-card">
+            <div class="creature-header">
+                <h1>Болотный лютоволк</h1>
+                <div class="subinfo">Монстр / Зверь</div>
+            </div>
+
+            <div class="creature-body">
+                <div class="portrait-container">
+                    <img src="creature_image.jpg" alt="Грифон">
+                </div>
+                <div class="details">
+                    <h2>Характеристики</h2>
+                    <table>
+                        <tr><th>КБ</th><td>14 (толстая шкура)</td></tr>
+                        <tr><th>Хиты</th><td>30</td></tr>
+                        <tr><th>Скорость</th><td>40 фт</td></tr>
+                        <tr><th>Сила</th><td>17 (+3)</td></tr>
+                        <tr><th>Ловкость</th><td>13 (+1)</td></tr>
+                        <tr><th>Телосложение</th><td>15 (+2)</td></tr>
+                        <tr><th>Интеллект</th><td>5 (-3)</td></tr>
+                        <tr><th>Мудрость</th><td>14 (+2)</td></tr>
+                        <tr><th>Харизма</th><td>8 (–1)</td></tr>
+                    </table>
+
+                    <div class="section">
+                        <h3>Атаки</h3>
+                        <ul>
+                            <li><strong>Укус +5:</strong> 2d6+3 колющий урон. Дистанция 5 фт, одна цель.</li>
+                            <li><strong>Царапание когтями (Бонусное действие, 1/ход) +3:</strong> 1d8+3 рубящий урон, если цель лежит — бросок с преимуществом.</li>
+                        </ul>
+                    </div>
+
+                    <div class="section">
+                        <h3>Особенности</h3>
+                        <ul>
+                            <li>Болотная охота. Лютоволк не получает штрафов за передвижение по грязи, болотам и топям. Он может прятаться в таких местах с преимуществом.</li>
+                            <li>Чутьё крови. Чует запах крови и гнили на расстоянии до 90 фт. Если существо ранено — атаки лютоволка против него совершаются с преимуществом.</li>
+                            <li>Свирепость. При снижении хитов ниже половины, лютоволк совершает дополнительную атаку в тот же ход, когда его ранили.</li>
+                        </ul>
+                    </div>
+
+                    <div class="section">
+                        <h3>Поведение</h3>
+                        <p>Лютоволк — одиночный хищник, чья шкура покрыта болотной грязью и клочьями мха. Поджидает добычу, прячась в камышах, затем загоняет в трясину. Может набрасываться из темного.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
