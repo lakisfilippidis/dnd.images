@@ -110,10 +110,10 @@
   }
 
   try {
-    statusEl.textContent = `Сканирую папку: ${folderPath} ...`;
+    statusEl.textContent = `Ищу карточки персонажей...`;
     const files = await fetchRecursive(folderPath === "/" ? "" : folderPath);
     if (!files.length) {
-      statusEl.textContent = "HTML-файлов (кроме index.html) не найдено в этой директории.";
+      statusEl.textContent = "Карточек персонажей не найдено(.";
       return;
     }
 
