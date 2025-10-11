@@ -19,7 +19,7 @@
     .link-list {
       display: grid;
       gap: 10px;
-      max-width: 600px;
+      max-width: 700px;
       margin: 0 auto;
     }
     a {
@@ -31,36 +31,71 @@
       text-decoration: none;
       color: #f5f5dc;
       transition: 0.3s;
+      word-break: break-word;
     }
     a:hover {
       background: #333;
       transform: translateY(-2px);
     }
+    .loading {
+      text-align: center;
+      opacity: 0.6;
+      font-style: italic;
+    }
   </style>
 </head>
 <body>
   <h1>Список страниц</h1>
+  <div id="status" class="loading">Загрузка...</div>
   <div class="link-list" id="linkList"></div>
 
   <script>
-    // === Настройки ===
-    const repo = "lakisfilippidis/dnd.images"; // имя репозитория
-    const folderPath = window.location.pathname.replace(/\/index\.html$/, ""); // текущая папка
+    const repo = "lakisfilippidis/dnd.images";
+    const folderPath = window.location.pathname.replace(/\/index\.html$/, "").replace(/\/$/, "");
+
+    const list = document.getElementById("linkList");
+    const status = document.getElementById("status");
+
+    async function fetchRecursive(path) {
+      const url = `https://api.github.com/repos/${repo}/contents${path}`;
+      const res = await fetch(url);
+      const data = await res.json();
+
+      let files = [];
+
+      for (const item of data) {
+        if (item.type === "file" && item.name.endsWith(".html") && item.name !== "index.html") {
+          files.push({
+            name: item.name,
+            path: item.path,
+            url: item.html_url
+          });
+        } else if (item.type === "dir") {
+          const subFiles = await fetchRecursive(`/${item.path}`);
+          files = files.concat(subFiles);
+        }
+      }
+
+      return files;
+    }
 
     async function loadLinks() {
-      const url = `https://api.github.com/repos/${repo}/contents${folderPath}`;
-      const response = await fetch(url);
-      const files = await response.json();
+      const files = await fetchRecursive(folderPath);
+      status.remove();
 
-      const list = document.getElementById("linkList");
-      files
-        .filter(f => f.name.endsWith(".html") && f.name !== "index.html")
-        .forEach(file => {
-          const link = document.createElement("a");
-          link.href = file.name;
-          link.textContent = file.name.replace(".html", "");
-          list.appendChild(link);
-        });
+      if (files.length === 0) {
+        const msg = document.createElement("div");
+        msg.textContent = "Нет HTML-файлов в этой директории.";
+        list.appendChild(msg);
+        return;
+      }
+
+      for (const f of files) {
+        const link = document.createElement("a");
+        link.href = f.path.replace(/ /g, "%20");
+        link.textContent = f.path.replace(folderPath + "/", "").replace(".html", "");
+        list.appendChild(link);
+      }
     }
 
     loadLinks();
