@@ -1,104 +1,117 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Список страниц</title>
+  <meta charset="utf-8">
+  <title>Список страниц — Characters</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <style>
-    body {
-      font-family: "Cinzel", serif;
-      background-color: #111;
-      color: #f5f5dc;
-      margin: 0;
-      padding: 20px;
-    }
-    h1 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    .link-list {
-      display: grid;
-      gap: 10px;
-      max-width: 700px;
-      margin: 0 auto;
-    }
-    a {
-      display: block;
-      padding: 12px 16px;
-      border: 1px solid #555;
-      border-radius: 8px;
-      background: #222;
-      text-decoration: none;
-      color: #f5f5dc;
-      transition: 0.3s;
-      word-break: break-word;
-    }
-    a:hover {
-      background: #333;
-      transform: translateY(-2px);
-    }
-    .loading {
-      text-align: center;
-      opacity: 0.6;
-      font-style: italic;
-    }
+    body{font-family:Arial,Helvetica,sans-serif;background:#f3f3f3;color:#222;margin:0;padding:20px}
+    h1{text-align:center}
+    #status{margin:12px auto;max-width:900px;text-align:center;color:#666}
+    .list{max-width:900px;margin:16px auto;display:grid;gap:8px}
+    .item{display:block;padding:10px 12px;background:#fff;border-radius:8px;border:1px solid #ddd;text-decoration:none;color:#111}
+    .item:hover{box-shadow:0 4px 14px rgba(0,0,0,0.06)}
+    .error{color:#a00}
+    pre{white-space:pre-wrap;word-break:break-word;background:#111;color:#f8f8f8;padding:10px;border-radius:8px;overflow:auto}
   </style>
 </head>
 <body>
-  <h1>Список страниц</h1>
-  <div id="status" class="loading">Загрузка...</div>
-  <div class="link-list" id="linkList"></div>
+  <h1>Список страниц в этой директории (включая вложенные)</h1>
+  <div id="status">Загрузка...</div>
+  <div id="list" class="list" aria-live="polite"></div>
 
-  <script>
-    const repo = "lakisfilippidis/dnd.images";
-    const folderPath = window.location.pathname.replace(/\/index\.html$/, "").replace(/\/$/, "");
+<script>
+(async function(){
+  const repo = "lakisfilippidis/dnd.images"; // <--- оставь как есть
+  const repoName = repo.split("/")[1];
 
-    const list = document.getElementById("linkList");
-    const status = document.getElementById("status");
+  // 1) вычислим путь внутри репозитория, относительно корня репо.
+  // Примеры window.location.pathname:
+  //  - "/dnd.images/Characters/"  (github pages)
+  //  - "/Characters/"             (если index.html непосредственно в папке на сервере)
+  //  - "/lakisfilippidis.github.io/dnd.images/Characters/"  (реже)
+  let pathname = window.location.pathname || "/";
+  // Удаляем возможный суффикс index.html
+  pathname = pathname.replace(/index\.html$/, "");
+  // Ищем "/<repoName>/" в пути — если есть, возьмём всё после него
+  let idx = pathname.indexOf("/" + repoName + "/");
+  let folderPath = "/";
+  if (idx !== -1) {
+    folderPath = pathname.slice(idx + repoName.length + 1); // после "dnd.images/"
+  } else {
+    // если repoName не найдено, возможно path уже относительный (например "/Characters/")
+    folderPath = pathname;
+  }
+  // Убедимся, что путь начинается с '/'
+  if (!folderPath.startsWith("/")) folderPath = "/" + folderPath;
+  // Уберём лишний слэш в конце (для root это будет "/")
+  folderPath = folderPath.replace(/\/$/, "") || "/";
 
-    async function fetchRecursive(path) {
-      const url = `https://api.github.com/repos/${repo}/contents${path}`;
-      const res = await fetch(url);
-      const data = await res.json();
+  const statusEl = document.getElementById("status");
+  const listEl = document.getElementById("list");
 
-      let files = [];
+  function showError(text) {
+    statusEl.innerHTML = '<span class="error">Ошибка: </span>' + text;
+    console.error(text);
+  }
 
-      for (const item of data) {
-        if (item.type === "file" && item.name.endsWith(".html") && item.name !== "index.html") {
-          files.push({
-            name: item.name,
-            path: item.path,
-            url: item.html_url
-          });
-        } else if (item.type === "dir") {
-          const subFiles = await fetchRecursive(`/${item.path}`);
-          files = files.concat(subFiles);
+  // Рекурсивный fetch через GitHub API
+  async function fetchRecursive(path) {
+    const apiUrl = `https://api.github.com/repos/${repo}/contents${path === "/" ? "" : path}`;
+    // debug
+    console.log("Fetch:", apiUrl);
+    const resp = await fetch(apiUrl);
+    if (!resp.ok) {
+      const txt = await resp.text();
+      throw new Error(`HTTP ${resp.status} ${resp.statusText} — ${apiUrl}\n${txt}`);
+    }
+    const json = await resp.json();
+    let files = [];
+    for (const item of json) {
+      if (item.type === "file") {
+        if (item.name.endsWith(".html") && item.name.toLowerCase() !== "index.html") {
+          files.push({ name: item.name, path: "/" + item.path, html_url: item.html_url });
         }
-      }
-
-      return files;
-    }
-
-    async function loadLinks() {
-      const files = await fetchRecursive(folderPath);
-      status.remove();
-
-      if (files.length === 0) {
-        const msg = document.createElement("div");
-        msg.textContent = "Нет HTML-файлов в этой директории.";
-        list.appendChild(msg);
-        return;
-      }
-
-      for (const f of files) {
-        const link = document.createElement("a");
-        link.href = f.path.replace(/ /g, "%20");
-        link.textContent = f.path.replace(folderPath + "/", "").replace(".html", "");
-        list.appendChild(link);
+      } else if (item.type === "dir") {
+        const sub = await fetchRecursive("/" + item.path);
+        files = files.concat(sub);
       }
     }
+    return files;
+  }
 
-    loadLinks();
-  </script>
+  try {
+    statusEl.textContent = `Сканирую папку: ${folderPath} ...`;
+    const files = await fetchRecursive(folderPath === "/" ? "" : folderPath);
+    if (!files.length) {
+      statusEl.textContent = "HTML-файлов (кроме index.html) не найдено в этой директории.";
+      return;
+    }
+    statusEl.textContent = `Найдено ${files.length} файлов:`;
+    // Сортируем по пути
+    files.sort((a,b)=> a.path.localeCompare(b.path));
+    files.forEach(f=>{
+      // создаём относительный href, пригодный в Pages: возьмём путь после "/dnd.images/" если есть
+      let href = f.path;
+      // преобразуем "/Characters/Artur/file.html" -> "Characters/Artur/file.html" (относительно site root)
+      href = href.replace(/^\/+/, "");
+      // Создаём элемент
+      const a = document.createElement("a");
+      a.className = "item";
+      a.href = href;
+      a.textContent = href.replace(folderPath.replace(/^\//, "") + "/", "").replace(/\.html$/, "");
+      a.title = href;
+      listEl.appendChild(a);
+    });
+  } catch (err) {
+    console.error(err);
+    showError(err.message || String(err));
+    // Покажем raw-response для диагностики при необходимости (безопасно)
+    const pre = document.createElement("pre");
+    pre.textContent = `Детали ошибки см. в консоли.\n\nЕсли вы открываете файл по file:// — fetch к api.github.com будет блокирован.\n\nПроверьте в DevTools → Network/Console.`;
+    document.body.appendChild(pre);
+  }
+})();
+</script>
 </body>
 </html>
