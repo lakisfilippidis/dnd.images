@@ -61,13 +61,12 @@
 
 <script>
 (async function(){
-  const repo = "lakisfilippidis/dnd.images"; // <-- оставь как есть
+  const repo = "lakisfilippidis/dnd.images";
   const repoName = repo.split("/")[1];
 
   let pathname = window.location.pathname || "/";
-  pathname = pathname.replace(/index\.html$/, ""); // убираем index.html
+  pathname = pathname.replace(/index\.html$/, "");
 
-  // Определяем путь внутри репозитория
   let idx = pathname.indexOf("/" + repoName + "/");
   let folderPath = "/";
   if (idx !== -1) {
@@ -87,7 +86,6 @@
     console.error(text);
   }
 
-  // Рекурсивно получаем все HTML-файлы из GitHub API
   async function fetchRecursive(path) {
     const apiUrl = `https://api.github.com/repos/${repo}/contents${path === "/" ? "" : path}`;
     console.log("Fetch:", apiUrl);
@@ -119,25 +117,23 @@
       return;
     }
 
-    statusEl.textContent = `Найдено ${files.length} файлов:`;
+    statusEl.textContent = `Найдено ${files.length} персонажей:`;
     files.sort((a, b) => a.path.localeCompare(b.path));
 
     files.forEach(f => {
       let href = f.path;
 
-      // удаляем текущий folderPath из начала, чтобы не было дублирования
       if (folderPath !== "/" && href.startsWith(folderPath + "/")) {
         href = href.slice(folderPath.length + 1);
       } else {
         href = href.replace(/^\/+/, "");
       }
 
-      // создаём ссылку
       const a = document.createElement("a");
       a.className = "item";
       a.href = href;
       a.textContent = href.replace(/\.html$/, "");
-      a.title = f.path;
+      a.title = f.name;
       listEl.appendChild(a);
     });
   } catch (err) {
