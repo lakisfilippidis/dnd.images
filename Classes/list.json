@@ -1,8 +1,8 @@
 [
-  "artist.html",
-  "fighter.html",
-  "ranger.html",
-  "rogeu.html",
-  "savage.html",
-  "warlock.html"
+  "artist.html,Артист",
+  "fighter.html,Боец",
+  "ranger.html,Следопыт",
+  "rogue.html,Плут",
+  "savage.html,Дикарь",
+  "warlock.html,Колдун"
 ]
