@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8">
-  <title>Список персонажей</title>
+  <title>Список страниц</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <style>
     body {
@@ -14,6 +14,7 @@
     }
     h1 {
       text-align: center;
+      font-family: "Uncial Antiqua", cursive;
     }
     #status {
       margin: 12px auto;
@@ -35,113 +36,49 @@
       border: 1px solid #ddd;
       text-decoration: none;
       color: #111;
-      transition: box-shadow 0.2s;
+      transition: 0.2s;
     }
     .item:hover {
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+      transform: translateY(-2px);
     }
     .error {
       color: #a00;
     }
-    pre {
-      white-space: pre-wrap;
-      word-break: break-word;
-      background: #111;
-      color: #f8f8f8;
-      padding: 10px;
-      border-radius: 8px;
-      overflow: auto;
-    }
   </style>
 </head>
 <body>
-  <h1>Список персонажей</h1>
-  <div id="status">Загрузка...</div>
+  <h1>Список страниц</h1>
+  <div id="status">Загрузка списка...</div>
   <div id="list" class="list" aria-live="polite"></div>
 
 <script>
-(async function(){
-  const repo = "lakisfilippidis/dnd.images";
-  const repoName = repo.split("/")[1];
-
-  let pathname = window.location.pathname || "/";
-  pathname = pathname.replace(/index\.html$/, "");
-
-  let idx = pathname.indexOf("/" + repoName + "/");
-  let folderPath = "/";
-  if (idx !== -1) {
-    folderPath = pathname.slice(idx + repoName.length + 1);
-  } else {
-    folderPath = pathname;
-  }
-
-  if (!folderPath.startsWith("/")) folderPath = "/" + folderPath;
-  folderPath = folderPath.replace(/\/$/, "") || "/";
-
+(async function() {
   const statusEl = document.getElementById("status");
   const listEl = document.getElementById("list");
 
-  function showError(text) {
-    statusEl.innerHTML = '<span class="error">Ошибка: </span>' + text;
-    console.error(text);
-  }
-
-  async function fetchRecursive(path) {
-    const apiUrl = `https://api.github.com/repos/${repo}/contents${path === "/" ? "" : path}`;
-    console.log("Fetch:", apiUrl);
-    const resp = await fetch(apiUrl);
-    if (!resp.ok) {
-      const txt = await resp.text();
-      throw new Error(`HTTP ${resp.status} ${resp.statusText} — ${apiUrl}\n${txt}`);
-    }
-    const json = await resp.json();
-    let files = [];
-    for (const item of json) {
-      if (item.type === "file") {
-        if (item.name.endsWith(".html") && item.name.toLowerCase() !== "index.html") {
-          files.push({ name: item.name, path: "/" + item.path, html_url: item.html_url });
-        }
-      } else if (item.type === "dir") {
-        const sub = await fetchRecursive("/" + item.path);
-        files = files.concat(sub);
-      }
-    }
-    return files;
-  }
-
   try {
-    statusEl.textContent = `Ищу карточки персонажей...`;
-    const files = await fetchRecursive(folderPath === "/" ? "" : folderPath);
+    const resp = await fetch("list.json");
+    if (!resp.ok) throw new Error("list.json не найден или недоступен");
+    const files = await resp.json();
+
     if (!files.length) {
-      statusEl.textContent = "Карточек персонажей не найдено(.";
+      statusEl.textContent = "Здесь пока пусто :(";
       return;
     }
 
-    statusEl.textContent = `Найдено ${files.length} персонажей:`;
-    files.sort((a, b) => a.path.localeCompare(b.path));
+    statusEl.textContent = `Найдено ${files.length} страниц:`;
 
-    files.forEach(f => {
-      let href = f.path;
-
-      if (folderPath !== "/" && href.startsWith(folderPath + "/")) {
-        href = href.slice(folderPath.length + 1);
-      } else {
-        href = href.replace(/^\/+/, "");
-      }
-
+    files.forEach(filePath => {
       const a = document.createElement("a");
       a.className = "item";
-      a.href = href;
-      a.textContent = href.replace(/\.html$/, "");
-      a.title = f.name;
+      a.href = filePath;
+      a.textContent = filePath.replace(/\.html$/, "");
       listEl.appendChild(a);
     });
   } catch (err) {
+    statusEl.innerHTML = `<span class="error">Ошибка:</span> ${err.message}`;
     console.error(err);
-    showError(err.message || String(err));
-    const pre = document.createElement("pre");
-    pre.textContent = `Детали ошибки см. в консоли.\n\nЕсли вы открываете файл по file:// — fetch к api.github.com будет блокирован.\n\nПроверьте в DevTools → Network/Console.`;
-    document.body.appendChild(pre);
   }
 })();
 </script>
