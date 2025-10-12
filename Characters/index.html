@@ -71,9 +71,12 @@
 
     files.forEach(filePath => {
       const a = document.createElement("a");
+      const match = filePath.match(/([^/]+)\/[^/]*\.html$/);
+      const displayName = match ? match[1] : filePath;
+
       a.className = "item";
       a.href = filePath;
-      a.textContent = filePath.replace(/\caracter_card.html$/, "");
+      a.textContent = displayName;      
       listEl.appendChild(a);
     });
   } catch (err) {
