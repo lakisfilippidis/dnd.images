@@ -15,6 +15,7 @@
     h1 {
       text-align: center;
       font-family: "Uncial Antiqua", cursive;
+      font-size: 28px;
     }
     #status {
       margin: 12px auto;
@@ -59,23 +60,30 @@
 
   try {
     const resp = await fetch("list.json");
-    if (!resp.ok) throw new Error("list.json не найден или недоступен");
-    const files = await resp.json();
+    if (!resp.ok) throw new Error("Не удалось загрузить list.json");
+    const items = await resp.json();
 
-    if (!files.length) {
+    if (!Array.isArray(items) || items.length === 0) {
       statusEl.textContent = "Здесь пока пусто :(";
       return;
     }
 
-    statusEl.textContent = `Найдено ${files.length} страниц:`;
+    // сортировка по названию (второй элемент)
+    const parsedItems = items.map(str => {
+      const [path, name] = str.split(",");
+      return { path: path.trim(), name: (name || path).trim() };
+    }).sort((a, b) => a.name.localeCompare(b.name, "ru"));
 
-    files.forEach(filePath => {
+    statusEl.textContent = `Найдено ${parsedItems.length} страниц:`;
+
+    parsedItems.forEach(({ path, name }) => {
       const a = document.createElement("a");
       a.className = "item";
-      a.href = filePath;
-      a.textContent = filePath.replace(/\.html$/, "");
+      a.href = path;
+      a.textContent = name;
       listEl.appendChild(a);
     });
+
   } catch (err) {
     statusEl.innerHTML = `<span class="error">Ошибка:</span> ${err.message}`;
     console.error(err);
