@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8">
-  <title>Список страниц</title>
+  <title>Список карточек персонажей</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <style>
     body {
@@ -15,6 +15,7 @@
     h1 {
       text-align: center;
       font-family: "Uncial Antiqua", cursive;
+      font-size: 28px;
     }
     #status {
       margin: 12px auto;
@@ -48,7 +49,7 @@
   </style>
 </head>
 <body>
-  <h1>Список страниц</h1>
+  <h1>Список карточек персонажей</h1>
   <div id="status">Загрузка списка...</div>
   <div id="list" class="list" aria-live="polite"></div>
 
@@ -59,24 +60,27 @@
 
   try {
     const resp = await fetch("list.json");
-    if (!resp.ok) throw new Error("list.json не найден или недоступен");
+    if (!resp.ok) throw new Error("Не удалось загрузить list.json");
     const files = await resp.json();
 
-    if (!files.length) {
+    if (!Array.isArray(files) || files.length === 0) {
       statusEl.textContent = "Здесь пока пусто :(";
       return;
     }
 
-    statusEl.textContent = `Найдено ${files.length} страниц:`;
+    files.sort((a, b) => a.localeCompare(b, "ru"));
+
+    statusEl.textContent = `Найдено ${files.length} карточек:`;
 
     files.forEach(filePath => {
       const a = document.createElement("a");
-      const match = filePath.match(/([^/]+)\/[^/]*\.html$/);
-      const displayName = match ? match[1] : filePath;
-
       a.className = "item";
       a.href = filePath;
-      a.textContent = displayName;      
+
+      const parts = filePath.split("/");
+      const displayName = parts[parts.length - 2] || filePath;
+
+      a.textContent = displayName;
       listEl.appendChild(a);
     });
   } catch (err) {
