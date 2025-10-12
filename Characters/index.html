@@ -61,33 +61,34 @@
   try {
     const resp = await fetch("list.json");
     if (!resp.ok) throw new Error("Не удалось загрузить list.json");
-    const files = await resp.json();
+    const items = await resp.json();
 
-    if (!Array.isArray(files) || files.length === 0) {
+    if (!Array.isArray(items) || items.length === 0) {
       statusEl.textContent = "Здесь пока пусто :(";
       return;
     }
 
-    files.sort((a, b) => a.localeCompare(b, "ru"));
+    const parsedItems = items.map(str => {
+      const [path, name] = str.split(",");
+      return { path: path.trim(), name: (name || path).trim() };
+    }).sort((a, b) => a.name.localeCompare(b.name, "ru"));
 
-    statusEl.textContent = `Найдено ${files.length} карточек:`;
+    statusEl.textContent = `Найдено ${parsedItems.length} карточек:`;
 
-    files.forEach(filePath => {
+    parsedItems.forEach(({ path, name }) => {
       const a = document.createElement("a");
       a.className = "item";
-      a.href = filePath;
-
-      const parts = filePath.split("/");
-      const displayName = parts[parts.length - 2] || filePath;
-
-      a.textContent = displayName;
+      a.href = path;
+      a.textContent = name;
       listEl.appendChild(a);
     });
+
   } catch (err) {
     statusEl.innerHTML = `<span class="error">Ошибка:</span> ${err.message}`;
     console.error(err);
   }
 })();
 </script>
+
 </body>
 </html>
