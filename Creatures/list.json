@@ -2,5 +2,8 @@
   "scavenger/creature.html,Шарпальщик",
   "stray_dog/creature.html,Бродячий пес",
   "swamp_boar/creature.html,Дикий кабан",
-  "swamp_direwolf/creature.html,Болотный лютоволк"
+  "swamp_direwolf/creature.html,Болотный лютоволк",
+  "brown_bear/creature.html,Бурый медведь",
+  "swamper/creature.html,Трясинник",
+  "nightweaver/creature.html,Ночеплётк",
 ]
