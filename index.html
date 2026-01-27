@@ -5,79 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Мир DnD — Главная</title>
     <link href="https://fonts.googleapis.com/css2?family=Uncial+Antiqua&display=swap" rel="stylesheet">
-    <style>
-      body {
-        margin: 0;
-        padding: 0;
-        background-color: #e1dedb;
-        background-image: radial-gradient(#d4cfc9 1px, transparent 1px);
-        background-size: 20px 20px;
-        font-family: 'Segoe UI', sans-serif;
-        color: #2b1f1f;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        min-height: 100vh;
-      }
-
-      header {
-        text-align: center;
-        margin-bottom: 40px;
-      }
-
-      header h1 {
-        font-family: 'Uncial Antiqua', cursive;
-        font-size: 2.5em;
-        margin: 0;
-        color: #3b2b2b;
-        text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-      }
-
-      .nav-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: 24px;
-        width: 90%;
-        max-width: 900px;
-      }
-
-      .nav-card {
-        background-color: #f4f4f4;
-        border: 2px solid #999;
-        border-radius: 12px;
-        padding: 30px;
-        text-align: center;
-        text-decoration: none;
-        color: #2b1f1f;
-        box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
-        transition: transform 0.2s, box-shadow 0.2s;
-      }
-
-      .nav-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 0 12px rgba(0,0,0,0.3);
-      }
-
-      .nav-card h2 {
-        font-family: 'Uncial Antiqua', cursive;
-        font-size: 1.4em;
-        margin-bottom: 8px;
-      }
-
-      .nav-card p {
-        font-size: 0.9em;
-        color: #444;
-      }
-
-      footer {
-        margin-top: 40px;
-        font-size: 0.8em;
-        color: #666;
-      }
-    </style>
+    <link rel="stylesheet" href="styles/shared.css">
   </head>
-  <body>
+  <body class="home-page">
     <header>
       <h1>Мир DnD</h1>
       <p>Выберите раздел для просмотра</p>

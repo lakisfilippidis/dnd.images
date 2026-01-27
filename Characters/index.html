@@ -4,51 +4,9 @@
   <meta charset="utf-8">
   <title>Список карточек персонажей</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <style>
-    body {
-      font-family: Arial, Helvetica, sans-serif;
-      background: #f3f3f3;
-      color: #222;
-      margin: 0;
-      padding: 20px;
-    }
-    h1 {
-      text-align: center;
-      font-family: "Uncial Antiqua", cursive;
-      font-size: 28px;
-    }
-    #status {
-      margin: 12px auto;
-      max-width: 900px;
-      text-align: center;
-      color: #666;
-    }
-    .list {
-      max-width: 900px;
-      margin: 16px auto;
-      display: grid;
-      gap: 8px;
-    }
-    .item {
-      display: block;
-      padding: 10px 12px;
-      background: #fff;
-      border-radius: 8px;
-      border: 1px solid #ddd;
-      text-decoration: none;
-      color: #111;
-      transition: 0.2s;
-    }
-    .item:hover {
-      box-shadow: 0 4px 14px rgba(0,0,0,0.06);
-      transform: translateY(-2px);
-    }
-    .error {
-      color: #a00;
-    }
-  </style>
+  <link rel="stylesheet" href="../styles/shared.css">
 </head>
-<body>
+<body class="list-page">
   <h1>Список карточек персонажей</h1>
   <div id="status">Загрузка списка...</div>
   <div id="list" class="list" aria-live="polite"></div>
