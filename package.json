@@ -1,0 +1,12 @@
+{
+  "name": "dnd-images",
+  "version": "1.0.0",
+  "description": "D&D world wiki site",
+  "scripts": {
+    "build": "eleventy",
+    "serve": "eleventy --serve"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "^3.0.0"
+  }
+}

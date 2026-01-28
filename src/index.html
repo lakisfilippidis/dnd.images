@@ -1,0 +1,36 @@
+---
+layout: base.njk
+title: "Мир DnD — Главная"
+bodyClass: "home-page"
+needsFont: true
+---
+<header>
+  <h1>Мир DnD</h1>
+  <p>Выберите раздел для просмотра</p>
+</header>
+
+<div class="nav-grid">
+  <a href="{{ '/Classes/' | url }}" class="nav-card">
+    <h2>Классы</h2>
+    <p>Описание и архетипы персонажей</p>
+  </a>
+
+  <a href="{{ '/Characters/' | url }}" class="nav-card">
+    <h2>Персонажи</h2>
+    <p>Карточки игроков и их истории</p>
+  </a>
+
+  <a href="{{ '/Creatures/' | url }}" class="nav-card">
+    <h2>Существа</h2>
+    <p>Монстры, звери и нейтральные НПС</p>
+  </a>
+
+  <a href="{{ '/Maps/Ostroga/' | url }}" class="nav-card">
+    <h2>Карты</h2>
+    <p>Мир, деревни и подземелья</p>
+  </a>
+</div>
+
+<footer>
+  &copy; 2025 — Мир DnD Darzalas
+</footer>

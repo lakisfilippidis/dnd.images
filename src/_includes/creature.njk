@@ -1,0 +1,57 @@
+---
+layout: base.njk
+bodyClass: creature-page
+needsFont: true
+breadcrumbSection: Существа
+breadcrumbSectionUrl: /Creatures/
+---
+<div class="creature-card">
+  <div class="creature-header">
+    <h1>{{ creatureName }}</h1>
+    <div class="subinfo">{{ creatureType }}</div>
+  </div>
+  <div class="creature-body">
+    <div class="portrait-container">
+      {% if gallery %}
+      <span class="gallery-nav prev">&#10094;</span>
+      <span class="gallery-nav next">&#10095;</span>
+      <div class="pager"></div>
+      {% else %}
+      <img src="{{ portrait }}" alt="{{ creatureName }}">
+      {% endif %}
+    </div>
+    <div class="details">
+      {{ content | safe }}
+    </div>
+  </div>
+</div>
+{% if gallery %}
+<script>
+  const imageFiles = {{ gallery | dump | safe }};
+  const container = document.querySelector(".portrait-container");
+  const pager = container.querySelector(".pager");
+  imageFiles.forEach((file, i) => {
+    const img = document.createElement("img");
+    img.src = file;
+    img.alt = "Изображение " + (i+1);
+    img.className = "gallery-image" + (i === 0 ? " active" : "");
+    container.insertBefore(img, pager);
+    const dot = document.createElement("div");
+    dot.className = "pager-dot" + (i === 0 ? " active" : "");
+    dot.addEventListener("click", () => showImage(i));
+    pager.appendChild(dot);
+  });
+  let currentIndex = 0;
+  const images = document.querySelectorAll(".gallery-image");
+  const dots = document.querySelectorAll(".pager-dot");
+  function showImage(index) {
+    images[currentIndex].classList.remove("active");
+    dots[currentIndex].classList.remove("active");
+    currentIndex = (index + images.length) % images.length;
+    images[currentIndex].classList.add("active");
+    dots[currentIndex].classList.add("active");
+  }
+  document.querySelector(".prev").addEventListener("click", () => showImage(currentIndex - 1));
+  document.querySelector(".next").addEventListener("click", () => showImage(currentIndex + 1));
+</script>
+{% endif %}

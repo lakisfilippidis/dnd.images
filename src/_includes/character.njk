@@ -1,0 +1,12 @@
+---
+layout: base.njk
+bodyClass: character-page
+breadcrumbSection: Персонажи
+breadcrumbSectionUrl: /Characters/
+---
+<div class="container">
+  <img class="portrait" src="{{ portrait }}" alt="Портрет">
+  <div class="content">
+    {{ content | safe }}
+  </div>
+</div>
