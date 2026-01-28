@@ -1,6 +1,4 @@
 {
-  "layout": "base.njk",
-  "tags": "creature",
-  "bodyClass": "creature-page",
-  "needsFont": true
+  "layout": "creature.njk",
+  "tags": "creature"
 }
