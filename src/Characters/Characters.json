@@ -1,6 +1,5 @@
 {
-  "layout": "base.njk",
+  "layout": "character.njk",
   "tags": "character",
-  "bodyClass": "character-page",
   "needsFont": false
 }
