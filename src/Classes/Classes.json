@@ -2,5 +2,7 @@
   "layout": "base.njk",
   "tags": "class",
   "bodyClass": "class-page",
-  "needsFont": false
+  "needsFont": false,
+  "breadcrumbSection": "Классы",
+  "breadcrumbSectionUrl": "/Classes/"
 }
