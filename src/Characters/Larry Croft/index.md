@@ -71,6 +71,6 @@ portrait: character_image.jpg
 
 - **[Вдохновение](https://lakisfilippidis.github.io/dnd.images/Classes/artist.html#inspiration)**
 
-- **[Быстрая поддержка:](https://lakisfilippidis.github.io/dnd.images/Classes/artist.html#inspiration)** можно подбодрить союзника бонусным действием - восстанавливает 1к4 КЗ
+- **[Быстрая поддержка](https://lakisfilippidis.github.io/dnd.images/Classes/artist.html#inspiration)** можно подбодрить союзника бонусным действием - восстанавливает 1к4 КЗ
 
 - **[Сказитель (Storyteller) 3 уровень](https://lakisfilippidis.github.io/dnd.images/Classes/artist.html#archetypes-art)**
