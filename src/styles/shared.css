@@ -42,6 +42,10 @@ html {
   scroll-behavior: smooth;
 }
 
+body {
+  margin-bottom: 50px;
+}
+
 /* ===== Sticky Bottom TOC ===== */
 #page-toc {
   position: fixed;
