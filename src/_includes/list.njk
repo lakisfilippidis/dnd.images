@@ -1,0 +1,10 @@
+---
+layout: base.njk
+---
+<h1>{{ listTitle }}</h1>
+<div id="status">{{ statusPrefix }} {{ collections[collectionTag].length }} {{ statusSuffix }}:</div>
+<div class="list">
+  {% for item in collections[collectionTag] %}
+  <a class="item" href="{{ item.url | url }}">{{ item.data.title }}</a>
+  {% endfor %}
+</div>

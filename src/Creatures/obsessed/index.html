@@ -1,0 +1,89 @@
+---
+title: "Одержимая"
+---
+<div class="creature-card">
+            <div class="creature-header">
+                <h1>Одержимая</h1>
+                <div class="subinfo">Гуманоид (человек), хаотично-злая</div>
+            </div>
+
+            <div class="creature-body">
+                <div class="portrait-container">
+                    <span class="gallery-nav prev">&#10094;</span>
+                    <span class="gallery-nav next">&#10095;</span>
+                    <div class="pager"></div>
+                </div>
+
+                <div class="details">
+                    <h2>Характеристики</h2>
+                    <table>
+                        <tr><th>КБ</th><td>11</td></tr>
+                        <tr><th>Хиты</th><td>13</td></tr>
+                        <tr><th>Скорость</th><td>30 фт</td></tr>
+                        <tr><th>Сила</th><td>10 (+0)</td></tr>
+                        <tr><th>Ловкость</th><td>12 (+1)</td></tr>
+                        <tr><th>Телосложение</th><td>10 (+0)</td></tr>
+                        <tr><th>Интеллект</th><td>8 (-1)</td></tr>
+                        <tr><th>Мудрость</th><td>8 (-1)</td></tr>
+                        <tr><th>Харизма</th><td>13 (+1)</td></tr>
+                    </table>
+
+                    <div class="section">
+                        <h3>Атаки</h3>
+                        <ul>
+                            <li><strong>Короткий меч / длинный кинжал. +3:</strong> 1d6+3 колющий или рубящий урон. Одна цель.</li>
+                            <li><strong>Факел +3:</strong> 1d4 огненный урон. При попадании цель должна сделать спасбросок <em>Ловкости</em> 11 или загореться (1d4 урона огнём в начале следующего хода).</li>
+                        </ul>
+                    </div>
+
+                    <div class="section">
+                        <h3>Особенности</h3>
+                        <ul>
+                            <li><strong>Голоса в голове.</strong> Одержимая имеет преимущество на спасброски против страха.</li>
+                            <li><strong>Безрассудная атака.</strong> Может атаковать с преимуществом, но все атаки против неё до следующего хода совершаются с преимуществом.</li>
+                        </ul>
+                    </div>
+
+                    <div class="section">
+                        <h3>Поведение</h3>
+                        <p>Одержимая визжит и кидается в бой, не заботясь о жизни. Бьёт ближайшего врага факелом, если тот поджигается — смеётся и атакует мечом. Если видит, что её враг тяжело ранен, пытается сжечь его насмерть. Не боится смерти.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            const imageFiles = ["creature_image1.jpg", "creature_image2.jpg", "creature_image3.jpg"];
+
+            const container = document.querySelector(".portrait-container");
+            const pager = container.querySelector(".pager");
+
+            imageFiles.forEach((file, i) => {
+                const img = document.createElement("img");
+                img.src = file;
+                img.alt = "Изображение " + (i+1);
+                img.className = "gallery-image" + (i === 0 ? " active" : "");
+                container.insertBefore(img, pager);
+
+                const dot = document.createElement("div");
+                dot.className = "pager-dot" + (i === 0 ? " active" : "");
+                dot.addEventListener("click", () => showImage(i));
+                pager.appendChild(dot);
+            });
+
+            let currentIndex = 0;
+            const images = document.querySelectorAll(".gallery-image");
+            const dots = document.querySelectorAll(".pager-dot");
+
+            function showImage(index) {
+                images[currentIndex].classList.remove("active");
+                dots[currentIndex].classList.remove("active");
+                currentIndex = (index + images.length) % images.length;
+                images[currentIndex].classList.add("active");
+                dots[currentIndex].classList.add("active");
+            }
+
+            document.querySelector(".prev").addEventListener("click", () => showImage(currentIndex - 1));
+            document.querySelector(".next").addEventListener("click", () => showImage(currentIndex + 1));
+            // --- /Галерея ---
+        </script>
