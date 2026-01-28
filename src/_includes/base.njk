@@ -29,5 +29,33 @@
     </nav>
     {% endif %}
     {{ content | safe }}
+    <nav id="page-toc"></nav>
+    <script>
+      (function() {
+        var body = document.body;
+        var toc = document.getElementById('page-toc');
+        if (body.classList.contains('list-page') || body.classList.contains('home-page')) {
+          toc.style.display = 'none';
+          return;
+        }
+        var headers = document.querySelectorAll('h2, h3');
+        if (!headers.length) {
+          toc.style.display = 'none';
+          return;
+        }
+        headers.forEach(function(h) {
+          if (!h.id) {
+            h.id = h.textContent.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^\w\u0400-\u04ff-]/g, '');
+          }
+          var a = document.createElement('a');
+          a.href = '#' + h.id;
+          a.textContent = h.textContent;
+          if (h.tagName === 'H3') {
+            a.classList.add('toc-h3');
+          }
+          toc.appendChild(a);
+        });
+      })();
+    </script>
   </body>
 </html>

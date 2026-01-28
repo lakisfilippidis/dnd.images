@@ -37,6 +37,47 @@
   --radius-code: 4px;
 }
 
+/* ===== Smooth Scroll ===== */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ===== Sticky Bottom TOC ===== */
+#page-toc {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  display: flex;
+  gap: 12px;
+  padding: 8px 16px;
+  background: rgba(225, 222, 219, 0.95);
+  border-top: 2px solid var(--color-border);
+  overflow-x: auto;
+  white-space: nowrap;
+  box-sizing: border-box;
+  font-family: var(--font-sans-basic);
+  font-size: 0.85em;
+}
+
+#page-toc a {
+  text-decoration: none;
+  color: var(--color-text);
+  flex-shrink: 0;
+  transition: color 0.2s;
+}
+
+#page-toc a:hover {
+  color: #8b4513;
+}
+
+#page-toc a.toc-h3 {
+  font-size: 0.85em;
+  color: var(--color-text-muted);
+  padding-left: 8px;
+}
+
 /* ===== Top Menu ===== */
 .top-menu {
   display: flex;
@@ -91,7 +132,7 @@ body.list-page {
   background: var(--color-bg-light);
   color: var(--color-text-list);
   margin: 0;
-  padding: 20px;
+  padding: 0;
 }
 
 .list-page h1 {
@@ -110,6 +151,7 @@ body.list-page {
 .list-page .list {
   max-width: 900px;
   margin: 16px auto;
+  padding: 20px;
   display: grid;
   gap: 8px;
 }
