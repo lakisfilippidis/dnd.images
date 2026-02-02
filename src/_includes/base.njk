@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    {% if needsFont %}
+    <link href="https://fonts.googleapis.com/css2?family=Uncial+Antiqua&display=swap" rel="stylesheet">
+    {% endif %}
+    <link rel="stylesheet" href="{{ '/styles/shared.css' | url }}">
+  </head>
+  <body{% if bodyClass %} class="{{ bodyClass }}"{% endif %}>
+    <nav class="top-menu">
+      <a href="{{ '/' | url }}">Главная</a>
+      <a href="{{ '/Characters/' | url }}">Персонажи</a>
+      <a href="{{ '/Classes/' | url }}">Классы</a>
+      <a href="{{ '/Creatures/' | url }}">Существа</a>
+      <a href="{{ '/Maps/Ostroga/' | url }}">Карты</a>
+    </nav>
+    {% if breadcrumbSection %}
+    <nav class="breadcrumbs">
+      <a href="{{ '/' | url }}">Главная</a> &gt;
+      {% if eleventyExcludeFromCollections %}
+        <span>{{ breadcrumbSection }}</span>
+      {% else %}
+        <a href="{{ breadcrumbSectionUrl | url }}">{{ breadcrumbSection }}</a> &gt;
+        <span>{{ title }}</span>
+      {% endif %}
+    </nav>
+    {% endif %}
+    {{ content | safe }}
+    <nav id="page-toc"></nav>
+    <script>
+      (function() {
+        var body = document.body;
+        var toc = document.getElementById('page-toc');
+        if (body.classList.contains('list-page') || body.classList.contains('home-page')) {
+          toc.style.display = 'none';
+          return;
+        }
+        var headers = document.querySelectorAll('h2, h3');
+        if (!headers.length) {
+          toc.style.display = 'none';
+          return;
+        }
+        headers.forEach(function(h) {
+          if (!h.id) {
+            h.id = h.textContent.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^\w\u0400-\u04ff-]/g, '');
+          }
+          var a = document.createElement('a');
+          a.href = '#' + h.id;
+          a.textContent = h.textContent;
+          if (h.tagName === 'H3') {
+            a.classList.add('toc-h3');
+          }
+          toc.appendChild(a);
+        });
+      })();
+    </script>
+  </body>
+</html>
