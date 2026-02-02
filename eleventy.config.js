@@ -22,6 +22,7 @@ module.exports = function (eleventyConfig) {
   });
 
   return {
+    pathPrefix: "/dnd.images/",
     dir: {
       input: "src",
       output: "_site",
