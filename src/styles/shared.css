@@ -89,6 +89,10 @@ body {
   padding-left: 8px;
 }
 
+:has(+ #page-toc) {
+    margin-bottom: 4em;
+}
+
 /* ===== Top Menu ===== */
 .top-menu {
   position: sticky;
