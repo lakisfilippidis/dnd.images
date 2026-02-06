@@ -6,7 +6,7 @@ portrait: character_image.jpg
 # Карточка персонажа — Милли
 
 ## Основная информация
-**Класс:** **[Дикарь (Savage)](https://lakisfilippidis.github.io/dnd.images/Classes/savage.html)**  
+**Класс:** **[Дикарь (Savage)](../../Classes/savage/)**  
 **Предыстория:** Берсерк (северянка)
 
 **Мировоззрение:** Хаотичный добрый
@@ -69,6 +69,6 @@ portrait: character_image.jpg
 
 - **Инстинкт выживания:** один раз за ход, когда ты получаешь урон от атаки, твой инстинкт выживания обостряется - ты получаешь +1 к КД до конца своего следующего хода.</a>
 
-- **[Берсерк](https://lakisfilippidis.github.io/dnd.images/Classes/savage.html#fighting-styles)**
+- **[Берсерк](../../Classes/savage/#fighting-styles)**
 
-- **[Берсерк (Berserk) 3 уровень](https://lakisfilippidis.github.io/dnd.images/Classes/savage.html#archetypes)**
+- **[Берсерк (Berserk) 3 уровень](../../Classes/savage/#archetypes)**

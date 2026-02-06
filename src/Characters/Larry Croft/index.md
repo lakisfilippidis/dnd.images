@@ -6,7 +6,7 @@ portrait: character_image.jpg
 # Карточка персонажа — Ларри Крофт
 
 ## Основная информация
-**Класс:** **[Артист (Artist)](https://lakisfilippidis.github.io/dnd.images/Classes/artist.html)**  
+**Класс:** **[Артист (Artist)](../../Classes/artist/)**  
 **Предыстория:** Аристократ авантюрист
 
 **Мировоззрение:** Хаотично-нейтральное
@@ -72,8 +72,8 @@ portrait: character_image.jpg
 
 - **Вернувшийся:** Смерть пришла за тобой, но ты выскользнул из её хладных пальцев в самый последний момент. Но такое не происходит бесследно.</a>
 
-- **[Вдохновение](https://lakisfilippidis.github.io/dnd.images/Classes/artist.html#inspiration)**
+- **[Вдохновение](../../Classes/artist/#inspiration)**
 
-- **[Быстрая поддержка](https://lakisfilippidis.github.io/dnd.images/Classes/artist.html#inspiration)** можно подбодрить союзника бонусным действием - восстанавливает 1к4 КЗ
+- **[Быстрая поддержка](../../Classes/artist/#inspiration)** можно подбодрить союзника бонусным действием - восстанавливает 1к4 КЗ
 
-- **[Сказитель (Storyteller) 3 уровень](https://lakisfilippidis.github.io/dnd.images/Classes/artist.html#archetypes-art)**
+- **[Сказитель (Storyteller) 3 уровень](../../Classes/artist/#archetypes-art)**

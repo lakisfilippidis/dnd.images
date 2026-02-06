@@ -6,7 +6,7 @@ portrait: character_image.jpg
 # Карточка персонажа — Костас Кадаран Чернобородый
 
 ## Основная информация
-**Класс:** **[Следопыт (Ranger)](https://lakisfilippidis.github.io/dnd.images/Classes/ranger.html)**  
+**Класс:** **[Следопыт (Ranger)](../../Classes/ranger/)**  
 **Предыстория:** Пират-ополченец
 
 **Мировоззрение:** Упорядоченно добрый
@@ -84,8 +84,8 @@ portrait: character_image.jpg
 
 ## Особенности
 
-- **[Избранный враг (Favored Enemy) - Гуманоиды (особенно Пираты, разбойники, морские налётчики)](https://lakisfilippidis.github.io/dnd.images/Classes/ranger.html#favorite-enemy)**
+- **[Избранный враг (Favored Enemy) - Гуманоиды (особенно Пираты, разбойники, морские налётчики)](../../Classes/ranger/#favorite-enemy)**
 
-- **[Боеготовность (Rapid Response)](https://lakisfilippidis.github.io/dnd.images/Classes/ranger.html#fighting-styles)**
+- **[Боеготовность (Rapid Response)](../../Classes/ranger/#fighting-styles)**
 
-- **[Арсеналист (Arsenalist)** 3 уровень](https://lakisfilippidis.github.io/dnd.images/Classes/ranger.html#archetypes)
+- **[Арсеналист (Arsenalist)** 3 уровень](../../Classes/ranger/#archetypes)

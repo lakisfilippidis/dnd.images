@@ -6,7 +6,7 @@ portrait: character_image.jpg
 # Карточка персонажа — Линн Эстер
 
 ## Основная информация
-**Класс:** **[Следопыт (Ranger)](https://lakisfilippidis.github.io/dnd.images/Classes/ranger.html)**  
+**Класс:** **[Следопыт (Ranger)](../../Classes/ranger/)**  
 **Предыстория:** Дозорная предгорных троп
 
 **Мировоззрение:** Нейтральная
@@ -74,11 +74,11 @@ portrait: character_image.jpg
 
 ## Особенности
 
-- **[Избранный враг (Favored Enemy) - Гуманоиды](https://lakisfilippidis.github.io/dnd.images/Classes/ranger.html#favorite-enemy)**
+- **[Избранный враг (Favored Enemy) - Гуманоиды](../../Classes/ranger/#favorite-enemy)**
 
-- **[Стрельба (Archery)](https://lakisfilippidis.github.io/dnd.images/Classes/ranger.html#fighting-styles)**
+- **[Стрельба (Archery)](../../Classes/ranger/#fighting-styles)**
 
-- **[Охотник (Hunter)** 3 уровень](https://lakisfilippidis.github.io/dnd.images/Classes/ranger.html#archetypes)
+- **[Охотник (Hunter)** 3 уровень](../../Classes/ranger/#archetypes)
 
 ## Животный спутник — ворон Кайр
 

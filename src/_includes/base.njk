@@ -17,18 +17,20 @@
       <a href="{{ '/Creatures/' | url }}">Существа</a>
       <a href="{{ '/Maps/Ostroga/' | url }}">Карты</a>
     </nav>
-    {% if breadcrumbSection %}
-    <nav class="breadcrumbs">
-      <a href="{{ '/' | url }}">Главная</a> &gt;
-      {% if eleventyExcludeFromCollections %}
-        <span>{{ breadcrumbSection }}</span>
-      {% else %}
-        <a href="{{ breadcrumbSectionUrl | url }}">{{ breadcrumbSection }}</a> &gt;
-        <span>{{ title }}</span>
+    <div class="content-wrapper">
+      {% if breadcrumbSection %}
+      <nav class="breadcrumbs">
+        <a href="{{ '/' | url }}">Главная</a> &gt;
+        {% if eleventyExcludeFromCollections %}
+          <span>{{ breadcrumbSection }}</span>
+        {% else %}
+          <a href="{{ breadcrumbSectionUrl | url }}">{{ breadcrumbSection }}</a> &gt;
+          <span>{{ title }}</span>
+        {% endif %}
+      </nav>
       {% endif %}
-    </nav>
-    {% endif %}
-    {{ content | safe }}
+      {{ content | safe }}
+    </div>
     <nav id="page-toc"></nav>
     <script>
       (function() {

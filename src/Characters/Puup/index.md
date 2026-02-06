@@ -6,7 +6,7 @@ portrait: character_image.jpg
 # Карточка персонажа — Пуупь
 
 ## Основная информация
-**Класс:** **[Дикарь (Savage)](https://lakisfilippidis.github.io/dnd.images/Classes/savage.html)**  
+**Класс:** **[Дикарь (Savage)](../../Classes/savage/)**  
 **Предыстория:** Цирковой силач
 
 **Мировоззрение:** Хаотичный добрый
@@ -75,9 +75,9 @@ portrait: character_image.jpg
 
 ## Особенности
 
-- **[Неуловимый (Elusive)](https://lakisfilippidis.github.io/dnd.images/Classes/savage.html#fighting-styles)**
+- **[Неуловимый (Elusive)](../../Classes/savage/#fighting-styles)**
 
-- **[Маневр (Maneuver)](https://lakisfilippidis.github.io/dnd.images/Classes/savage.html#maneuver)**
+- **[Маневр (Maneuver)](../../Classes/savage/#maneuver)**
 
 - **Инстинкт выживания.** Один раз за ход, когда ты получаешь урон от атаки, твой инстинкт выживания обостряется - ты получаешь +1 к КД до конца своего следующего хода.
 

@@ -12,7 +12,7 @@ eleventyExcludeFromCollections: true
                 <img src="map.jpg" alt="Карта">
                     <a href="#stronghold-ostroga" class="map-label" style="top: 42%; left: 37%;">Крепость Острога</a>
                     <a href="#abbey-court" class="map-label" style="top: 19%; right: 4%;">Монастырский двор</a>
-                    <a href="https://lakisfilippidis.github.io/dnd.images/Maps/Rotten_puddle/map.html" class="map-label" style="top: 63%; right: 9%;">Гнилая лужа</a>
+                    <a href="../Rotten_puddle/" class="map-label" style="top: 63%; right: 9%;">Гнилая лужа</a>
                     <a href="#grunfeld" class="map-label" style="bottom: 10%; left: 55%;">Грюнфельд</a>
                     <a href="#bears-court" class="map-label" style="bottom: 30%; left: 4%;">Медвежий двор</a>
             </div>

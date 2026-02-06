@@ -6,7 +6,7 @@ portrait: character_image.jpg
 # Карточка персонажа — Артур
 
 ## Основная информация
-**Класс:** **[Боец (Fighter)](https://lakisfilippidis.github.io/dnd.images/Classes/fighter.html)**
+**Класс:** **[Боец (Fighter)](../../Classes/fighter/)**
 
 **Предыстория:** Дворянин, торговец, на хорошем счету в крепости
 
@@ -78,8 +78,8 @@ portrait: character_image.jpg
 
 ## Особенности
 
-- **[Дуэль (Dueling)](https://lakisfilippidis.github.io/dnd.images/Classes/fighter.html#fighting-styles)**
+- **[Дуэль (Dueling)](../../Classes/fighter/#fighting-styles)**
 
-- **[Второе дыхание](https://lakisfilippidis.github.io/dnd.images/Classes/fighter.html#second-wind)**
+- **[Второе дыхание](../../Classes/fighter/#second-wind)**
 
-- **<a href="https://lakisfilippidis.github.io/dnd.images/Classes/fighter.html#action-surge">Экшен-сурж**
+- **<a href="../../Classes/fighter/#action-surge">Экшен-сурж**

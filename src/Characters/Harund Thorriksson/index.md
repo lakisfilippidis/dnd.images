@@ -79,9 +79,9 @@ portrait: character_image.jpg
 
 ## Особенности
 
-- **[Укрепленный (Fortified)](https://lakisfilippidis.github.io/dnd.images/Classes/savage.html#fighting-styles)**
+- **[Укрепленный (Fortified)](../../Classes/savage/#fighting-styles)**
 
-- **[Маневр (Maneuver)](https://lakisfilippidis.github.io/dnd.images/Classes/savage.html#maneuver)**
+- **[Маневр (Maneuver)](../../Classes/savage/#maneuver)**
 
-- **[Охотник за головами (Bounty Hunter)** 4 уровень](https://lakisfilippidis.github.io/dnd.images/Classes/savage.html#archetypes)
+- **[Охотник за головами (Bounty Hunter)** 4 уровень](../../Classes/savage/#archetypes)
 **Дополнительная атака:** можешь совершить две атаки в каждом ходу.

@@ -6,7 +6,7 @@ portrait: character_image.jpg
 # Карточка персонажа — Илса
 
 ## Основная информация
-**Класс:** **[Следопыт (Ranger)](https://lakisfilippidis.github.io/dnd.images/Classes/ranger.html)**  
+**Класс:** **[Следопыт (Ranger)](../../Classes/ranger/)**  
 **Предыстория:** Охотник на монстров
 
 **Мировоззрение:** Нейтрально-доброе
@@ -73,6 +73,6 @@ portrait: character_image.jpg
 
 ## Особенности
 
-- **[Избранный враг (Favored Enemy) - Монстры](https://lakisfilippidis.github.io/dnd.images/Classes/ranger.html#favorite-enemy)**
+- **[Избранный враг (Favored Enemy) - Монстры](../../Classes/ranger/#favorite-enemy)**
 
-- **[Снайпер (Sniper)](https://lakisfilippidis.github.io/dnd.images/Classes/ranger.html#fighting-styles)**
+- **[Снайпер (Sniper)](../../Classes/ranger/#fighting-styles)**

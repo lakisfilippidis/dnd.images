@@ -76,10 +76,10 @@ portrait: character_image.jpg
 
 ## Особенности
 
-- **[ Железная воля (Iron Will)](https://lakisfilippidis.github.io/dnd.images/Classes/fighter.html#fighting-styles)**
+- **[ Железная воля (Iron Will)](../../Classes/fighter/#fighting-styles)**
 
-- **[Второе дыхание](https://lakisfilippidis.github.io/dnd.images/Classes/fighter.html#second-wind)**
+- **[Второе дыхание](../../Classes/fighter/#second-wind)**
 
-- **<a href="https://lakisfilippidis.github.io/dnd.images/Classes/fighter.html#action-surge">Экшен-сурж**
+- **<a href="../../Classes/fighter/#action-surge">Экшен-сурж**
 
-- **<a href="https://lakisfilippidis.github.io/dnd.images/Classes/fighter.html#archetypes">Чемпион** 3 уровень
+- **<a href="../../Classes/fighter/#archetypes">Чемпион** 3 уровень

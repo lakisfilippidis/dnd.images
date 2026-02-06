@@ -6,7 +6,7 @@ portrait: character_image.jpg
 # Карточка персонажа — Лира
 
 ## Основная информация
-**Класс:** **[Следопыт (Ranger)](https://lakisfilippidis.github.io/dnd.images/Classes/ranger.html)**  
+**Класс:** **[Следопыт (Ranger)](../../Classes/ranger/)**  
 **Предыстория:** Пастушья семья, сирота
 
 **Мировоззрение:** Упорядоченный добрый
@@ -71,6 +71,6 @@ portrait: character_image.jpg
 
 ## Особенности
 
-- **[Избранный враг (Favored Enemy) - Звери](https://lakisfilippidis.github.io/dnd.images/Classes/ranger.html#favorite-enemy)**
+- **[Избранный враг (Favored Enemy) - Звери](../../Classes/ranger/#favorite-enemy)**
 
-- **[Засада (Ambush)](https://lakisfilippidis.github.io/dnd.images/Classes/ranger.html#fighting-styles)**
+- **[Засада (Ambush)](../../Classes/ranger/#fighting-styles)**

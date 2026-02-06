@@ -42,8 +42,8 @@
 /* ===== Target Highlight ===== */
 :target {
   animation: highlight 0.5s ease-out;
-  scroll-margin-top: calc(var(--height-header) * 1.2);
-  scroll-margin-bottom: calc(var(--height-footer) * 1.2);
+  scroll-margin-top: calc(var(--height-header) * 1.5);
+  scroll-margin-bottom: calc(var(--height-footer) * 1.5);
 }
 
 @keyframes highlight {
@@ -140,15 +140,10 @@ body {
 }
 /* ===== Breadcrumbs ===== */
 .breadcrumbs {
-  max-width: 900px;
-  margin: 8px auto 0;
-  padding: 4px 16px;
+  margin: 8px 0 0;
   font-family: var(--font-sans-basic);
   font-size: 0.85em;
   color: var(--color-text-muted);
-  width: 100%;
-  box-sizing: border-box;
-  flex-shrink: 0;
 }
 
 .breadcrumbs a {
@@ -158,6 +153,11 @@ body {
 
 .breadcrumbs a:hover {
   text-decoration: underline;
+}
+
+/* ===== Content Wrapper ===== */
+.content-wrapper {
+  padding-inline: 2rem;
 }
 
 /* ===== List Page Styles (Characters/Classes/Creatures index) ===== */
@@ -350,7 +350,8 @@ body.class-page {
   font-family: var(--font-sans-full);
   background-color: var(--color-bg-class);
   color: var(--color-text-dark);
-  padding: 2rem;
+  margin: 0;
+  padding: 0;
   line-height: 1.6;
 }
 

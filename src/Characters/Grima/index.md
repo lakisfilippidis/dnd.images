@@ -6,7 +6,7 @@ portrait: character_image.jpg
 # Карточка персонажа — Грима (Грим)
 
 ## Основная информация
-**Класс:** **[Артист (Artist)](https://lakisfilippidis.github.io/dnd.images/Classes/artist.html)**
+**Класс:** **[Артист (Artist)](../../Classes/artist/)**
 
 **Предыстория:** Циркач
 
@@ -81,9 +81,9 @@ portrait: character_image.jpg
 
 ## Особенности
 
-- **[Вдохновение](https://lakisfilippidis.github.io/dnd.images/Classes/artist.html#inspiration)**
+- **[Вдохновение](../../Classes/artist/#inspiration)**
 
-- **[Быстрая поддержка](https://lakisfilippidis.github.io/dnd.images/Classes/artist.html#fast-support)**
+- **[Быстрая поддержка](../../Classes/artist/#fast-support)**
 
 - **Быстрая поддержка:** можно подбодрить союзника бонусным действием - восстанавливает 1к4 КЗ
 

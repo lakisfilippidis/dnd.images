@@ -6,7 +6,7 @@ portrait: character_image.jpg
 # Карточка персонажа — Бруно Кузнец
 
 ## Основная информация
-**Класс:** **[Боец (Fighter)](https://lakisfilippidis.github.io/dnd.images/Classes/fighter.html)**  
+**Класс:** **[Боец (Fighter)](../../Classes/fighter/)**  
 **Предыстория:** Кузнец (Guild Artisan)
 
 **Мировоззрение:** Упорядоченный нейтральный
@@ -74,10 +74,10 @@ portrait: character_image.jpg
 
 - **Крепкий:** получает дополнительные +2 КЗ за каждый уровень
 
-- **[Бой с большим оружием (Great Weapon Fighting)](https://lakisfilippidis.github.io/dnd.images/Classes/fighter.html#fighting-styles)**
+- **[Бой с большим оружием (Great Weapon Fighting)](../../Classes/fighter/#fighting-styles)**
 
-- **[Второе дыхание](https://lakisfilippidis.github.io/dnd.images/Classes/fighter.html#second-wind)**
+- **[Второе дыхание](../../Classes/fighter/#second-wind)**
 
-- **<a href="https://lakisfilippidis.github.io/dnd.images/Classes/fighter.html#action-surge">Экшен-сурж**
+- **<a href="../../Classes/fighter/#action-surge">Экшен-сурж**
 
-- **<a href="https://lakisfilippidis.github.io/dnd.images/Classes/fighter.html#archetypes">Чемпион** 3 уровень
+- **<a href="../../Classes/fighter/#archetypes">Чемпион** 3 уровень

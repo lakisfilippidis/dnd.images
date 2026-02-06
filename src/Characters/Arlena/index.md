@@ -6,7 +6,7 @@ portrait: character_image.jpg
 # Карточка персонажа — Арлена
 
 ## Основная информация
-**Класс:** **[Следопыт (Ranger)](https://lakisfilippidis.github.io/dnd.images/Classes/ranger.html)**  
+**Класс:** **[Следопыт (Ranger)](../../Classes/ranger/)**  
 **Предыстория:** Странница-охотница
 
 **Мировоззрение:** Хаотично нейтральный
@@ -77,6 +77,6 @@ portrait: character_image.jpg
 
 ## Особенности
 
-- **[Избранный враг (Favored Enemy) - Звери](https://lakisfilippidis.github.io/dnd.images/Classes/ranger.html#favorite-enemy)**
+- **[Избранный враг (Favored Enemy) - Звери](../../Classes/ranger/#favorite-enemy)**
 
-- **[Стрельба (Archery)](https://lakisfilippidis.github.io/dnd.images/Classes/ranger.html#fighting-styles)**
+- **[Стрельба (Archery)](../../Classes/ranger/#fighting-styles)**
