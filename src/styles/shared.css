@@ -50,10 +50,6 @@
   from { background-color: yellow; }
 }
 
-/* ===== Smooth Scroll ===== */
-html {
-  scroll-behavior: smooth;
-}
 
 body {
   margin-bottom: 50px;
