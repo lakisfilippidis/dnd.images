@@ -39,12 +39,11 @@
 
 /* ===== Target Highlight ===== */
 :target {
-  animation: highlight 2s ease;
+  animation: highlight 0.5s ease-out;
 }
 
 @keyframes highlight {
   from { background-color: yellow; }
-  to { background-color: transparent; }
 }
 
 /* ===== Smooth Scroll ===== */
@@ -58,6 +57,7 @@ body {
 
 * {
     box-sizing: border-box;
+    background-color: transparent;
 }
 
 /* ===== Sticky Bottom TOC ===== */
