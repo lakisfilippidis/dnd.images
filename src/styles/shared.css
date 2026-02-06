@@ -37,6 +37,16 @@
   --radius-code: 4px;
 }
 
+/* ===== Target Highlight ===== */
+:target {
+  animation: highlight 2s ease;
+}
+
+@keyframes highlight {
+  from { background-color: yellow; }
+  to { background-color: transparent; }
+}
+
 /* ===== Smooth Scroll ===== */
 html {
   scroll-behavior: smooth;
