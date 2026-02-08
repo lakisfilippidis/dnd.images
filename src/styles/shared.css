@@ -243,10 +243,11 @@ body.home-page {
 
 .nav-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, 320px);
   gap: 24px;
-  width: 90%;
-  max-width: 900px;
+  place-items: stretch;
+  margin-inline: auto;
+  place-content: center;
 }
 
 .nav-card {
