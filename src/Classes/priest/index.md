@@ -1,3 +1,6 @@
+---
+title: "Боец"
+---
 <!DOCTYPE html>
 <html lang="ru">
     <head>
@@ -475,3 +478,4 @@
         </table>
     </body>
 </html>
+
