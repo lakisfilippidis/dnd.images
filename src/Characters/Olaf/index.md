@@ -74,6 +74,8 @@ portrait: character_image.jpg
 
 - **Легенда о герое:** +4 к КЗ.</a>
 
+## Способности
+
 - **[Защита (Defense)](../../Classes/fighter/#fighting-styles)**
 
 - **[Второе дыхание](../../Classes/fighter/#second-wind)**
