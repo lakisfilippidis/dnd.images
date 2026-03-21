@@ -1,6 +1,6 @@
 ---
-title: "Rugens Silva (Ревущий в лесах)"
-creatureName: "Rugens Silva (Ревущий в лесах)"
+title: "Ревущий в лесах (Rugens Silva)"
+creatureName: "Ревущий в лесах (Rugens Silva)"
 creatureType: "Монстр / Зверь"
 portrait: "creature_image.jpg"
 ---
