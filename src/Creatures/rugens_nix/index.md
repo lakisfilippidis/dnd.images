@@ -1,6 +1,6 @@
 ---
-title: "Rugens Nix (Ревущий в снегах)"
-creatureName: "Rugens Nix (Ревущий в снегах)"
+title: "Ревущий в снегах (Rugens Nix)"
+creatureName: "Ревущий в снегах (Rugens Nix)"
 creatureType: "Монстр / Зверь"
 portrait: "creature_image.jpg"
 ---
