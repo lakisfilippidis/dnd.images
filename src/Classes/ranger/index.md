@@ -19,7 +19,7 @@ title: "Следопыт"
                 <tr><td>2</td><td><a href="#fighting-styles">Боевой стиль</a></td></tr>
                 <tr><td>3</td><td><a href="#archetypes">Боевой архетип, способность архетипа</td></tr>
                 <tr><td>4</td><td>Повышение характеристик</td></tr>
-                <tr><td>5</td><td>Доп. атака</td></tr>
+                <tr><td>5</td><td>Дополнительная атака</td></tr>
                 <tr><td>6</td><td><a href="#explorer">Исследователь</a></td></tr>
                 <tr><td>7</td><td><a href="#archetypes">Черта архетипа</td></tr>
                 <tr><td>8</td><td>Повышение характеристик</td></tr>
