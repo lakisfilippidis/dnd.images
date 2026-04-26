@@ -11,11 +11,11 @@ eleventyExcludeFromCollections: true
             <div class="map-container">
                 <img src="map.jpg" alt="Карта">
                     <a href="../Waldmark/" class="map-label" style="top: 32%; left: 25%;">Вальдмарк</a>
-                    <a href="../Lirenia/" class="map-label" style="top: 19%; right: 4%;">Лирения</a>
-                    <a href="../Silvirhelt/" class="map-label" style="top: 63%; right: 9%;">Сильвирхельт</a>
+                    <a href="../Lirenia/" class="map-label" style="top: 32%; right: 50%;">Лирения</a>
+                    <a href="../Silvirhelt/" class="map-label" style="top: 50%; right: 24%;">Сильвирхельт</a>
                     <a href="../Vikkirland/" class="map-label" style="bottom: 10%; left: 55%;">Виккирланд</a>
-                    <a href="../Rum/" class="map-label" style="bottom: 30%; left: 4%;">Рум</a>
-                    <a href="../Mani/" class="map-label" style="bottom: 50%; left: 24%;">Мани</a>
+                    <a href="../Rum/" class="map-label" style="bottom: 30%; left: 33%;">Рум</a>
+                    <a href="../Mani/" class="map-label" style="bottom: 35%; left: 4%;">Мани</a>
             </div>
 
             <div class="town-container">
