@@ -10,7 +10,7 @@ eleventyExcludeFromCollections: true
 <div class="container">
             <div class="map-container">
                 <img src="map.jpg" alt="Карта">
-                    <a href="../Waldmark/" class="map-label" style="top: 42%; left: 37%;">Вальдмарк</a>
+                    <a href="../Waldmark/" class="map-label" style="top: 32%; left: 25%;">Вальдмарк</a>
                     <a href="../Lirenia/" class="map-label" style="top: 19%; right: 4%;">Лирения</a>
                     <a href="../Silvirhelt/" class="map-label" style="top: 63%; right: 9%;">Сильвирхельт</a>
                     <a href="../Vikkirland/" class="map-label" style="bottom: 10%; left: 55%;">Виккирланд</a>
