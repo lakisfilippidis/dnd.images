@@ -11,7 +11,7 @@ eleventyExcludeFromCollections: true
             <div class="map-container">
                 <img src="map.jpg" alt="Карта">
                     <a href="../Ostroga/" class="map-label" style="top: 15%; left: 10%;">Крепость Острога</a>
-                    <a href="../Falcen/" class="map-label" style="top: 16%; right: 40%;">Крепость Фалькен</a>
+                    <a href="../Falcen/" class="map-label" style="top: 16%; left: 30%;">Крепость Фалькен</a>
                     <a href="../Holmgard/" class="map-label" style="top: 35%; left: 30%;">Хольмгард</a>
                     <a href="../Brokengard/" class="map-label" style="top: 59%; left: 5%;">Брокенгард</a>
                     <a href="../Windhaim/" class="map-label" style="top: 54%; left: 54%;">Виндхейм</a>
