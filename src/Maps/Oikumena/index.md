@@ -11,7 +11,7 @@ eleventyExcludeFromCollections: true
             <div class="map-container">
                 <img src="map.jpg" alt="Карта">
                     <a href="../Waldmark/" class="map-label" style="top: 32%; left: 25%;">Вальдмарк</a>
-                    <a href="../Lirenia/" class="map-label" style="top: 32%; right: 42%;">Лирения</a>
+                    <a href="../Lirenia/" class="map-label" style="top: 29%; right: 43%;">Лирения</a>
                     <a href="../Silvirhelt/" class="map-label" style="top: 44%; left: 17%;">Сильвирхельт</a>
                     <a href="../Vikkirland/" class="map-label" style="top: 19%; left: 12%;">Виккирланд</a>
                     <a href="../Rum/" class="map-label" style="bottom: 26%; left: 31%;">Рум</a>
