@@ -11,11 +11,11 @@ eleventyExcludeFromCollections: true
             <div class="map-container">
                 <img src="map.jpg" alt="Карта">
                     <a href="../Ostroga/" class="map-label" style="top: 15%; left: 10%;">Крепость Острога</a>
-                    <a href="../Falcen/" class="map-label" style="top: 16%; left: 30%;">Крепость Фалькен</a>
-                    <a href="../Holmgard/" class="map-label" style="top: 33%; left: 32%;">Хольмгард</a>
-                    <a href="../Brokengard/" class="map-label" style="top: 59%; left: 5%;">Брокенгард</a>
-                    <a href="../Windhaim/" class="map-label" style="top: 50%; left: 49%;">Виндхейм</a>
-                    <a href="../grasshaim/" class="map-label" style="bottom: 50%; left: 10%;">Грассхейм</a>
+                    <a href="../Falcen/" class="map-label" style="top: 16%; reight: 30%;">Крепость Фалькен</a>
+                    <a href="../Holmgard/" class="map-label" style="top: 34%; left: 32%;">Хольмгард</a>
+                    <a href="../Brokengard/" class="map-label" style="bottom: 45%; left: 5%;">Брокенгард</a>
+                    <a href="../Windhaim/" class="map-label" style="top: 45%; left: 49%;">Виндхейм</a>
+                    <a href="../grasshaim/" class="map-label" style="top: 45%; reight: 25%;">Грассхейм</a>
             </div>
 
             <div class="town-container">
