@@ -15,7 +15,7 @@ eleventyExcludeFromCollections: true
                     <a href="../Holmgard/" class="map-label" style="top: 34%; left: 32%;">Хольмгард</a>
                     <a href="../Brokengard/" class="map-label" style="bottom: 41%; left: 7%;">Брокенгард</a>
                     <a href="../Windhaim/" class="map-label" style="top: 45%; left: 49%;">Виндхейм</a>
-                    <a href="../grasshaim/" class="map-label" style="top: 45%; right: 20%;">Грассхейм</a>
+                    <a href="../grasshaim/" class="map-label" style="top: 45%; right: 15%;">Грассхейм</a>
             </div>
 
             <div class="town-container">
