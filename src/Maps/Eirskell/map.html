@@ -1,133 +1,45 @@
-<!DOCTYPE html>
-<html lang="ru">
-    <head>
-        <meta charset="UTF-8">
-            <title>Эйрскелл</title>
-            <link href="https://fonts.googleapis.com/css2?family=Uncial+Antiqua&display=swap" rel="stylesheet">
-                <style>
-                    body {
-                        font-family: Arial, sans-serif;
-                        margin: 0;
-                        padding: 0;
-                    }
+---
+layout: base.njk
+title: "Карта Острова Эйрскелл"
+bodyClass: "map-page"
+needsFont: true
+breadcrumbSection: "Карты"
+breadcrumbSectionUrl: "/Maps/Eirskell/"
+eleventyExcludeFromCollections: true
+---
+<div class="container">
+    <div class="map-container">
+        <img src="map.jpg" alt="Карта">
+            <a href="#Aidsvik" class="map-label" style="top: 35%; left: 15%;">Эйдсвик</a>
+            <a href="#Bjorkvik" class="map-label" style="top: 15%; right: 7%;">Бьёрквик</a>
+            <a href="#Kaldhavn" class="map-label" style="top: 34%; right: 5%;">Кальдхавн</a>
+            <a href="#Stormfjeld" class="map-label" style="bottom: 15%; left: 8%;">Стормфьельд</a>
+    </div>
 
-                    .container {
-                        display: flex;
-                        flex-direction: column;
-                        align-items: center;
-                    }
-
-                    .map-container {
-                        position: relative;
-                    }
-
-                    .map-container img {
-                        width: 100%;
-                        height: auto;
-                        display: block;
-                        border-radius: 32px;
-                    }
-
-                    .map-label {
-                        position: absolute;
-                        font-family: 'Uncial Antiqua', cursive;
-                        font-size: 1.2em;
-                        color: white;
-                        text-shadow: 1px 1px 2px #000;
-                        cursor: pointer;
-                        transition: transform 0.2s, color 0.2s;
-                    }
-
-                    .map-label:hover {
-                        color: gold;
-                        transform: scale(1.1);
-                    }
-
-                    .town-description {
-                        background: white;
-                        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-                        box-sizing: border-box;
-                        border-radius: 32px;
-                    }
-
-                    .town-description h2 {
-                        font-family: 'Uncial Antiqua', cursive;
-                        padding: 20px;
-                    }
-
-                    .town-description p {
-                        padding: 20px;
-                    }
-
-                    @media (orientation: portrait) {
-                        .container {
-                            flex-direction: column;
-                        }
-
-                        .map-container {
-                            width: 98vw;
-                            padding-top: 16px;
-                        }
-
-                        .town-container {
-                            width: 98vw;
-                        }
-                    }
-
-                    @media (orientation: landscape) {
-                        .container {
-                            flex-direction: row;
-                            align-items: flex-start;
-                        }
-
-                        .map-container {
-                            width: 35vw;
-                            padding: 16px;
-                        }
-
-                        .town-container {
-                            width: 62%;
-                            box-sizing: border-box;
-                        }
-                    }
-                </style>
-            </head>
-    <body>
-        <div class="container">
-            <div class="map-container">
-                <img src="map.jpg" alt="Карта">
-                    <a href="#Aidsvik" class="map-label" style="top: 35%; left: 15%;">Эйдсвик</a>
-                    <a href="#Bjorkvik" class="map-label" style="top: 15%; right: 7%;">Бьёрквик</a>
-                    <a href="#Kaldhavn" class="map-label" style="top: 34%; right: 5%;">Кальдхавн</a>
-                    <a href="#Stormfjeld" class="map-label" style="bottom: 15%; left: 8%;">Стормфьельд</a>
-            </div>
-
-            <div class="town-container">
-                <div id="Aidsvik" class="town-description">
-                    <h2>Эйдсвик</h2>
-                    <p>Главный торговый порт острова. Здесь сходятся
-                        рыбаки, китобои, купцы с материка.
-                        Гавань защищена естественными скалами, но ветра здесь резкие и коварные.</p>
-                </div>
-
-                <div id="Bjorkvik" class="town-description">
-                    <h2>Бьёрквик</h2>
-                    <p>Более спокойный порт, окружённый редкими лесами и холмами.
-                        Здесь занимаются рыболовством, переработкой мяса морских животных и скотоводством (овцы, козы, зуброяки). Здесь
-                        меньше шума, больше жизни — семьи, стада, ремесленники.</p>
-                </div>
-
-                <div id="Kaldhavn" class="town-description">
-                    <h2>Кальдхавн</h2>
-                    <p>Изолированный порт в северной бухте, где ледяные ветра не утихают почти никогда. Местные занимаются добычей уголя, и железной руды. В этом порту расположен перевалочный пункт ресурсов и сторожевой пост. Это место для самых выносливых, кто привык к одиночеству и тяжелому труду.</p>
-                </div>
-
-                <div id="Stormfjeld" class="town-description">
-                    <h2>Стормфьельд</h2>
-                    <p>Крепость у подножия старого вулкана, контролирующая внутренние земли острова. Это не просто замок — это: административный центр и резиденция ярла.
-                        Камень, ветер, дым кузниц и постоянная готовность к бою.</p>
-                </div>
-            </div>
+    <div class="town-container">
+        <div id="Aidsvik" class="town-description">
+            <h2>Эйдсвик</h2>
+            <p>Главный торговый порт острова. Здесь сходятся
+                рыбаки, китобои, купцы с материка.
+                Гавань защищена естественными скалами, но ветра здесь резкие и коварные.</p>
         </div>
-    </body>
-</html>
+
+        <div id="Bjorkvik" class="town-description">
+            <h2>Бьёрквик</h2>
+            <p>Более спокойный порт, окружённый редкими лесами и холмами.
+                Здесь занимаются рыболовством, переработкой мяса морских животных и скотоводством (овцы, козы, зуброяки). Здесь
+                меньше шума, больше жизни — семьи, стада, ремесленники.</p>
+        </div>
+
+        <div id="Kaldhavn" class="town-description">
+            <h2>Кальдхавн</h2>
+            <p>Изолированный порт в северной бухте, где ледяные ветра не утихают почти никогда. Местные занимаются добычей уголя, и железной руды. В этом порту расположен перевалочный пункт ресурсов и сторожевой пост. Это место для самых выносливых, кто привык к одиночеству и тяжелому труду.</p>
+        </div>
+
+        <div id="Stormfjeld" class="town-description">
+            <h2>Стормфьельд</h2>
+            <p>Крепость у подножия старого вулкана, контролирующая внутренние земли острова. Это не просто замок — это: административный центр и резиденция ярла.
+                Камень, ветер, дым кузниц и постоянная готовность к бою.</p>
+        </div>
+    </div>
+</div>
