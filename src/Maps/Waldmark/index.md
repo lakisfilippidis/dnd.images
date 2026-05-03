@@ -15,7 +15,7 @@ eleventyExcludeFromCollections: true
                     <a href="../Holmgard/" class="map-label" style="top: 34%; left: 32%;">Хольмгард</a>
                     <a href="../Brokengard/" class="map-label" style="bottom: 41%; left: 7%;">Брокенгард</a>
                     <a href="../Windhaim/" class="map-label" style="top: 45%; left: 49%;">Виндхейм</a>
-                    <a href="../grasshaim/" class="map-label" style="top: 45%; right: 30%;">Грассхейм</a>
+                    <a href="../grasshaim/" class="map-label" style="top: 45%; right: 25%;">Грассхейм</a>
             </div>
 
             <div class="town-container">
@@ -25,22 +25,27 @@ eleventyExcludeFromCollections: true
                 </div>
 
                 <div id="abbey-court" class="town-description">
-                    <h2>Монастырский двор (разграблен дикарями)</h2>
+                    <h2>Крепость Фалькен</h2>
                     <p>Некогда процветающая деревня сейчас покинута и разграблена. Возможно, ее все еще можно будет восстановить.</p>
                 </div>
 
                 <div id="rotten-puddle" class="town-description">
-                    <h2>Гнилая лужа</h2>
+                    <h2>Хольмгарда</h2>
                     <p>Маленькая деревня в болотистой местности, местные занимаются сбором болотных трав, грибов и выпасом немногочисленного скота.</p>
                 </div>
 
                 <div id="grunfeld" class="town-description">
-                    <h2>Грюнфельд</h2>
+                    <h2>Брокенгард</h2>
                     <p>Городок на юге, купающаяся в солнечном свете. Здесь живут богатые семьи, торгующие зерном и мёдом. Местные жители гордятся своей пивоварней, и даже в крепости ценят их напитки.</p>
                 </div>
 
                 <div id="bears-court" class="town-description">
-                    <h2>Медвежий двор</h2>
+                    <h2>Виндхеймор</h2>
+                    <p>Небольшое поселение у опушки леса. Жители — дровосеки, охотники и углежоги. Здесь ценят силу и молчаливый труд. Ночами над деревней тянется дым костров и смоляных печей.</p>
+                </div>
+
+                <div id="bears-court" class="town-description">
+                    <h2>Грассхейм</h2>
                     <p>Небольшое поселение у опушки леса. Жители — дровосеки, охотники и углежоги. Здесь ценят силу и молчаливый труд. Ночами над деревней тянется дым костров и смоляных печей.</p>
                 </div>
             </div>
