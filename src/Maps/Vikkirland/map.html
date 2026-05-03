@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8">
+            <title>Виккирланд</title>
+            <link href="https://fonts.googleapis.com/css2?family=Uncial+Antiqua&display=swap" rel="stylesheet">
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        margin: 0;
+                        padding: 0;
+                    }
+
+                    .container {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                    }
+
+                    .map-container {
+                        position: relative;
+                    }
+
+                    .map-container img {
+                        width: 100%;
+                        height: auto;
+                        display: block;
+                        border-radius: 32px;
+                    }
+
+                    .map-label {
+                        position: absolute;
+                        font-family: 'Uncial Antiqua', cursive;
+                        font-size: 1.2em;
+                        color: white;
+                        text-shadow: 1px 1px 2px #000;
+                        cursor: pointer;
+                        transition: transform 0.2s, color 0.2s;
+                    }
+
+                    .map-label:hover {
+                        color: gold;
+                        transform: scale(1.1);
+                    }
+
+                    .town-description {
+                        background: white;
+                        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+                        box-sizing: border-box;
+                        border-radius: 32px;
+                    }
+
+                    .town-description h2 {
+                        font-family: 'Uncial Antiqua', cursive;
+                        padding: 20px;
+                    }
+
+                    .town-description p {
+                        padding: 20px;
+                    }
+
+                    @media (orientation: portrait) {
+                        .container {
+                            flex-direction: column;
+                        }
+
+                        .map-container {
+                            width: 98vw;
+                            padding-top: 16px;
+                        }
+
+                        .town-container {
+                            width: 98vw;
+                        }
+                    }
+
+                    @media (orientation: landscape) {
+                        .container {
+                            flex-direction: row;
+                            align-items: flex-start;
+                        }
+
+                        .map-container {
+                            width: 35vw;
+                            padding: 16px;
+                        }
+
+                        .town-container {
+                            width: 62%;
+                            box-sizing: border-box;
+                        }
+                    }
+                </style>
+            </head>
+    <body>
+        <div class="container">
+            <div class="map-container">
+                <img src="map.jpg" alt="Карта">
+                    <a href="../Eirskell/" class="map-label" style="bottom: 38%; right: 33%;">Эйрскелл</a>
+                    <a href="#Utholm" class="map-label" style="top: 36%; left: 5%;">Архипелаг Утхольм</a>
+                    <a href="#Vorngar" class="map-label" style="top: 12%; right: 3%;">Земли Ворнгар</a>
+            </div>
+
+            <div class="town-container">
+                <div id="Eirskell" class="town-description">
+                    <h2>Эйрскелл</h2>
+                    <p>Удаленный остров, стоящий на пути штормов. Его бухты — единственное безопасное место на многие мили вокруг. Сильные ветра, узкие фьорды - земля скальдов, мореходов и искателей приключений.
+                </div>
+
+                <div id="Vorngar" class="town-description">
+                    <h2>Земли Ворнгар</h2>
+                    <p>Для виккирских кланов это не просто территория — это новый материк, холодный, опасный и чуждый..</p>
+                </div>
+
+                <div id="Utholm" class="town-description">
+                    <h2>Архипелаг Утхольм</h2>
+                    <p>Плохо изученные небольшие острова, слишком далекие для постоянного снабжения и частых экспедиций.</p>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
