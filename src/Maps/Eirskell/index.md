@@ -10,10 +10,10 @@ eleventyExcludeFromCollections: true
 <div class="container">
     <div class="map-container">
         <img src="map.jpg" alt="Карта">
-            <a href="#Aidsvik" class="map-label" style="top: 35%; left: 15%;">Эйдсвик</a>
-            <a href="#Bjorkvik" class="map-label" style="top: 15%; right: 7%;">Бьёрквик</a>
-            <a href="#Kaldhavn" class="map-label" style="top: 34%; right: 5%;">Кальдхавн</a>
-            <a href="#Stormfjeld" class="map-label" style="bottom: 15%; left: 8%;">Стормфьельд</a>
+            <a href="#Aidsvik" class="map-label" style="bottom: 35%; right: 40%;">Эйдсвик</a>
+            <a href="#Bjorkvik" class="map-label" style="bottom: 40%; left: 25%;">Бьёрквик</a>
+            <a href="#Kaldhavn" class="map-label" style="top: 20%; right: 45%;">Кальдхавн</a>
+            <a href="#Stormfjeld" class="map-label" style="top: 48%; right: 48%;">Стормфьельд</a>
     </div>
     <div class="town-container">
         <div id="Aidsvik" class="town-description">
