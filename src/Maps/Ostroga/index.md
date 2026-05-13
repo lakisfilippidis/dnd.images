@@ -3,8 +3,6 @@ layout: base.njk
 title: "Карта Острога"
 bodyClass: "map-page"
 needsFont: true
-breadcrumbSection: "Карты"
-breadcrumbSectionUrl: "/Maps/Ostroga/"
 ---
 <div class="container">
             <div class="map-container">

@@ -3,8 +3,6 @@ layout: base.njk
 title: "Карта Ойкумены"
 bodyClass: "map-page"
 needsFont: true
-breadcrumbSection: "Карты"
-breadcrumbSectionUrl: "/Maps/Oikumena/"
 ---
 <div class="container">
             <div class="map-container">

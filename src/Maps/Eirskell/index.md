@@ -3,8 +3,6 @@ layout: base.njk
 title: "Карта Острова Эйрскелл"
 bodyClass: "map-page"
 needsFont: true
-breadcrumbSection: "Карты"
-breadcrumbSectionUrl: "/Maps/Eirskell/"
 ---
 <div class="container">
     <div class="map-container">

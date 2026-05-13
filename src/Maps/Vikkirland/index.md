@@ -3,8 +3,6 @@ layout: base.njk
 title: "Карта Виккирланда"
 bodyClass: "map-page"
 needsFont: true
-breadcrumbSection: "Карты"
-breadcrumbSectionUrl: "/Maps/Vikkirland/"
 ---
 <div class="container">
     <div class="map-container">
