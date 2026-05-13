@@ -5,7 +5,6 @@ bodyClass: "map-page"
 needsFont: true
 breadcrumbSection: "Карты"
 breadcrumbSectionUrl: "/Maps/Eirskell/"
-eleventyExcludeFromCollections: true
 ---
 <div class="container">
     <div class="map-container">

@@ -3,42 +3,36 @@ layout: base.njk
 title: "Мир DnD — Главная"
 bodyClass: "home-page"
 needsFont: true
+sections:
+  - title: "Классы"
+    url: "/Classes/"
+    tag: "classes"
+  - title: "Персонажи"
+    url: "/Characters/"
+    tag: "characters"
+  - title: "Существа"
+    url: "/Creatures/"
+    tag: "creatures"
+  - title: "Карты"
+    url: "/Maps/"
+    tag: "maps"
 ---
 <header>
   <h1>Мир DnD</h1>
-  <p>Выберите раздел для просмотра</p>
+  <p>Выберите раздел или страницу для просмотра</p>
 </header>
 
-<div class="nav-grid">
-  <a href="{{ '/Classes/' | url }}" class="nav-card">
-    <h2>Классы</h2>
-    <p>Описание и архетипы персонажей</p>
-  </a>
-
-  <a href="{{ '/Characters/' | url }}" class="nav-card">
-    <h2>Персонажи</h2>
-    <p>Карточки игроков и их истории</p>
-  </a>
-
-  <a href="{{ '/Personalities/' | url }}" class="nav-card">
-    <h2>Личность</h2>
-    <p>НПС влияющие на мир и историю</p>
-  </a>
-
-  <a href="{{ '/Opponents/' | url }}" class="nav-card">
-    <h2>Боевые НПС</h2>
-    <p>Соладты, наемники, бандиты</p>
-  </a>
-
-  <a href="{{ '/Creatures/' | url }}" class="nav-card">
-    <h2>Бестиарий</h2>
-    <p>Монстры, звери и нейтральные существа</p>
-  </a>
-
-  <a href="{{ '/Maps/Oikumena/' | url }}" class="nav-card">
-    <h2>Карты</h2>
-    <p>Мир, деревни и подземелья</p>
-  </a>
+<div class="home-sections">
+  {% for section in sections %}
+  <section class="home-section">
+    <h2><a href="{{ section.url | url }}">{{ section.title }}</a></h2>
+    <div class="home-section-list">
+      {% for item in collections[section.tag] %}
+      <a class="home-section-item" href="{{ item.url | url }}">{{ item.data.title }}</a>
+      {% endfor %}
+    </div>
+  </section>
+  {% endfor %}
 </div>
 
 <footer>
