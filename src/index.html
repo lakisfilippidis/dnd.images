@@ -18,6 +18,7 @@ sections:
   - title: "Карты"
     url: "/Maps/"
     tag: "maps"
+    mapPreview: true
 ---
 <header>
   <h1>Мир DnD</h1>
@@ -26,19 +27,24 @@ sections:
 
 <div class="home-sections">
   {% for section in sections %}
-  <section class="home-section{% if section.withPreview %} home-section--previews{% endif %}">
+  <section class="home-section{% if section.withPreview %} home-section--previews{% endif %}{% if section.mapPreview %} home-section--maps{% endif %}">
     <h2><a href="{{ section.url | url }}">{{ section.title }}</a></h2>
     <div class="home-section-list">
       {% for item in collections[section.tag] %}
       <a class="home-section-item" href="{{ item.url | url }}">
-        {% if section.withPreview %}
-          {% if item.data.portrait %}
-            <img class="home-section-preview" src="{{ item.url | url }}{{ item.data.portrait }}" alt="">
-          {% elsif item.data.gallery %}
-            <img class="home-section-preview" src="{{ item.url | url }}{{ item.data.gallery | first }}" alt="">
+        {% if section.mapPreview %}
+          <span class="home-section-item-title">{{ item.data.title }}</span>
+          <img class="home-section-map-preview" src="{{ item.url | url }}map.jpg" alt="">
+        {% else %}
+          {% if section.withPreview %}
+            {% if item.data.portrait %}
+              <img class="home-section-preview" src="{{ item.url | url }}{{ item.data.portrait }}" alt="">
+            {% elsif item.data.gallery %}
+              <img class="home-section-preview" src="{{ item.url | url }}{{ item.data.gallery | first }}" alt="">
+            {% endif %}
           {% endif %}
+          <span class="home-section-item-title">{{ item.data.title }}</span>
         {% endif %}
-        <span class="home-section-item-title">{{ item.data.title }}</span>
       </a>
       {% endfor %}
     </div>
