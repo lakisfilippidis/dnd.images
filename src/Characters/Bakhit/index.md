@@ -1,5 +1,6 @@
 ---
 title: "Бахит"
+portrait: character_image.jpg
 ---
 
 # Карточка персонажа — Бахит
