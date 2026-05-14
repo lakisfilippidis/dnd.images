@@ -1,0 +1,248 @@
+/* =========================
+   PAGE
+========================= */
+
+.race-page {
+    background: #1a1714;
+    color: #d8c7a3;
+    font-family: 'Georgia', serif;
+}
+
+/* =========================
+   CARD
+========================= */
+
+.race-card {
+    max-width: 1200px;
+    margin: 40px auto;
+    background:
+        linear-gradient(rgba(22,18,15,.92), rgba(22,18,15,.92)),
+        url('/assets/ui/parchment.jpg');
+    border: 2px solid #5c4630;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow:
+        0 0 30px rgba(0,0,0,.55),
+        inset 0 0 80px rgba(0,0,0,.25);
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.race-header {
+    padding: 28px 36px;
+    border-bottom: 2px solid #5c4630;
+    background:
+        linear-gradient(to bottom,
+        rgba(70,50,35,.95),
+        rgba(45,32,23,.95));
+}
+
+.race-header h1 {
+    margin: 0;
+    font-size: 3rem;
+    color: #f1e2bc;
+    letter-spacing: 2px;
+    text-shadow: 0 2px 8px rgba(0,0,0,.5);
+}
+
+.race-header .subinfo {
+    margin-top: 8px;
+    color: #b89c6a;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* =========================
+   BODY
+========================= */
+
+.race-body {
+    display: flex;
+    gap: 40px;
+    padding: 36px;
+    align-items: flex-start;
+}
+
+/* =========================
+   PORTRAIT
+========================= */
+
+.portrait-container {
+    position: sticky;
+    top: 20px;
+    width: 320px;
+    min-width: 320px;
+    border: 2px solid #5c4630;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #111;
+    box-shadow:
+        0 0 20px rgba(0,0,0,.5),
+        inset 0 0 30px rgba(0,0,0,.4);
+}
+
+.portrait-container img,
+.gallery-image {
+    width: 100%;
+    display: none;
+    object-fit: cover;
+}
+
+.portrait-container img,
+.gallery-image.active {
+    display: block;
+}
+
+/* =========================
+   GALLERY
+========================= */
+
+.gallery-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 2rem;
+    color: #f1e2bc;
+    background: rgba(0,0,0,.45);
+    width: 42px;
+    height: 42px;
+    line-height: 42px;
+    text-align: center;
+    border-radius: 50%;
+    cursor: pointer;
+    user-select: none;
+    transition: .2s;
+    z-index: 5;
+}
+
+.gallery-nav:hover {
+    background: rgba(0,0,0,.75);
+}
+
+.gallery-nav.prev {
+    left: 10px;
+}
+
+.gallery-nav.next {
+    right: 10px;
+}
+
+.pager {
+    position: absolute;
+    bottom: 14px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+.pager-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.35);
+    cursor: pointer;
+    transition: .2s;
+}
+
+.pager-dot.active {
+    background: #f1e2bc;
+    transform: scale(1.2);
+}
+
+/* =========================
+   DETAILS
+========================= */
+
+.details {
+    flex: 1;
+    min-width: 0;
+}
+
+.details h2 {
+    margin-top: 0;
+    color: #f1e2bc;
+    font-size: 2rem;
+    border-bottom: 1px solid #5c4630;
+    padding-bottom: 10px;
+}
+
+.details h3 {
+    margin-top: 28px;
+    color: #d9b574;
+    font-size: 1.35rem;
+}
+
+.details p {
+    line-height: 1.8;
+    color: #d8c7a3;
+}
+
+.details ul {
+    padding-left: 22px;
+}
+
+.details li {
+    margin-bottom: 8px;
+}
+
+/* =========================
+   TABLES
+========================= */
+
+.details table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 24px 0;
+    background: rgba(0,0,0,.15);
+}
+
+.details th,
+.details td {
+    border: 1px solid #5c4630;
+    padding: 12px 14px;
+    text-align: left;
+}
+
+.details th {
+    background: rgba(80,55,35,.55);
+    color: #f1e2bc;
+}
+
+/* =========================
+   LINKS
+========================= */
+
+.details a {
+    color: #d9b574;
+    text-decoration: none;
+}
+
+.details a:hover {
+    text-decoration: underline;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 900px) {
+
+    .race-body {
+        flex-direction: column;
+    }
+
+    .portrait-container {
+        width: 100%;
+        min-width: 100%;
+        position: relative;
+        top: 0;
+    }
+
+    .race-header h1 {
+        font-size: 2.2rem;
+    }
+}
