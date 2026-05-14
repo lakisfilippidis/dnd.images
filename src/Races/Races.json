@@ -1,5 +1,5 @@
 {
-  "layout": "base.njk",
+  "layout": "race.njk",
   "tags": "race",
   "needsFont": false
   "breadcrumbSection": "Расы",
