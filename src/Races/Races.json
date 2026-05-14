@@ -1,4 +1,7 @@
 {
+  "tags": "race",
+  "breadcrumbSection": "Расы",
+  "breadcrumbSectionUrl": "/Races/",
   "layout": "race.njk",
   "tags": "race"
 }
