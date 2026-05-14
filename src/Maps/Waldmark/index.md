@@ -1,6 +1,6 @@
 ---
 layout: base.njk
-title: "Карта Ойкумены"
+title: "Карта королевства Вальдмарк"
 bodyClass: "map-page"
 needsFont: true
 ---
