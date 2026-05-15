@@ -363,26 +363,31 @@ body.home-page {
   color: var(--color-text-muted);
 }
 
-/* ===== Character Card Styles ===== */
+/* ===== Character / Race Card Styles ===== */
 .character-page body,
-body.character-page {
+body.character-page,
+.race-page body,
+body.race-page {
   margin: 0;
   font-family: Arial, sans-serif;
 }
 
-.character-page .container {
+.character-page .container,
+.race-page .container {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.character-page .portrait {
+.character-page .portrait,
+.race-page .portrait {
   object-fit: cover;
   padding: 16px;
   border-radius: var(--radius-large);
 }
 
-.character-page .content {
+.character-page .content,
+.race-page .content {
   margin-top: 16px;
   margin-bottom: 16px;
   background: white;
@@ -392,31 +397,37 @@ body.character-page {
 }
 
 @media (orientation: portrait) {
-  .character-page .container {
+  .character-page .container,
+  .race-page .container {
     flex-direction: column;
   }
 
-  .character-page .portrait {
+  .character-page .portrait,
+  .race-page .portrait {
     width: 98vw;
   }
 
-  .character-page .content {
+  .character-page .content,
+  .race-page .content {
     width: 98vw;
     padding: 16px;
   }
 }
 
 @media (orientation: landscape) {
-  .character-page .container {
+  .character-page .container,
+  .race-page .container {
     flex-direction: row;
     align-items: flex-start;
   }
 
-  .character-page .portrait {
+  .character-page .portrait,
+  .race-page .portrait {
     width: 30vw;
   }
 
-  .character-page .content {
+  .character-page .content,
+  .race-page .content {
     width: 67%;
     padding: 16px;
     box-sizing: border-box;
