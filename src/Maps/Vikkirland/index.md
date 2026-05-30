@@ -8,7 +8,7 @@ needsFont: true
     <div class="map-container">
         <img src="map.jpg" alt="Карта">
             <a href="../Eirskell/" class="map-label" style="bottom: 38%; right: 33%;">Эйрскелл</a>
-            <a href="#Utholm" class="map-label" style="top: 36%; left: 5%;">Архипелаг Утхольм</a>
+            <a href="../Utholm/" class="map-label" style="top: 36%; left: 5%;">Архипелаг Утхольм</a>
             <a href="#Vorngar" class="map-label" style="top: 12%; right: 3%;">Земли Ворнгар</a>
     </div>
     
