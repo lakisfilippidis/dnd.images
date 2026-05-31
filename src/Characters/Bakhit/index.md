@@ -65,6 +65,8 @@ portrait: character_image.jpg
 
 ## Особенности
 
+- **[Колдовское оружие - Серп, Коса, Хопеш](../../Classes/warlock/#warlock's-weapon)**
+
 - **[Порча](../../Classes/warlock/#corruption)**
 
 - **[Проклятие](../../Classes/warlock/#curse)**
