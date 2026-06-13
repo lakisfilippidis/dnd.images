@@ -92,3 +92,5 @@ portrait: character_image.jpg
 - **[Вдохновение](../../Classes/artist/#inspiration)**
 
 - **[Быстрая поддержка:](../../Classes/artist/#fast-support)** можно подбодрить союзника бонусным действием - восстанавливает 1к4 КЗ
+
+- **[Менестрель (Minstrel) 3 уровень](../../Classes/artist/#archetypes-art)**
