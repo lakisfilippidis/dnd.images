@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>Список страниц</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f3f3f3;
+      color: #222;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      font-family: "Uncial Antiqua", cursive;
+    }
+    #status {
+      margin: 12px auto;
+      max-width: 900px;
+      text-align: center;
+      color: #666;
+    }
+    .list {
+      max-width: 900px;
+      margin: 16px auto;
+      display: grid;
+      gap: 8px;
+    }
+    .item {
+      display: block;
+      padding: 10px 12px;
+      background: #fff;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      text-decoration: none;
+      color: #111;
+      transition: 0.2s;
+    }
+    .item:hover {
+      box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+      transform: translateY(-2px);
+    }
+    .error {
+      color: #a00;
+    }
+  </style>
+</head>
+<body>
+  <h1>Список страниц</h1>
+  <div id="status">Загрузка списка...</div>
+  <div id="list" class="list" aria-live="polite"></div>
+
+<script>
+(async function() {
+  const statusEl = document.getElementById("status");
+  const listEl = document.getElementById("list");
+
+  try {
+    const resp = await fetch("list.json");
+    if (!resp.ok) throw new Error("list.json не найден или недоступен");
+    const files = await resp.json();
+
+    if (!files.length) {
+      statusEl.textContent = "Здесь пока пусто :(";
+      return;
+    }
+
+    statusEl.textContent = `Найдено ${files.length} страниц:`;
+
+    files.forEach(filePath => {
+      const a = document.createElement("a");
+      a.className = "item";
+      a.href = filePath;
+      a.textContent = filePath.replace(/\.html$/, "");
+      listEl.appendChild(a);
+    });
+  } catch (err) {
+    statusEl.innerHTML = `<span class="error">Ошибка:</span> ${err.message}`;
+    console.error(err);
+  }
+})();
+</script>
+</body>
+</html>
