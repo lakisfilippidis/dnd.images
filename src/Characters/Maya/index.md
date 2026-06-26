@@ -1,5 +1,5 @@
 ---
-title: "Майа стойкая"
+title: "Майя стойкая"
 portrait: character_image.jpg
 ---
 
