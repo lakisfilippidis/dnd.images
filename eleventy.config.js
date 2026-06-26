@@ -21,6 +21,12 @@ module.exports = function (eleventyConfig) {
       .sort((a, b) => a.data.title.localeCompare(b.data.title, "ru"));
   });
 
+  eleventyConfig.addCollection("personalities", function (collectionApi) {
+    return collectionApi
+      .getFilteredByTag("personalities")
+      .sort((a, b) => a.data.title.localeCompare(b.data.title, "ru"));
+  });
+
   eleventyConfig.addCollection("races", function (collectionApi) {
     return collectionApi
       .getFilteredByTag("race")
