@@ -91,4 +91,4 @@ portrait: character_image.jpg
 
 - **[Засада (Ambush)](../../Classes/ranger/#fighting-styles)**
 
-- **[Арсеналист (Arsenalist)** 3 уровень](../../Classes/ranger/#archetypes)
+- **[Арсеналист (Arsenalist) 3 уровень](../../Classes/ranger/#archetypes)**

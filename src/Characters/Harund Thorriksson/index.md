@@ -83,5 +83,5 @@ portrait: character_image.jpg
 
 - **[Маневр (Maneuver)](../../Classes/savage/#maneuver)**
 
-- **[Охотник за головами (Bounty Hunter)** 4 уровень](../../Classes/savage/#archetypes)
+- **[Охотник за головами (Bounty Hunter) 4 уровень](../../Classes/savage/#archetypes)**
 **Дополнительная атака:** можешь совершить две атаки в каждом ходу.

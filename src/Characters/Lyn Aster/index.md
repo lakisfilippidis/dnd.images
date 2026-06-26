@@ -78,7 +78,7 @@ portrait: character_image.jpg
 
 - **[Стрельба (Archery)](../../Classes/ranger/#fighting-styles)**
 
-- **[Охотник (Hunter)** 3 уровень](../../Classes/ranger/#archetypes)
+- **[Охотник (Hunter) 3 уровень](../../Classes/ranger/#archetypes)**
 
 ## Животный спутник — ворон Кайр
 

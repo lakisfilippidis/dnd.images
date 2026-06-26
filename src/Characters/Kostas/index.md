@@ -88,4 +88,4 @@ portrait: character_image.jpg
 
 - **[Боеготовность (Rapid Response)](../../Classes/ranger/#fighting-styles)**
 
-- **[Арсеналист (Arsenalist)** 3 уровень](../../Classes/ranger/#archetypes)
+- **[Арсеналист (Arsenalist) 3 уровень](../../Classes/ranger/#archetypes)**
