@@ -97,11 +97,11 @@ portrait: character_image.jpg
 
 - **[Второе дыхание](../../Classes/fighter/#second-wind)**
 
-- **<a href="../../Classes/fighter/#action-surge">Экшен-сурж**
+- **[Экшен-сурж](../../Classes/fighter/#action-surge)**
 
-- **<a href="../../Classes/fighter/#archetypes">Чемпион (Champion) 3 уровень**
+- **[Чемпион (Champion) 3 уровень](../../Classes/fighter/#archetypes)**
 
-- **<a href="../../Classes/fighter/#indomitable">Доблесть - Можешь совершить свободное восстановление 1d10+уровень воина один раз в день**
+- **[Доблесть](../../Classes/fighter/#indomitable) - Можешь совершить свободное восстановление 1d10+уровень воина один раз в день**
 
 - **Дополнительная атака за ход**
 
