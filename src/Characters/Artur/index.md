@@ -82,4 +82,4 @@ portrait: character_image.jpg
 
 - **[Второе дыхание](../../Classes/fighter/#second-wind)**
 
-- **<a href="../../Classes/fighter/#action-surge">Экшен-сурж**
+- **[Экшен-сурж](../../Classes/fighter/#action-surge)**

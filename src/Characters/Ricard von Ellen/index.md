@@ -16,7 +16,7 @@ portrait: character_image.jpg
 
 **Уровень:** 3
 
-**Уровень:** 920
+**Опыт:** 920
 
 ## Характеристики
 
@@ -80,6 +80,6 @@ portrait: character_image.jpg
 
 - **[Второе дыхание](../../Classes/fighter/#second-wind)**
 
-- **<a href="../../Classes/fighter/#action-surge">Экшен-сурж**
+- **[Экшен-сурж](../../Classes/fighter/#action-surge)**
 
-- **<a href="../../Classes/fighter/#archetypes">Чемпион** 3 уровень
+- **[Чемпион 3 уровень](../../Classes/fighter/#archetypes)**

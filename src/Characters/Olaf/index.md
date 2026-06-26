@@ -72,7 +72,7 @@ portrait: character_image.jpg
 
 ## Особенности
 
-- **Легенда о герое:** +4 к КЗ.</a>
+- **Легенда о герое:** +4 к КЗ.
 
 ## Способности
 
@@ -80,6 +80,6 @@ portrait: character_image.jpg
 
 - **[Второе дыхание](../../Classes/fighter/#second-wind)**
 
-- **<a href="../../Classes/fighter/#action-surge">Экшен-сурж**
+- **[Экшен-сурж](../../Classes/fighter/#action-surge)**
 
-- **<a href="../../Classes/fighter/#archetypes">Гвардеец (Guardsman) 3 уровень**
+- **[Гвардеец (Guardsman) 3 уровень](../../Classes/fighter/#archetypes)**
