@@ -93,7 +93,7 @@ portrait: character_image.jpg
 
 ## Способности
 
-- **[Боевой стиль — Стрельба (Archery) - +2 к броскам атаки дальнобойным оружием](../../Classes/fighter/#fighting-styles)**
+- **[Боевой стиль — Стрельба (Archery)](../../Classes/fighter/#fighting-styles)**
 
 - **[Второе дыхание](../../Classes/fighter/#second-wind)**
 
