@@ -6,7 +6,9 @@ needsFont: true
 ---
 <div class="container">
     <div class="map-container">
-        <img src="map.jpg" alt="Карта">
+        <map-canvas>
+            <img src="map.jpg" alt="Карта">
+        </map-canvas>
             <a href="#Aidsvik" class="map-label" style="bottom: 35%; right: 40%;">Эйдсвик</a>
             <a href="#Bjorkvik" class="map-label" style="bottom: 40%; left: 25%;">Бьёрквик</a>
             <a href="#Kaldhavn" class="map-label" style="top: 20%; right: 45%;">Кальдхавн</a>

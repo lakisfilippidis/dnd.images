@@ -9,6 +9,9 @@
     {% endif %}
     <link rel="stylesheet" href="{{ '/styles/shared.css' | url }}">
     <script type="module" src="https://ramil-k.github.io/dice-roller/roll-dice.js"></script>
+    {% if bodyClass == "map-page" %}
+    <script type="module" src="{{ '/scripts/map-canvas.js' | url }}"></script>
+    {% endif %}
   </head>
   <body{% if bodyClass %} class="{{ bodyClass }}"{% endif %}>
     <nav class="top-menu">
