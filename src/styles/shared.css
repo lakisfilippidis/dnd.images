@@ -117,6 +117,15 @@ body {
     margin-bottom: var(--height-footer);
 }
 
+/* ===== Floating dice roller ===== */
+/* The <roll-any-dice> FAB is position: fixed at bottom-right (from its own
+   shadow DOM). Lift it clear of the sticky bottom TOC bar so the two don't
+   overlap. Overriding the light-DOM element beats its :host default. */
+roll-any-dice {
+  bottom: calc(var(--height-footer) + 1.25rem) !important;
+  right: 1.25rem !important;
+}
+
 /* ===== Top Menu ===== */
 .top-menu {
   position: sticky;
