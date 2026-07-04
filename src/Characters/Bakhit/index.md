@@ -42,7 +42,7 @@ portrait: character_image.jpg
 
 ### Оружие
 
-- **Посох:** <roll-dice>1d6</roll-dice> дробящего урона (<roll-dice>1d8</roll-dice> двуручный), <roll-dice>1d20+0</roll-dice> к попаданию
+- **Серп:** <roll-dice>1d6</roll-dice> режущего урона, <roll-dice>1d20+0</roll-dice> к попаданию. [Колдовское оружие](../../Classes/warlock/#warlock's-weapon): +<roll-dice>1d4</roll-dice> к урону по целям, хп которых меньше половины
 
 ### Доп. снаряжение
 
