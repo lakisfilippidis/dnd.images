@@ -40,7 +40,7 @@
 }
 
 /* ===== Underlines ===== */
-:where(a, u, ins, abbr[title]) {
+* {
   text-decoration-skip-ink: none;
   text-underline-offset: 0.3em;
   text-decoration-thickness: 1px;
