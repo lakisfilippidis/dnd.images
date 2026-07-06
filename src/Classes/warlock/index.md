@@ -36,7 +36,6 @@ title: "Колдун"
                 <tr><td>20</td><td><a href="#patron-bond">Узы Покровителя</td></tr>
             </tbody>
         </table>
-
         <table>
             <h2 id="corruption">🧿 Порча (Corruption)</h2>
             <p>Дальность: 18 м (60 футов)</p>
@@ -52,7 +51,6 @@ title: "Колдун"
                 <tr><td>17</td><td>-4 к броскам атаке</td><td>3 хода</td><td>3</td></tr>
             </tbody>
         </table>
-
         <table>
             <h2 id="curse">👁️ Проклятие (Сurse)</h2>
             <p>Дальность: 18 м (60 футов)</p>
@@ -68,19 +66,17 @@ title: "Колдун"
                 <tr><td>17</td><td>–1d10 к броскам урона любого типа при атаке</td><td>3 хода</td><td>3</td></tr>
             </tbody>
         </table>
-
         <div>
             <h2 id="dark-rush">Тёмный рывок (Dark Rush)</h2>
             <li>Быстрое перемещение без штрафов на 10-15 футов.</li>
         </div>
-
         <div>
             <h2 id="bleeding">Кровотечение (Bleeding)</h2>
             <li>+1 урона в каждом следующем ходу, пока не остановит кровотечение медициной или потратив одно действие на перевязку.</li>
         </div>
-
         <table>
             <h2 id="warlock's-weapon">Колдовское оружие (Warlock's Weapon)</h2>
+                <p>Колдун может наложить на избранное колдовское оружие <a href="#corruption">Порчу</a> либо <a href="#curse">Проклятие</a>. Каждое попадании по цели, будет накладывать соответствующий эффект.</p>
             <thead>
                 <tr><th>Эмодзи</th><th>Название</th><th>Описание</th></tr>
             </thead>
@@ -151,7 +147,6 @@ title: "Колдун"
                     </td>
             </tbody>
         </table>
-
         <h2 id="patron-bond">Узы Покровителя (Patron Bond)</h2>
         <table>
             <thead>
