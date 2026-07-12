@@ -487,8 +487,8 @@ body.race-page {
   background: var(--color-bg-white);
 }
 
-.combat-block .stat:last-child:nth-child(3n + 1) {
-  grid-column: 1 / -1;
+.combat-block {
+  grid-template-columns: repeat(4, 1fr);
 }
 
 .combat-block button.stat {
@@ -511,17 +511,17 @@ body.race-page {
   grid-area: icon;
   width: 48px;
   height: 48px;
-  align-items: end;
+  align-items: center end;
 }
 
 .combat-block .stat-name {
   grid-area: name;
-  place-self: start;
+  place-self: center start;
 }
 
 .combat-block .stat-mod {
   grid-area: value;
-  place-self: start;
+  place-self: center start;
 }
 
 .stat-block .stat-name,
