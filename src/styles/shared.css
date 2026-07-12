@@ -465,17 +465,14 @@ body.race-page {
 .combat-block {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
   width: calc(100% - 32px);
   margin: 0 16px 16px;
   box-sizing: border-box;
-  background: var(--color-bg-white);
+  background: var(--color-border-light);
   border-radius: var(--radius-item);
   box-shadow: var(--shadow-card);
   overflow: hidden;
-}
-
-.combat-block {
-  grid-template-columns: repeat(2, 1fr);
 }
 
 .stat-block .stat,
@@ -487,25 +484,22 @@ body.race-page {
   gap: 2px;
   padding: 8px 4px;
   border: none;
-  border-right: 1px solid var(--color-border-light);
-  border-bottom: 1px solid var(--color-border-light);
+  background: var(--color-bg-white);
 }
 
-.stat-block .stat:nth-child(3n),
-.combat-block .stat:nth-child(2n) {
-  border-right: none;
-}
-
-.stat-block .stat:nth-child(n+4),
-.combat-block .stat:nth-child(n+3) {
-  border-bottom: none;
+.combat-block .stat:last-child:nth-child(3n + 1) {
+  grid-column: 1 / -1;
 }
 
 .combat-block button.stat {
   appearance: none;
-  background: none;
   font: inherit;
   cursor: pointer;
+}
+
+.combat-block .stat-icon {
+  width: 22px;
+  height: 22px;
 }
 
 .stat-block .stat-name,
