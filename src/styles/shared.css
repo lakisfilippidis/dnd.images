@@ -308,6 +308,27 @@ body.home-page {
     padding-inline: 0;
   }
 
+  body .content-wrapper > :is(h1, h2, h3, h4, h5, h6, p, ul, ol, .breadcrumbs) {
+    margin-inline: 16px;
+  }
+
+  .content-wrapper table {
+    display: block;
+    overflow-x: auto;
+    padding-inline: 16px;
+  }
+
+  /* The table itself is the scroll container here, so a header offset
+     would push it down over the first rows instead of sticking. */
+  body .content-wrapper thead th {
+    top: 0;
+  }
+
+  body.class-page th,
+  body.class-page td {
+    padding: 0.5rem;
+  }
+
   .home-sections {
     row-gap: 1px;
   }
@@ -477,6 +498,27 @@ body.race-page {
   }
 }
 
+/* ===== Tables: sticky header and first column ===== */
+.content-wrapper thead th {
+  position: sticky;
+  top: calc(var(--height-header) * 1.5);
+  z-index: 1;
+}
+
+.content-wrapper table :is(th, td):first-child {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+}
+
+.content-wrapper thead th:first-child {
+  z-index: 2;
+}
+
+.content-wrapper table td:first-child {
+  background-color: var(--color-bg-white);
+}
+
 /* ===== Class Page Styles ===== */
 .class-page body,
 body.class-page {
@@ -495,7 +537,8 @@ body.class-page {
 }
 
 .class-page table {
-  width: 100%;
+  width: fit-content;
+  max-width: 100%;
   border-collapse: collapse;
   margin: 1rem 0;
   background-color: white;
