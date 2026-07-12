@@ -40,11 +40,11 @@ title: "Артист"
             </tbody>
         </table>
 
-        <table>
-            <h2 id="inspiration">✨ Вдохновение (Inspiration)</h2>
+                    <h2 id="inspiration">✨ Вдохновение (Inspiration)</h2>
             <p>Дальность: 60 футов (18 м)</p>
             <p>1 раз/бой, бонус союзнику к броску атаки/спасброску/проверке</p>
             <p>Вне боя — 10 минут</p>
+<table>
             <thead>
                 <tr><th>Уровень</th><th>Изменения</th></tr>
             </thead>
