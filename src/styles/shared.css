@@ -64,6 +64,10 @@
 }
 
 
+html {
+  overflow-x: clip;
+}
+
 body {
   margin-bottom: 50px;
   padding-bottom: 30vh;
@@ -278,12 +282,6 @@ body.home-page {
   box-sizing: border-box;
 }
 
-@media (max-width: 600px) {
-  .home-sections {
-    padding-inline: 0;
-  }
-}
-
 @supports (grid-template-rows: masonry) {
   .home-sections {
     grid-template-rows: masonry;
@@ -297,11 +295,26 @@ body.home-page {
 }
 
 .home-section {
+  min-width: 0;
   background-color: var(--color-bg-page);
-  border: 2px solid var(--color-border);
   border-radius: var(--radius-card);
   padding: 24px;
   box-shadow: var(--shadow-card);
+}
+
+@media (max-width: 600px) {
+  .content-wrapper,
+  .home-sections {
+    padding-inline: 0;
+  }
+
+  .home-sections {
+    row-gap: 1px;
+  }
+
+  .home-section {
+    border-radius: 0;
+  }
 }
 
 .home-section h2 {
@@ -326,6 +339,7 @@ body.home-page {
 }
 
 .home-section-item {
+  min-width: 0;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -344,6 +358,7 @@ body.home-page {
 }
 
 .home-section-item-title {
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
