@@ -511,7 +511,7 @@ body.race-page {
   grid-area: icon;
   width: 48px;
   height: 48px;
-  align-items: center end;
+  place-self: center end;
 }
 
 .combat-block .stat-name {
