@@ -19,6 +19,8 @@ breadcrumbSectionUrl: /Creatures/
       {% else %}
       <img src="{{ portrait }}" alt="{{ creatureName }}">
       {% endif %}
+      {% include "stat-block.njk" %}
+      {% include "combat-block.njk" %}
     </div>
     <div class="details">
       {{ content | safe }}

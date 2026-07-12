@@ -542,6 +542,12 @@ body.race-page {
   font-size: 0.85rem;
 }
 
+.creature-page .stat-block,
+.creature-page .combat-block {
+  width: 100%;
+  margin: 16px 0 0;
+}
+
 [popover].stat-note {
   max-width: 280px;
   padding: 8px 12px;
@@ -768,7 +774,7 @@ body.creature-page {
   background: #ccc;
 }
 
-.portrait-container img {
+.portrait-container > img {
   max-width: 100%;
   border-radius: var(--radius-card);
   box-shadow: var(--shadow-portrait);
