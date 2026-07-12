@@ -461,7 +461,8 @@ body.race-page {
   box-sizing: border-box;
 }
 
-.stat-block {
+.stat-block,
+.combat-block {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   width: calc(100% - 32px);
@@ -473,31 +474,49 @@ body.race-page {
   overflow: hidden;
 }
 
-.stat-block .stat {
+.combat-block {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.stat-block .stat,
+.combat-block .stat {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 2px;
   padding: 8px 4px;
+  border: none;
   border-right: 1px solid var(--color-border-light);
   border-bottom: 1px solid var(--color-border-light);
 }
 
-.stat-block .stat:nth-child(3n) {
+.stat-block .stat:nth-child(3n),
+.combat-block .stat:nth-child(2n) {
   border-right: none;
 }
 
-.stat-block .stat:nth-child(n+4) {
+.stat-block .stat:nth-child(n+4),
+.combat-block .stat:nth-child(n+3) {
   border-bottom: none;
 }
 
-.stat-block .stat-name {
+.combat-block button.stat {
+  appearance: none;
+  background: none;
+  font: inherit;
+  cursor: pointer;
+}
+
+.stat-block .stat-name,
+.combat-block .stat-name {
   font-size: 0.7rem;
   color: var(--color-text-muted);
   text-align: center;
 }
 
-.stat-block .stat-mod {
+.stat-block .stat-mod,
+.combat-block .stat-mod {
   font-size: 1.4rem;
   font-weight: bold;
   color: var(--color-text-heading);
@@ -505,6 +524,27 @@ body.race-page {
 
 .stat-block .stat-roll {
   font-size: 0.85rem;
+}
+
+[popover].stat-note {
+  max-width: 280px;
+  padding: 8px 12px;
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-item);
+  background: var(--color-bg-white);
+  box-shadow: var(--shadow-card-hover);
+  font-size: 0.85rem;
+  color: var(--color-text-subtle);
+}
+
+@supports (position-area: block-end) {
+  [popover].stat-note {
+    position: fixed;
+    inset: auto;
+    position-area: block-end;
+    position-try-fallbacks: flip-block;
+    margin: 6px 0;
+  }
 }
 
 .character-page .content,

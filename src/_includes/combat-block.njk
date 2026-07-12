@@ -1,0 +1,22 @@
+{% if combat %}
+<div class="combat-block">
+  {% for name, item in combat %}
+  {% if item.note %}
+  <button type="button" class="stat" popovertarget="combat-pop-{{ loop.index }}">
+    <span class="stat-name">{{ name }}</span>
+    <span class="stat-mod">{{ item.value }}</span>
+  </button>
+  {% else %}
+  <div class="stat">
+    <span class="stat-name">{{ name }}</span>
+    <span class="stat-mod">{{ item.value }}</span>
+  </div>
+  {% endif %}
+  {% endfor %}
+</div>
+{% for name, item in combat %}
+{% if item.note %}
+<div id="combat-pop-{{ loop.index }}" popover class="stat-note">{{ item.note }}</div>
+{% endif %}
+{% endfor %}
+{% endif %}
