@@ -464,10 +464,13 @@ body.race-page {
 .stat-block {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  width: 100%;
-  padding: 0 16px 16px;
+  width: calc(100% - 32px);
+  margin: 0 16px 16px;
   box-sizing: border-box;
+  background: var(--color-bg-white);
+  border-radius: var(--radius-item);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
 }
 
 .stat-block .stat {
@@ -476,9 +479,16 @@ body.race-page {
   align-items: center;
   gap: 2px;
   padding: 8px 4px;
-  background: var(--color-bg-white);
-  border-radius: var(--radius-item);
-  box-shadow: var(--shadow-card);
+  border-right: 1px solid var(--color-border-light);
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.stat-block .stat:nth-child(3n) {
+  border-right: none;
+}
+
+.stat-block .stat:nth-child(n+4) {
+  border-bottom: none;
 }
 
 .stat-block .stat-name {
