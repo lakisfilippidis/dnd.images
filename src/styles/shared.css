@@ -503,16 +503,14 @@ body.race-page {
     "icon name"
     "icon value" / auto 1fr;
   column-gap: 8px;
-  align-items: center;
-  justify-items: start;
-  text-align: left;
+  place-items: center;
   padding: 8px 10px;
 }
 
 .combat-block .stat-icon {
   grid-area: icon;
-  width: 24px;
-  height: 24px;
+  width: 48px;
+  height: 48px;
 }
 
 .combat-block .stat-name {
