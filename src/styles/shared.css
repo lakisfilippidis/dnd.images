@@ -487,6 +487,10 @@ body.race-page {
   background: var(--color-bg-white);
 }
 
+.combat-block {
+  width: min-content;
+}
+
 .combat-block .stat:last-child:nth-child(3n + 1) {
   grid-column: 1 / -1;
 }
