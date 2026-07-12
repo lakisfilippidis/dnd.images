@@ -495,14 +495,13 @@ body.race-page {
   appearance: none;
   font: inherit;
   cursor: pointer;
-  width: max-content;
 }
 
 .combat-block .stat {
   display: grid;
   grid-template:
     "icon name"
-    "icon value" / auto 1fr;
+    "icon value" / max-content max-content;
   column-gap: 8px;
   place-items: center;
   padding: 8px 10px;
@@ -512,14 +511,17 @@ body.race-page {
   grid-area: icon;
   width: 48px;
   height: 48px;
+  align-items: end;
 }
 
 .combat-block .stat-name {
   grid-area: name;
+  place-self: start;
 }
 
 .combat-block .stat-mod {
   grid-area: value;
+  place-self: start;
 }
 
 .stat-block .stat-name,
