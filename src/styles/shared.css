@@ -497,9 +497,30 @@ body.race-page {
   cursor: pointer;
 }
 
+.combat-block .stat {
+  display: grid;
+  grid-template:
+    "icon name"
+    "icon value" / auto 1fr;
+  column-gap: 8px;
+  align-items: center;
+  justify-items: start;
+  text-align: left;
+  padding: 8px 10px;
+}
+
 .combat-block .stat-icon {
-  width: 22px;
-  height: 22px;
+  grid-area: icon;
+  width: 24px;
+  height: 24px;
+}
+
+.combat-block .stat-name {
+  grid-area: name;
+}
+
+.combat-block .stat-mod {
+  grid-area: value;
 }
 
 .stat-block .stat-name,
