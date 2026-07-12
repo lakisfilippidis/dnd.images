@@ -548,6 +548,10 @@ body.race-page {
   margin: 16px 0 0;
 }
 
+.creature-page .combat-block {
+  grid-template-columns: repeat(2, 1fr);
+}
+
 [popover].stat-note {
   max-width: 280px;
   padding: 8px 12px;
@@ -566,6 +570,242 @@ body.race-page {
     position-area: block-end;
     position-try-fallbacks: flip-block;
     margin: 6px 0;
+  }
+}
+
+/* ===== Initiative Tracker ===== */
+.battle-fab {
+  position: fixed;
+  top: calc(var(--height-header) + 0.75rem);
+  right: 1.25rem;
+  z-index: 1001;
+  width: 6em;
+  height: 6em;
+  padding: 0.8em;
+  box-sizing: border-box;
+  border: 1px solid var(--color-border-light);
+  border-radius: 50%;
+  background: var(--color-bg-white);
+  box-shadow: var(--shadow-card);
+  cursor: pointer;
+}
+
+.battle-fab:hover {
+  box-shadow: var(--shadow-card-hover);
+}
+
+.battle-fab img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.init-tracker[popover] {
+  position: fixed;
+  inset: auto;
+  top: calc(var(--height-header) + 4.25rem);
+  right: 1.25rem;
+  width: 50vw;
+  min-width: min(24rem, calc(100vw - 2.5rem));
+  max-width: calc(100vw - 2.5rem);
+  max-height: calc(100dvh - var(--height-header) - var(--height-footer) - 7rem);
+  overflow-y: auto;
+  padding: 0;
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-item);
+  background: var(--color-bg-white);
+  box-shadow: var(--shadow-card-hover);
+  color: var(--color-text);
+}
+
+.init-tracker-header,
+.init-tracker-footer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+}
+
+.init-tracker-header {
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.init-tracker-footer {
+  border-top: 1px solid var(--color-border-light);
+}
+
+.init-round {
+  margin-right: auto;
+  font-family: var(--font-fantasy);
+  font-size: 1.1rem;
+  color: var(--color-text-heading);
+}
+
+.init-btn {
+  appearance: none;
+  font: inherit;
+  font-size: 0.85rem;
+  padding: 4px 10px;
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-item);
+  background: var(--color-bg-light);
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.init-btn:hover {
+  background: var(--color-bg);
+}
+
+.init-timer {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.init-timer img {
+  height: 1.1em;
+}
+
+.init-timer [data-timer-label] {
+  min-width: 3em;
+  text-align: center;
+}
+
+.init-close,
+.init-remove {
+  appearance: none;
+  border: none;
+  background: none;
+  padding: 0 4px;
+  font-size: 1.2rem;
+  line-height: 1;
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+
+.init-close:hover,
+.init-remove:hover {
+  color: var(--color-error);
+}
+
+.init-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.init-table th {
+  padding: 6px 8px;
+  font-size: 0.7rem;
+  font-weight: normal;
+  text-align: left;
+  color: var(--color-text-muted);
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.init-table td {
+  padding: 4px 8px;
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.init-row.active {
+  background: rgb(from var(--color-error) r g b / 0.08);
+  box-shadow: inset 3px 0 0 var(--color-error);
+}
+
+.init-table input {
+  font: inherit;
+  color: var(--color-text);
+  border: 1px solid transparent;
+  border-radius: var(--radius-code);
+  background: none;
+  padding: 2px 4px;
+  box-sizing: border-box;
+}
+
+.init-table input:hover,
+.init-table input:focus {
+  border-color: var(--color-border-light);
+  background: var(--color-bg-white);
+}
+
+.init-table input[type="number"] {
+  width: 3.5em;
+}
+
+.init-name {
+  width: 100%;
+}
+
+.init-name input {
+  width: calc(100% - 1.5em);
+  min-width: 6em;
+}
+
+.init-name a {
+  color: var(--color-text-muted);
+  text-decoration: none;
+}
+
+.init-name a:hover {
+  color: var(--color-text);
+}
+
+.init-hp {
+  white-space: nowrap;
+}
+
+.init-hpmax {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.init-empty {
+  text-align: center;
+  color: var(--color-text-muted);
+  padding: 16px;
+}
+
+.add-to-battle {
+  appearance: none;
+  font: inherit;
+  font-size: 0.9rem;
+  width: calc(100% - 32px);
+  margin: 0 16px 16px;
+  box-sizing: border-box;
+  padding: 8px;
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-item);
+  background: var(--color-bg-white);
+  color: var(--color-text);
+  box-shadow: var(--shadow-card);
+  cursor: pointer;
+}
+
+.add-to-battle:hover:not(:disabled) {
+  box-shadow: var(--shadow-card-hover);
+}
+
+.add-to-battle:disabled {
+  color: var(--color-text-muted);
+  cursor: default;
+}
+
+.creature-page .add-to-battle {
+  width: 100%;
+  margin: 16px 0 0;
+}
+
+@media (orientation: portrait) {
+  .init-tracker[popover] {
+    left: 0;
+    right: 0;
+    min-width: 0;
+    width: 100vw;
+    max-width: none;
+    border-left: none;
+    border-right: none;
+    border-radius: 0;
   }
 }
 

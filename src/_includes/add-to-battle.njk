@@ -1,0 +1,7 @@
+{% if combat %}
+<button type="button" class="add-to-battle"
+  data-name="{{ creatureName or title }}"
+  data-ac="{{ combat['КБ'].value }}"
+  data-hp="{{ combat['КЗ'].value }}"
+  data-url="{{ page.url | url }}">Добавить в бой</button>
+{% endif %}
