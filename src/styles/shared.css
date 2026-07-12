@@ -497,13 +497,13 @@ body.race-page {
   text-align: center;
 }
 
-.stat-block .stat-value {
+.stat-block .stat-mod {
   font-size: 1.4rem;
   font-weight: bold;
   color: var(--color-text-heading);
 }
 
-.stat-block .stat-mod {
+.stat-block .stat-roll {
   font-size: 0.85rem;
 }
 
