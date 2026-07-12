@@ -495,7 +495,7 @@ body.race-page {
   appearance: none;
   font: inherit;
   cursor: pointer;
-  width: min-content;
+  width: max-content;
 }
 
 .combat-block .stat {
