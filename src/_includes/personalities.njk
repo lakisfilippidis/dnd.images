@@ -5,7 +5,10 @@ breadcrumbSection: Личности
 breadcrumbSectionUrl: /Personalities/
 ---
 <div class="container">
-  <img class="portrait" src="{{ portrait }}" alt="Портрет">
+  <div class="sidebar">
+    <img class="portrait" src="{{ portrait }}" alt="Портрет">
+    {% include "stat-block.njk" %}
+  </div>
   <div class="content">
     {{ content | safe }}
   </div>

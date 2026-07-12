@@ -1,0 +1,12 @@
+{% if stats %}
+<div class="stat-block">
+  {% for name, value in stats %}
+  {% set mod = ((value - 10) / 2) | round(0, "floor") %}
+  <div class="stat">
+    <span class="stat-name">{{ name }}</span>
+    <span class="stat-value">{{ value }}</span>
+    <roll-dice class="stat-mod">1d20{% if mod >= 0 %}+{% endif %}{{ mod }}</roll-dice>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}

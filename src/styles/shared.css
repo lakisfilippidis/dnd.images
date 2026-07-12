@@ -44,7 +44,7 @@
   text-decoration-skip-ink: none;
   text-underline-offset: 0.2em;
   text-decoration-thickness: 1px;
-  text-decoration-color: rgb(from currentColor r g b / 0.6);
+  text-decoration-color: rgb(from currentColor r g b / 0.5);
 }
 
 *:hover,
@@ -450,6 +450,53 @@ body.race-page {
   border-radius: var(--radius-large);
 }
 
+.character-page .sidebar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.character-page .sidebar .portrait {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.stat-block {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  width: 100%;
+  padding: 0 16px 16px;
+  box-sizing: border-box;
+}
+
+.stat-block .stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 4px;
+  background: var(--color-bg-white);
+  border-radius: var(--radius-item);
+  box-shadow: var(--shadow-card);
+}
+
+.stat-block .stat-name {
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.stat-block .stat-value {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: var(--color-text-heading);
+}
+
+.stat-block .stat-mod {
+  font-size: 0.85rem;
+}
+
 .character-page .content,
 .race-page .content {
   margin-top: 16px;
@@ -464,6 +511,10 @@ body.race-page {
   .character-page .container,
   .race-page .container {
     flex-direction: column;
+  }
+
+  .character-page .sidebar {
+    width: 98vw;
   }
 
   .character-page .portrait,
@@ -483,6 +534,10 @@ body.race-page {
   .race-page .container {
     flex-direction: row;
     align-items: flex-start;
+  }
+
+  .character-page .sidebar {
+    width: 30vw;
   }
 
   .character-page .portrait,
