@@ -122,12 +122,14 @@ body {
 }
 
 /* ===== Floating dice roller ===== */
-/* The <roll-any-dice> FAB is position: fixed at bottom-right (from its own
-   shadow DOM). Lift it clear of the sticky bottom TOC bar so the two don't
-   overlap. Overriding the light-DOM element beats its :host default. */
+/* <roll-any-dice> is a plain in-flow element since the dice-roller package
+   dropped built-in corner pinning — the page fixes it to the bottom-right
+   itself, lifted clear of the sticky bottom TOC bar. */
 roll-any-dice {
-  bottom: calc(var(--height-footer) + 1.25rem) !important;
-  right: 1.25rem !important;
+  position: fixed;
+  bottom: calc(var(--height-footer) + 1.25rem);
+  right: 1.25rem;
+  z-index: 1000;
 }
 
 /* ===== Top Menu ===== */
