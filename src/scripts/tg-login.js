@@ -30,16 +30,20 @@ const STRINGS = {
 const PLANE_ICON = `<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21.7 3.1 2.9 10.4c-1 .4-1 1.4-.2 1.7l4.6 1.5 1.8 5.6c.2.7 1 .9 1.5.4l2.6-2.5 4.7 3.5c.6.4 1.4.1 1.6-.6l3-15.6c.2-1-.5-1.6-1.8-1.3ZM9.9 14.3l8.7-7.9c.3-.3-.1-.4-.5-.2L7.4 12.9l2.5 1.4Z"/></svg>`;
 
 const CSS = `
+  /* Хост и обе обёртки выравнивают контент по baseline: базовая линия
+     текста прорастает наружу, и в шапке (align-items: baseline) логин
+     встаёт в строку с пунктами меню. Картинки без своей базовой линии
+     (иконка, аватарка) опускаются чуть ниже неё трансформом. */
   :host {
     display: inline-flex;
-    align-items: center;
+    align-items: baseline;
     font-family: inherit;
   }
 
   button {
     appearance: none;
     display: inline-flex;
-    align-items: center;
+    align-items: baseline;
     gap: 0.4em;
     font: inherit;
     line-height: normal;
@@ -51,11 +55,11 @@ const CSS = `
   }
   button:hover { color: var(--tg-accent, #a00); }
   button:disabled { color: var(--tg-muted, #666); cursor: default; }
-  button svg { width: 1.1em; height: 1.1em; }
+  button svg { width: 1.1em; height: 1.1em; align-self: center; transform: translateY(0.1em); }
 
   .who {
     display: inline-flex;
-    align-items: center;
+    align-items: baseline;
     gap: 0.4em;
     color: var(--tg-fg, #1e1e1e);
   }
@@ -65,6 +69,8 @@ const CSS = `
     border-radius: 50%;
     object-fit: cover;
     border: 1px solid var(--tg-border, #ddd);
+    align-self: center;
+    transform: translateY(0.1em);
   }
   .initial {
     width: 1.5em;
@@ -76,6 +82,8 @@ const CSS = `
     align-items: center;
     justify-content: center;
     color: var(--tg-muted, #666);
+    align-self: center;
+    transform: translateY(0.1em);
   }
 
   .logout {

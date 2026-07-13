@@ -587,7 +587,6 @@ tg-login {
 
 .top-menu tg-login {
   margin-left: auto;
-  align-self: center;
   flex-shrink: 0;
 }
 
