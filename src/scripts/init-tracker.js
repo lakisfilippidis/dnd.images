@@ -66,7 +66,7 @@ function render() {
       const link = c.url ? `<a href="${esc(c.url)}" title="Открыть страницу">&#8599;</a>` : "";
       const max = c.hpMax != null ? `<span class="init-hpmax">/ ${c.hpMax}</span>` : "";
       return `<tr class="init-row${active}" data-id="${c.id}">
-        <td><input type="number" data-field="init" value="${numOrEmpty(c.init)}"></td>
+        <td class="init-cell"><input type="number" data-field="init" value="${numOrEmpty(c.init)}"><roll-dice compact class="init-roll">1d20</roll-dice></td>
         <td class="init-name"><input type="text" data-field="name" value="${esc(c.name)}">${link}</td>
         <td class="init-hp"><input type="number" data-field="hp" value="${numOrEmpty(c.hp)}">${max}</td>
         <td><input type="number" data-field="ac" value="${numOrEmpty(c.ac)}"></td>
@@ -74,6 +74,17 @@ function render() {
       </tr>`;
     })
     .join("");
+  // Слушатель на самом элементе: реролл в оверлее стреляет с уже
+  // отсоединённого узла (после перерисовки) и до делегата бы не дошёл
+  for (const el of tbody.querySelectorAll(".init-roll")) {
+    const id = el.closest("[data-id]").dataset.id;
+    el.addEventListener("roll", (e) => {
+      const c = state.combatants.find((x) => x.id === id);
+      if (!c) return;
+      c.init = e.detail.total;
+      save();
+    });
+  }
 }
 
 function addCombatant({ name, init = null, hp = null, hpMax = null, ac = null, url = null }) {

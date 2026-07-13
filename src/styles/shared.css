@@ -737,6 +737,15 @@ body.race-page {
   width: 3.5em;
 }
 
+.init-cell {
+  white-space: nowrap;
+}
+
+.init-cell .init-roll {
+  font-size: 0.8rem;
+  margin-inline-start: 4px;
+}
+
 .init-name {
   width: 100%;
 }
