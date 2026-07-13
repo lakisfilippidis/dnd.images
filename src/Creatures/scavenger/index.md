@@ -1,5 +1,5 @@
 ---
-title: "Шарпальщик"
+title: "Мусорщик"
 creatureName: "Мусорщик"
 creatureType: "Гуманоид / Человек (хаотичный нейтральный)"
 size: "medium"

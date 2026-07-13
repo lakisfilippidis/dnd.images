@@ -1,5 +1,5 @@
 ---
-title: "Бродячий пес"
+title: "Бродячий пёс"
 creatureName: "Бродячий пёс"
 creatureType: "Зверь"
 size: "medium"
