@@ -269,12 +269,12 @@ export function saveState(key, state) {
   return raw;
 }
 
-export function addCombatant(state, { name, init = null, hp = null, hpMax = null, ac = null, url = null }) {
+export function addCombatant(state, { name, init = null, initMod = null, hp = null, hpMax = null, ac = null, url = null }) {
   const base = (name || STRINGS.defaultName).replace(/ \d+$/, "");
   const taken = state.combatants.filter((c) => c.name.replace(/ \d+$/, "") === base).length;
   const finalName = taken ? `${base} ${taken + 1}` : name || STRINGS.defaultName;
   const id = Math.random().toString(36).slice(2, 8);
-  state.combatants.push({ id, name: finalName, init, hp, hpMax, ac, url });
+  state.combatants.push({ id, name: finalName, init, initMod, hp, hpMax, ac, url });
   return state.combatants[state.combatants.length - 1];
 }
 
@@ -472,8 +472,9 @@ export class InitiativeTracker extends HTMLElement {
         const active = c.id === this._state.activeId ? ' class="active"' : "";
         const link = c.url ? `<a href="${esc(c.url)}" title="${STRINGS.openPage}">&#8599;</a>` : "";
         const max = c.hpMax != null ? `<span class="hp-max">/ ${c.hpMax}</span>` : "";
+        const formula = c.initMod ? `1d20${c.initMod > 0 ? "+" : ""}${c.initMod}` : "1d20";
         return `<tr${active} data-id="${c.id}">
-          <td class="cell-init"><input type="number" data-field="init" value="${numOrEmpty(c.init)}"><roll-dice compact>1d20</roll-dice></td>
+          <td class="cell-init"><input type="number" data-field="init" value="${numOrEmpty(c.init)}"><roll-dice compact>${formula}</roll-dice></td>
           <td class="cell-name"><input type="text" data-field="name" value="${esc(c.name)}">${link}</td>
           <td class="cell-hp"><input type="number" data-field="hp" value="${numOrEmpty(c.hp)}">${max}</td>
           <td><input type="number" data-field="ac" value="${numOrEmpty(c.ac)}"></td>
@@ -583,8 +584,10 @@ export class AddToBattle extends HTMLElement {
 
   _add() {
     const hp = parseInt(this.getAttribute("hp"), 10) || null;
+    const mod = parseInt(this.getAttribute("init-mod"), 10);
     const data = {
       name: this.getAttribute("name"),
+      initMod: Number.isFinite(mod) ? mod : null,
       hp,
       hpMax: hp,
       ac: parseInt(this.getAttribute("ac"), 10) || null,
