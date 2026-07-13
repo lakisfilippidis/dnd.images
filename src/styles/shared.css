@@ -600,15 +600,19 @@ initiative-tracker {
   --it-panel-max-height: calc(100dvh - var(--height-header) - var(--height-footer) - 10rem);
 }
 
-add-to-battle {
+add-to-battle:not([compact]) {
   display: block;
   width: calc(100% - 32px);
   margin: 0 16px 16px;
 }
 
-.creature-page add-to-battle {
+.creature-page add-to-battle:not([compact]) {
   width: 100%;
   margin: 16px 0 0;
+}
+
+.home-section-item add-to-battle {
+  margin-left: auto;
 }
 
 .character-page .content,

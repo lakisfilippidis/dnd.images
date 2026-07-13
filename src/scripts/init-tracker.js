@@ -41,9 +41,10 @@ const STRINGS = {
 };
 
 // Icons from Sergey Chikin's free set (https://sergeychikin.ru/365/):
-// 170-weapon/weapon.svg and 190-science/stopwatch.svg.
+// 170-weapon/weapon.svg, 190-science/stopwatch.svg and 170-weapon/sword2.svg.
 const WEAPON_ICON = `<svg viewBox="0 0 150 190" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M120.12,145c-6.1,6.36-15.55-.75-13.75-7.35l-10.89-9.13-14,7-2.94-4.74,6.32-6.48-9.25-9.17-8.46,8.49,3.27,5.81C62.19,137.62,51.88,132,51.88,132L41.41,141.2l1.48,3c-9.23,9.08-21-3-12-11.89l2.9,1.33L43,123.06s-5.13-11.38,2.31-18.7L51,107.68l8.92-8.09L35.27,75.19l-1.7-15,15.11.62L74.84,86.06,99.5,63.7l17-2.7L114,76.72l-23.91,24,9.22,8.89,5.31-5.44,4.88,3-6.67,12.69,10,11.91C119.65,130.34,125.77,139.11,120.12,145ZM107.63,76.18l3.21-9.49L101,69.47S60.59,108,56,112.19s2.34,11.87,7.53,6.91S107.63,76.18,107.63,76.18Z"/></svg>`;
 const STOPWATCH_ICON = `<svg viewBox="0 0 150 190" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M81.61,71.32,72.29,71V68.11l-4-.83V58.56H86v9.22l-4,.5ZM38.12,78.41l9.76-9,5.53,7.5-8.78,7.79ZM76.66,74.5c48.53,0,48.22,74.14.83,74.14C25.6,148.64,28,74.5,76.66,74.5Zm.63,68.32c39.95,0,40.21-62.5-.7-62.5C35.52,80.32,33.54,142.82,77.29,142.82ZM93.87,93.18,96.32,95s-13.83,18.93-15.15,20.57c-5.64,7-14.7-2.14-7.85-7.78C74.6,106.73,93.87,93.18,93.87,93.18Zm-44,15.6,9.05.46v6l-8.59.61ZM81,128.73l.46,9-7-.46.61-8.58Zm21.37-13.81-8.58-.61v-6l9-.46ZM74.11,95l-.61-8.58,7-.46-.46,9Z"/></svg>`;
+const SWORD_ICON = `<svg viewBox="30 40 90 125" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M82.8,129.77,81,147.27l2.84.9c.31,11.64-16.64,12.08-16.95.26l3-1-2-17.22L51.1,124.44l-.37-5.09,48.54-.29-.93,5.75ZM75.86,59l-2.93-.38-.73,55.61-10.26.45V99l3.89-5.78-3.89-3.6V60L74.39,46.6,87.06,59.39l.15,7.51-4.28,3.77L87.38,75l.4,19.9L83.37,102,88,108.15l.11,5.37-10.1.45Z"/></svg>`;
 
 // Offsets --it-top / --it-right are the vertical / horizontal distance from
 // the corner chosen by the `position` attribute.
@@ -237,6 +238,28 @@ const ADD_CSS = `
   button.done slot { display: none; }
   .feedback { display: none; }
   button.done .feedback { display: inline; }
+  .icon { display: none; }
+
+  /* compact: только иконка-меч, встраивается в строку */
+  :host([compact]) { display: inline-flex; vertical-align: middle; }
+  :host([compact]) button {
+    width: auto;
+    padding: 2px;
+    border: none;
+    background: none;
+    box-shadow: none;
+    color: var(--it-muted, #666);
+    line-height: 0;
+  }
+  :host([compact]) button:hover:not(:disabled) {
+    box-shadow: none;
+    color: var(--it-accent, #a00);
+  }
+  :host([compact]) slot,
+  :host([compact]) .feedback { display: none; }
+  :host([compact]) .icon { display: inline-block; }
+  :host([compact]) .icon svg { width: 1.4em; height: 1.4em; display: block; }
+  :host([compact]) button.done { color: var(--it-accent, #a00); }
 `;
 
 // ---------------------------------------------------------------------------
@@ -389,11 +412,13 @@ export class InitiativeTracker extends HTMLElement {
         this._dirty = false;
         this._render();
       });
-      this._panel.addEventListener("toggle", (e) => {
+      // beforetoggle, а не toggle: toggle приходит асинхронно, и рендер,
+      // случившийся до него, увидел бы устаревший state.open и спрятал панель
+      this._panel.addEventListener("beforetoggle", (e) => {
         const open = e.newState === "open";
         if (open === this._state.open) return;
         this._state.open = open;
-        this._save();
+        this._persist();
       });
 
       this._timerId = null;
@@ -401,6 +426,9 @@ export class InitiativeTracker extends HTMLElement {
         if (e.key === this.storageKey) this._refreshFromStorage();
       };
       this._onKeydown = (e) => {
+        // defaultPrevented: Esc уже обработан кем-то выше (например, оверлеем
+        // дайсов, который закрывает себя capture-слушателем) — панель не трогаем
+        if (e.defaultPrevented) return;
         if (e.key === "Escape" && this._panel.matches(":popover-open")) this._panel.hidePopover();
       };
       this._refresh = () => this._refreshFromStorage();
@@ -429,8 +457,12 @@ export class InitiativeTracker extends HTMLElement {
     this._save();
   }
 
-  _save() {
+  _persist() {
     this._lastRaw = saveState(this.storageKey, this._state) ?? JSON.stringify(this._state);
+  }
+
+  _save() {
+    this._persist();
     this._render();
   }
 
@@ -575,10 +607,19 @@ export class AddToBattle extends HTMLElement {
     style.textContent = ADD_CSS;
     this._btn = el("button");
     this._btn.type = "button";
+    this._btn.setAttribute("aria-label", `${STRINGS.addToBattle}: ${this.getAttribute("name") ?? ""}`);
+    if (this.hasAttribute("compact")) this._btn.title = STRINGS.addToBattle;
+    const icon = el("span", "icon");
+    icon.innerHTML = SWORD_ICON;
     const slot = document.createElement("slot");
     slot.textContent = STRINGS.addToBattle;
-    this._btn.append(slot, el("span", "feedback", STRINGS.added));
-    this._btn.addEventListener("click", () => this._add());
+    this._btn.append(icon, slot, el("span", "feedback", STRINGS.added));
+    this._btn.addEventListener("click", (e) => {
+      // кнопка может лежать внутри ссылки (карточки на главной) — не навигировать
+      e.preventDefault();
+      e.stopPropagation();
+      this._add();
+    });
     this._root.append(style, this._btn);
   }
 

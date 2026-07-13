@@ -52,6 +52,14 @@ sections:
             {% endif %}
           {% endif %}
           <span class="home-section-item-title">{{ item.data.title }}</span>
+          {% if item.data.combat %}
+          <add-to-battle compact
+            name="{{ item.data.creatureName | default: item.data.title }}"
+            ac="{{ item.data.combat['КБ'].value }}"
+            hp="{{ item.data.combat['КЗ'].value }}"
+            init-mod="{{ item.data.combat['Инициатива'].value }}"
+            url="{{ item.url | url }}"></add-to-battle>
+          {% endif %}
         {% endif %}
       </a>
       {% endfor %}
