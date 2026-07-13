@@ -2,6 +2,7 @@
 title: "Маниот ополченец"
 creatureName: "Маниот ополченец"
 creatureType: "Гуманоид / Человек-маниот (нейтральный)"
+size: "medium"
 portrait: "creature_image.jpg"
 stats:
   Сила: 15

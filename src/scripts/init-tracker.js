@@ -4,7 +4,8 @@
 // Usage:
 //   <script type="module" src="init-tracker.js"></script>
 //   <initiative-tracker timer-label="30 сек"></initiative-tracker>
-//   <add-to-battle name="Волк" ac="13" hp="11" url="/wolf/">В бой</add-to-battle>
+//   <add-to-battle name="Волк" ac="13" hp="11" url="/wolf/"
+//     avatar="/wolf/portrait.jpg" size="medium">В бой</add-to-battle>
 //
 // The tracker is a fixed corner button (attribute `position`, top-right by
 // default) opening a manual popover with the combat table. State lives in
@@ -190,7 +191,16 @@ const TRACKER_CSS = `
   roll-dice:not(:defined) { display: none; }
 
   .cell-name { width: 100%; }
-  .cell-name input { width: calc(100% - 1.5em); min-width: 6em; }
+  .name-wrap { display: flex; align-items: center; gap: 6px; }
+  .avatar {
+    flex: none;
+    width: 1.75em;
+    height: 1.75em;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid var(--it-border, #ddd);
+  }
+  .cell-name input { flex: 1 1 auto; width: 100%; min-width: 6em; }
   .cell-name a { color: var(--it-muted, #666); text-decoration: none; }
   .cell-name a:hover { color: var(--it-fg, #1e1e1e); }
 
@@ -292,12 +302,12 @@ export function saveState(key, state) {
   return raw;
 }
 
-export function addCombatant(state, { name, init = null, initMod = null, hp = null, hpMax = null, ac = null, url = null }) {
+export function addCombatant(state, { name, init = null, initMod = null, hp = null, hpMax = null, ac = null, url = null, avatar = null, size = null }) {
   const base = (name || STRINGS.defaultName).replace(/ \d+$/, "");
   const taken = state.combatants.filter((c) => c.name.replace(/ \d+$/, "") === base).length;
   const finalName = taken ? `${base} ${taken + 1}` : name || STRINGS.defaultName;
   const id = Math.random().toString(36).slice(2, 8);
-  state.combatants.push({ id, name: finalName, init, initMod, hp, hpMax, ac, url });
+  state.combatants.push({ id, name: finalName, init, initMod, hp, hpMax, ac, url, avatar, size });
   return state.combatants[state.combatants.length - 1];
 }
 
@@ -451,7 +461,7 @@ export class InitiativeTracker extends HTMLElement {
     this._stopTimer();
   }
 
-  // Public API: add a combatant ({name, init, hp, hpMax, ac, url}).
+  // Public API: add a combatant ({name, init, hp, hpMax, ac, url, avatar, size}).
   add(data) {
     addCombatant(this._state, data);
     this._save();
@@ -502,12 +512,13 @@ export class InitiativeTracker extends HTMLElement {
     this._tbody.innerHTML = this._state.combatants
       .map((c) => {
         const active = c.id === this._state.activeId ? ' class="active"' : "";
+        const avatar = c.avatar ? `<img class="avatar" src="${esc(c.avatar)}" alt="" loading="lazy">` : "";
         const link = c.url ? `<a href="${esc(c.url)}" title="${STRINGS.openPage}">&#8599;</a>` : "";
         const max = c.hpMax != null ? `<span class="hp-max">/ ${c.hpMax}</span>` : "";
         const formula = c.initMod ? `1d20${c.initMod > 0 ? "+" : ""}${c.initMod}` : "1d20";
         return `<tr${active} data-id="${c.id}">
           <td class="cell-init"><input type="number" data-field="init" value="${numOrEmpty(c.init)}"><roll-dice compact>${formula}</roll-dice></td>
-          <td class="cell-name"><input type="text" data-field="name" value="${esc(c.name)}">${link}</td>
+          <td class="cell-name"><span class="name-wrap">${avatar}<input type="text" data-field="name" value="${esc(c.name)}">${link}</span></td>
           <td class="cell-hp"><input type="number" data-field="hp" value="${numOrEmpty(c.hp)}">${max}</td>
           <td><input type="number" data-field="ac" value="${numOrEmpty(c.ac)}"></td>
           <td><button type="button" class="remove" data-action="remove" aria-label="${STRINGS.remove}">&times;</button></td>
@@ -633,6 +644,9 @@ export class AddToBattle extends HTMLElement {
       hpMax: hp,
       ac: parseInt(this.getAttribute("ac"), 10) || null,
       url: this.getAttribute("url") ?? null,
+      // шаблоны рендерят avatar="" при отсутствии портрета — пустую строку не храним
+      avatar: this.getAttribute("avatar") || null,
+      size: this.getAttribute("size") || null,
     };
     const tracker = document.querySelector("initiative-tracker");
     if (tracker && typeof tracker.add === "function") {

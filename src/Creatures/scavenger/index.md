@@ -2,6 +2,7 @@
 title: "Шарпальщик"
 creatureName: "Мусорщик"
 creatureType: "Гуманоид / Человек (хаотичный нейтральный)"
+size: "medium"
 portrait: "creature_image.jpg"
 stats:
   Сила: 10

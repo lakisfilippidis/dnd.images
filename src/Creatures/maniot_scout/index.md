@@ -2,6 +2,7 @@
 title: "Маниот разведчик"
 creatureName: "Маниот разведчик"
 creatureType: "Гуманоид / Человек-маниот (нейтральный)"
+size: "medium"
 portrait: "creature_image.jpg"
 stats:
   Сила: 10

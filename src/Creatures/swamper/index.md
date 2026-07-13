@@ -2,6 +2,7 @@
 title: "Трясинник"
 creatureName: "Трясинник"
 creatureType: "Монстр / Зверь"
+size: "small"
 portrait: "creature_image.jpg"
 stats:
   Сила: 12

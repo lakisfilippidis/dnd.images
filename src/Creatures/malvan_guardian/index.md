@@ -2,6 +2,7 @@
 title: "Малван-гвардеец"
 creatureName: "Малван-гвардеец"
 creatureType: "Гуманоид / Человек-южанин (нейтральный)"
+size: "medium"
 portrait: "creature_image.jpg"
 stats:
   Сила: 16

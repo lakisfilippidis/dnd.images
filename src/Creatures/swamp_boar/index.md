@@ -2,6 +2,7 @@
 title: "Дикий кабан"
 creatureName: "Дикий кабан"
 creatureType: "Зверь"
+size: "medium"
 portrait: "creature_image.jpg"
 stats:
   Сила: 16

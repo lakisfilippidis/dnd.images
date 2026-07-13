@@ -2,6 +2,7 @@
 title: "Бурый медведь"
 creatureName: "Бурый медведь"
 creatureType: "Зверь / Хищник"
+size: "large"
 portrait: "creature_image.jpg"
 stats:
   Сила: 19

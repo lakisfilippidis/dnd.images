@@ -2,6 +2,7 @@
 title: "Шкуролюд воитель"
 creatureName: "Шкуролюд воитель"
 creatureType: "Гуманоид / Человек-северянин (нейтральный)"
+size: "medium"
 portrait: "creature_image.jpg"
 stats:
   Сила: 15

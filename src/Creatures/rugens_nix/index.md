@@ -2,6 +2,7 @@
 title: "Ревущий в снегах (Rugens Nix)"
 creatureName: "Ревущий в снегах (Rugens Nix)"
 creatureType: "Монстр / Зверь"
+size: "huge"
 portrait: "creature_image.jpg"
 stats:
   Сила: 20

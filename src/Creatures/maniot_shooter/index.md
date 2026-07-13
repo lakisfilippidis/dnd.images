@@ -2,6 +2,7 @@
 title: "Маниот стрелок"
 creatureName: "Маниот стрелок"
 creatureType: "Гуманоид / Человек-маниот (нейтральный)"
+size: "medium"
 portrait: "creature_image.jpg"
 stats:
   Сила: 12

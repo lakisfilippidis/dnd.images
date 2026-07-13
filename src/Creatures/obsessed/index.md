@@ -2,6 +2,7 @@
 title: "Одержимая"
 creatureName: "Одержимая"
 creatureType: "Гуманоид (человек), хаотично-злая"
+size: "medium"
 gallery:
   - "creature_image1.jpg"
   - "creature_image2.jpg"

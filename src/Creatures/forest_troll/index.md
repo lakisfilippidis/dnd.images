@@ -2,6 +2,7 @@
 title: "Болотный тролль (Trollus Paludis)"
 creatureName: "Болотный тролль (Trollus Paludis)"
 creatureType: "Монстр"
+size: "large"
 portrait: "creature_image.jpg"
 stats:
   Сила: 22

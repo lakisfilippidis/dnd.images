@@ -4,5 +4,7 @@
   ac="{{ combat['КБ'].value }}"
   hp="{{ combat['КЗ'].value }}"
   init-mod="{{ combat['Инициатива'].value }}"
+  avatar="{% if portrait %}{{ page.url | url }}{{ portrait }}{% elif gallery %}{{ page.url | url }}{{ gallery | first }}{% endif %}"
+  size="{{ size or 'medium' }}"
   url="{{ page.url | url }}">Добавить в бой</add-to-battle>
 {% endif %}

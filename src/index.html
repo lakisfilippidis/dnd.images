@@ -58,6 +58,8 @@ sections:
             ac="{{ item.data.combat['КБ'].value }}"
             hp="{{ item.data.combat['КЗ'].value }}"
             init-mod="{{ item.data.combat['Инициатива'].value }}"
+            avatar="{% if item.data.portrait %}{{ item.url | url }}{{ item.data.portrait }}{% elsif item.data.gallery %}{{ item.url | url }}{{ item.data.gallery | first }}{% endif %}"
+            size="{{ item.data.size | default: 'medium' }}"
             url="{{ item.url | url }}"></add-to-battle>
           {% endif %}
         {% endif %}
