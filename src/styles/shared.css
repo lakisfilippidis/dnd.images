@@ -577,6 +577,20 @@ body.race-page {
   }
 }
 
+/* ===== Telegram Login (shadow DOM — тема через --tg-*) ===== */
+tg-login {
+  --tg-fg: var(--color-text);
+  --tg-muted: var(--color-text-muted);
+  --tg-accent: var(--color-error);
+  --tg-border: var(--color-border-light);
+}
+
+.top-menu tg-login {
+  margin-left: auto;
+  align-self: center;
+  flex-shrink: 0;
+}
+
 /* ===== Initiative Tracker (shadow DOM — тема через --it-* и layout хоста) ===== */
 initiative-tracker,
 add-to-battle {

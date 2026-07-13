@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="{{ '/styles/shared.css' | url }}">
     <script type="module" src="https://ramil-k.github.io/dice-roller/roll-dice.js"></script>
     <script type="module" src="{{ '/scripts/init-tracker.js' | url }}"></script>
+    <script type="module" src="{{ '/scripts/tg-login.js' | url }}"></script>
     {% if bodyClass == "map-page" %}
     <script type="module" src="{{ '/scripts/map-canvas.js' | url }}"></script>
     {% endif %}
@@ -25,6 +26,7 @@
       <a href="{{ '/Maps/' | url }}">Карты</a>
       <a href="{{ '/Glossary/' | url }}">Глоссарий</a>
       <a href="{{ '/Rules/' | url }}">Правила</a>
+      <tg-login bot-id="8995479777"></tg-login>
     </nav>
     <div class="content-wrapper">
       {% if breadcrumbSection %}
