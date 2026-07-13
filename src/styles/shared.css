@@ -502,9 +502,13 @@ body.race-page {
   grid-template:
     "icon name"
     "icon value" / max-content max-content;
-  column-gap: 8px;
+  column-gap: 0;
   place-items: center;
   padding: 8px 10px;
+}
+
+.combat-block div.stat {
+  padding-inline-start: 0;
 }
 
 .combat-block .stat-icon {

@@ -16,14 +16,15 @@ npm run build    # builds to _site/
 
 ## Architecture
 
-- **Build tool:** Eleventy v3 with Liquid templates (HTML files) and Nunjucks layouts
-- **Source directory:** `src/` — all content lives here
-- **Output directory:** `_site/` — generated on build, gitignored
-- **Layouts:** `src/_includes/base.njk` (base HTML wrapper), `src/_includes/list.njk` (section index pages)
-- **Content sections:** Characters, Classes, Creatures, Maps — each in `src/<Section>/`
-- **Directory data files:** `src/<Section>/<Section>.json` sets default layout, tags, and bodyClass for all pages in that section
-- **Collections:** Eleventy collections (`characters`, `classes`, `creatures`) replace the old `list.json` + JS fetch pattern. Sorting is done in `eleventy.config.js`
-- **Section index pages:** Use `list.njk` layout with `collectionTag` front matter to render sorted links at build time
-- **Content pages:** HTML files with YAML front matter (title). Body content is the original HTML, wrapped by `base.njk` layout
-- **Styling:** `src/styles/shared.css` — fantasy theme using "Uncial Antiqua" font, parchment color palette, responsive layout with CSS Grid/Flexbox
-- **Deployment:** GitHub Actions workflow (`.github/workflows/deploy.yml`) builds and deploys to GitHub Pages on push to main
+Start from `eleventy.config.js`: it defines all collections (one per content section, sorted with `localeCompare(..., "ru")`), passthrough copies, and the `/dnd.images/` pathPrefix (in `.njk` always pass internal URLs through `| url`; content pages use relative links).
+
+- **Source/output:** `src/` → `_site/` (gitignored)
+- **Content sections:** one folder per section under `src/` (Characters, Personalities, Races, Classes, Creatures, Maps). Each has a directory data file `src/<Section>/<Section>.json` (layout, tags, etc.) and an index page using the `list.njk` layout with `collectionTag` front matter
+- **Standalone pages:** `src/Glossary/`, `src/Rules/` — self-contained front matter, excluded from collections
+- **Layouts:** see `src/_includes/` — `base.njk` is the HTML wrapper (top nav, breadcrumbs, auto-TOC built from h2/h3, initiative tracker shell); section layouts (`character.njk`, `personalities.njk`, `creature.njk`, `race.njk`) chain to it
+- **Stat components:** character/personality/creature pages keep ability scores and combat values in front matter (`stats:`, `combat:` — see any `src/Characters/*/index.md` for the format), rendered by `src/_includes/stat-block.njk` and `src/_includes/combat-block.njk` (modifiers are computed in the template; combat notes render as popovers)
+- **Initiative tracker:** `src/scripts/init-tracker.js` — floating button + popover in `base.njk`, state in localStorage (cross-tab sync), fed by `src/_includes/add-to-battle.njk` buttons
+- **Icons:** `src/icons/` — SVGs from Sergey Chikin's free set (https://sergeychikin.ru/365/, download as `https://sergeychikin.ru/365/<category>/<name>.svg`)
+- **Dice widgets:** `<roll-dice>`/`<roll-any-dice>` custom elements loaded remotely in `base.njk`
+- **Styling:** `src/styles/shared.css` — single stylesheet; theme colors/fonts/shadows are CSS variables in `:root`, use them instead of hardcoded values
+- **Deployment:** `.github/workflows/deploy.yml` — builds and deploys to GitHub Pages on push to main

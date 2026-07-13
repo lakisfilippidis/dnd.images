@@ -1,17 +1,18 @@
 {% if combat %}
 {% set combatIcons = { "КБ": "plate-armour", "КЗ": "heart", "Инициатива": "lightning", "Скорость": "valenki" } %}
+{% set combatLabels = { "Инициатива": "Иниц." } %}
 <div class="combat-block">
   {% for name, item in combat %}
   {% if item.note %}
   <button type="button" class="stat" popovertarget="combat-pop-{{ loop.index }}">
     <img class="stat-icon" src="{{ ('/icons/' + combatIcons[name] + '.svg') | url }}" alt="">
-    <span class="stat-name">{{ name }}</span>
+    <span class="stat-name">{{ combatLabels[name] or name }}</span>
     <span class="stat-mod">{{ item.value }}</span>
   </button>
   {% else %}
   <div class="stat">
     <img class="stat-icon" src="{{ ('/icons/' + combatIcons[name] + '.svg') | url }}" alt="">
-    <span class="stat-name">{{ name }}</span>
+    <span class="stat-name">{{ combatLabels[name] or name }}</span>
     <span class="stat-mod">{{ item.value }}</span>
   </div>
   {% endif %}
