@@ -23,7 +23,7 @@ Start from `eleventy.config.js`: it defines all collections (one per content sec
 - **Standalone pages:** `src/Glossary/`, `src/Rules/` — self-contained front matter, excluded from collections
 - **Layouts:** see `src/_includes/` — `base.njk` is the HTML wrapper (top nav, breadcrumbs, auto-TOC built from h2/h3, initiative tracker shell); section layouts (`character.njk`, `personalities.njk`, `creature.njk`, `race.njk`) chain to it
 - **Stat components:** character/personality/creature pages keep ability scores and combat values in front matter (`stats:`, `combat:` — see any `src/Characters/*/index.md` for the format), rendered by `src/_includes/stat-block.njk` and `src/_includes/combat-block.njk` (modifiers are computed in the template; combat notes render as popovers)
-- **Initiative tracker:** `src/scripts/init-tracker.js` — floating button + popover in `base.njk`, state in localStorage (cross-tab sync), fed by `src/_includes/add-to-battle.njk` buttons
+- **Initiative tracker:** `src/scripts/init-tracker.js` — self-contained web components `<initiative-tracker>` and `<add-to-battle>` (shadow DOM, dice-roller project conventions, planned for extraction to the neighboring dice-roller repo). State in localStorage with cross-tab sync. Themed from `shared.css` via `--it-*` variables; usage in `base.njk` and `src/_includes/add-to-battle.njk`
 - **Icons:** `src/icons/` — SVGs from Sergey Chikin's free set (https://sergeychikin.ru/365/, download as `https://sergeychikin.ru/365/<category>/<name>.svg`)
 - **Dice widgets:** `<roll-dice>`/`<roll-any-dice>` custom elements loaded remotely in `base.njk`
 - **Styling:** `src/styles/shared.css` — single stylesheet; theme colors/fonts/shadows are CSS variables in `:root`, use them instead of hardcoded values

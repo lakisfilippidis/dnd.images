@@ -42,31 +42,7 @@
     </div>
     <nav id="page-toc"></nav>
     <roll-any-dice></roll-any-dice>
-    <button type="button" class="battle-fab" popovertarget="init-tracker" aria-label="Трекер инициативы">
-      <img src="{{ '/icons/weapon.svg' | url }}" alt="">
-    </button>
-    <div id="init-tracker" popover="manual" class="init-tracker">
-      <header class="init-tracker-header">
-        <span class="init-round">Раунд <b data-round>1</b></span>
-        <button type="button" class="init-btn init-timer" data-action="timer">
-          <img src="{{ '/icons/stopwatch.svg' | url }}" alt="">
-          <span data-timer-label>заебал</span>
-        </button>
-        <button type="button" class="init-btn" data-action="next">Следующий ход</button>
-        <button type="button" class="init-close" popovertarget="init-tracker" popovertargetaction="hide" aria-label="Закрыть">&times;</button>
-      </header>
-      <table class="init-table">
-        <thead>
-          <tr><th>Иниц.</th><th>Имя</th><th>Хиты</th><th>КБ</th><th></th></tr>
-        </thead>
-        <tbody data-rows></tbody>
-      </table>
-      <footer class="init-tracker-footer">
-        <button type="button" class="init-btn" data-action="add">Добавить</button>
-        <button type="button" class="init-btn" data-action="sort">Сортировать</button>
-        <button type="button" class="init-btn" data-action="clear">Очистить</button>
-      </footer>
-    </div>
+    <initiative-tracker timer-label="заебал"></initiative-tracker>
     <script>
       (function() {
         var body = document.body;
