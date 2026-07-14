@@ -95,4 +95,4 @@ combat:
 
 - **[Быстрая поддержка:](../../Classes/artist/#fast-support)** можно подбодрить союзника бонусным действием - восстанавливает 1d4 КЗ
 
-- **[Менестрель (Minstrel) 3 уровень](../../Classes/artist/#archetypes-art)**
+- **[Шут (Jester) 3 уровень](../../Classes/artist/#archetypes-art)**
