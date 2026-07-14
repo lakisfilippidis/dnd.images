@@ -9,7 +9,10 @@
     {% endif %}
     <link rel="stylesheet" href="{{ '/styles/shared.css' | url }}">
     <script type="module" src="https://ramil-k.github.io/dice-roller/roll-dice.js"></script>
-    <script type="module" src="{{ '/scripts/init-tracker.js' | url }}"></script>
+    <script type="module" src="https://ramil-k.github.io/dice-roller/battle-mat.js"></script>
+    <script type="module" src="https://ramil-k.github.io/dice-roller/initiative-tracker.js"></script>
+    {# add-to-battle.js импортирует battle-config.js — там же русские прилагательные #}
+    <script type="module" src="{{ '/scripts/battle-config.js' | url }}"></script>
     <script type="module" src="{{ '/scripts/tg-login.js' | url }}"></script>
     {% if bodyClass == "map-page" %}
     <script type="module" src="{{ '/scripts/map-canvas.js' | url }}"></script>
@@ -44,7 +47,16 @@
     </div>
     <nav id="page-toc"></nav>
     <roll-any-dice></roll-any-dice>
-    <initiative-tracker timer-label="заебал"></initiative-tracker>
+    <battle-mat></battle-mat>
+    <initiative-tracker
+      label-title="Инициатива"
+      label-round="Раунд"
+      label-next="Следующий ход"
+      label-reset="Сброс"
+      label-empty="На карте нет токенов"
+      label-hp="ХП"
+      label-ac="КБ"
+      label-init="Ин."></initiative-tracker>
     <script>
       (function() {
         var body = document.body;

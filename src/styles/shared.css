@@ -592,27 +592,39 @@ tg-login {
   flex-shrink: 0;
 }
 
-/* ===== Initiative Tracker (shadow DOM — тема через --it-* и layout хоста) ===== */
-initiative-tracker,
-add-to-battle {
-  --it-bg: var(--color-bg-white);
-  --it-fg: var(--color-text);
-  --it-muted: var(--color-text-muted);
-  --it-heading-fg: var(--color-text-heading);
-  --it-heading-font: var(--font-fantasy);
-  --it-border: var(--color-border-light);
-  --it-accent: var(--color-error);
-  --it-btn-bg: var(--color-bg-light);
-  --it-btn-hover-bg: var(--color-bg);
-  --it-radius: var(--radius-item);
-  --it-radius-small: var(--radius-code);
-  --it-shadow: var(--shadow-card);
-  --it-shadow-strong: var(--shadow-card-hover);
+/* ===== Боевые виджеты dice-roller (shadow DOM — тема через --bm-*) ===== */
+/* Трекер инициативы: прибит под шапкой справа, панель открывается вниз и
+   прижата к правому краю кнопки. */
+initiative-tracker {
+  --bm-trk-bg: var(--color-bg-white);
+  --bm-trk-fg: var(--color-text);
+  --bm-trk-muted: var(--color-text-muted);
+  --bm-trk-accent: var(--color-error);
+  --bm-trk-edge: var(--color-border-light);
+  --bm-trk-btn-bg: var(--color-bg-light);
+  --bm-trk-align: flex-end;
+  position: fixed;
+  top: calc(var(--height-header) + 0.75rem);
+  right: 1.25rem;
+  z-index: 1001;
 }
 
-initiative-tracker {
-  --it-top: calc(var(--height-header) + 0.75rem);
-  --it-panel-max-height: calc(100dvh - var(--height-header) - var(--height-footer) - 10rem);
+/* Кнопка баттл-мата: колонкой над кубиком в правом нижнем углу. */
+battle-mat {
+  --bm-fab-bg: var(--color-error);
+  position: fixed;
+  right: 1.25rem;
+  bottom: calc(var(--height-footer) + 1.25rem + 3.5rem + 0.75rem);
+  z-index: 1000;
+}
+
+add-to-battle {
+  --bm-atb-bg: var(--color-bg-white);
+  --bm-atb-fg: var(--color-text);
+  --bm-atb-muted: var(--color-text-muted);
+  --bm-atb-accent: var(--color-error);
+  --bm-atb-edge: var(--color-border-light);
+  --bm-atb-radius: var(--radius-item);
 }
 
 add-to-battle:not([compact]) {

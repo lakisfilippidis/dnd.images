@@ -55,12 +55,12 @@ sections:
           {% if item.data.combat %}
           <add-to-battle compact
             name="{{ item.data.creatureName | default: item.data.title }}"
+            kind="{% if item.data.tags contains 'character' %}player{% else %}monster{% endif %}"
             ac="{{ item.data.combat['КБ'].value }}"
             hp="{{ item.data.combat['КЗ'].value }}"
             init-mod="{{ item.data.combat['Инициатива'].value }}"
-            avatar="{% if item.data.portrait %}{{ item.url | url }}{{ item.data.portrait }}{% elsif item.data.gallery %}{{ item.url | url }}{{ item.data.gallery | first }}{% endif %}"
-            size="{{ item.data.size | default: 'medium' }}"
-            url="{{ item.url | url }}"></add-to-battle>
+            image="{% if item.data.portrait %}{{ item.url | url }}{{ item.data.portrait }}{% elsif item.data.gallery %}{{ item.url | url }}{{ item.data.gallery | first }}{% endif %}"
+            size="{{ item.data.size | default: 'medium' }}"></add-to-battle>
           {% endif %}
         {% endif %}
       </a>
