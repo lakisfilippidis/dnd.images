@@ -33,9 +33,9 @@ combat:
 
 **Раса:** Человек
 
-**Уровень:** 2
+**Уровень:** 3
 
-**Опыт:** 580
+**Опыт:** 900
 
 **Спасброски:** Интеллект, Мудрость
 
@@ -94,6 +94,8 @@ combat:
 - **[Молитва (Prayer)](../../Classes/priest/#prayer)**
 
 - **[Присутствие (Presence)](../../Classes/priest/#presence)**
+
+- **[Домен воздаяния (Domain of Retribution)](../../Classes/priest/#domain-table)**
 
 ## Биография
 
