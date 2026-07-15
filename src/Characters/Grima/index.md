@@ -1,6 +1,6 @@
 ---
 title: "Грима"
-portrait: character_image.png
+portrait: character_image.jpg
 stats:
   Сила: 8
   Ловкость: 17
