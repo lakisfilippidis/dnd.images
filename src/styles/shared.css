@@ -416,6 +416,7 @@ body.home-page {
 .home-section-map-preview {
   display: block;
   width: 100%;
+  height: auto;
   aspect-ratio: 1 / 1;
   object-fit: cover;
   border-radius: var(--radius-item);
@@ -447,6 +448,7 @@ body.race-page {
 
 .character-page .portrait,
 .race-page .portrait {
+  height: auto;
   object-fit: cover;
   padding: 16px;
   border-radius: var(--radius-large);
@@ -849,6 +851,7 @@ body.creature-page {
 
 .portrait-container > img {
   max-width: 100%;
+  height: auto;
   border-radius: var(--radius-card);
   box-shadow: var(--shadow-portrait);
 }
