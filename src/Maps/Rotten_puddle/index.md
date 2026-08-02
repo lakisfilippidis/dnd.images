@@ -7,7 +7,7 @@ needsFont: true
 <div class="container">
             <div class="map-container">
                 <map-canvas>
-                    <img src="map.jpg" alt="Карта">
+                    <img eleventy:ignore src="map.jpg" alt="Карта">
                 </map-canvas>
                     <a href="#dilapidated-chapel" class="map-label" style="top: 35%; left: 15%;">Ветхая часовня</a>
                     <a href="#devastated-logging-site" class="map-label" style="top: 15%; right: 7%;">Разоренная лесорубка</a>

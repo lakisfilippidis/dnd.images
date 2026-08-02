@@ -5,7 +5,7 @@ breadcrumbSection: Расы
 breadcrumbSectionUrl: /Races/
 ---
 <div class="container">
-  <img class="portrait" src="{{ portrait }}" alt="Портрет">
+  <img class="portrait" eleventy:widths="800,1200" sizes="(orientation: portrait) 98vw, 30vw" src="{{ portrait }}" alt="Портрет">
   <div class="content">
     {{ content | safe }}
   </div>

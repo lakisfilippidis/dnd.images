@@ -5,13 +5,13 @@
   {% for name, item in combat %}
   {% if item.note %}
   <button type="button" class="stat" popovertarget="combat-pop-{{ loop.index }}">
-    <img class="stat-icon" src="{{ ('/icons/' + combatIcons[name] + '.svg') | url }}" alt="">
+    <img class="stat-icon" eleventy:ignore src="{{ ('/icons/' + combatIcons[name] + '.svg') | url }}" alt="">
     <span class="stat-name">{{ combatLabels[name] or name }}</span>
     <span class="stat-mod">{{ item.value }}</span>
   </button>
   {% else %}
   <div class="stat">
-    <img class="stat-icon" src="{{ ('/icons/' + combatIcons[name] + '.svg') | url }}" alt="">
+    <img class="stat-icon" eleventy:ignore src="{{ ('/icons/' + combatIcons[name] + '.svg') | url }}" alt="">
     <span class="stat-name">{{ combatLabels[name] or name }}</span>
     <span class="stat-mod">{{ item.value }}</span>
   </div>

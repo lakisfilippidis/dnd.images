@@ -42,13 +42,13 @@ sections:
       <a class="home-section-item" href="{{ item.url | url }}">
         {% if section.mapPreview %}
           <span class="home-section-item-title">{{ item.data.title }}</span>
-          <img class="home-section-map-preview" src="{{ item.url | url }}map.jpg" alt="">
+          <img class="home-section-map-preview" eleventy:widths="440,800" sizes="(max-width: 600px) 90vw, 320px" src="{{ item.url }}map.jpg" alt="">
         {% else %}
           {% if section.withPreview %}
             {% if item.data.portrait %}
-              <img class="home-section-preview" src="{{ item.url | url }}{{ item.data.portrait }}" alt="">
+              <img class="home-section-preview" width="96" src="{{ item.url }}{{ item.data.portrait }}" alt="">
             {% elsif item.data.gallery %}
-              <img class="home-section-preview" src="{{ item.url | url }}{{ item.data.gallery | first }}" alt="">
+              <img class="home-section-preview" width="96" src="{{ item.url }}{{ item.data.gallery | first }}" alt="">
             {% endif %}
           {% endif %}
           <span class="home-section-item-title">{{ item.data.title }}</span>

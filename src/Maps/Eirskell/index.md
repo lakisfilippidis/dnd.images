@@ -7,7 +7,7 @@ needsFont: true
 <div class="container">
     <div class="map-container">
         <map-canvas>
-            <img src="map.jpg" alt="Карта">
+            <img eleventy:ignore src="map.jpg" alt="Карта">
         </map-canvas>
             <a href="#Aidsvik" class="map-label" style="bottom: 35%; right: 40%;">Эйдсвик</a>
             <a href="#Bjorkvik" class="map-label" style="bottom: 40%; left: 25%;">Бьёрквик</a>

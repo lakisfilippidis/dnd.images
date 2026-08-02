@@ -17,7 +17,7 @@ breadcrumbSectionUrl: /Creatures/
       <span class="gallery-nav next">&#10095;</span>
       <div class="pager"></div>
       {% else %}
-      <img src="{{ portrait }}" alt="{{ creatureName }}">
+      <img eleventy:widths="800,1200" sizes="(orientation: portrait) 98vw, 30vw" src="{{ portrait }}" alt="{{ creatureName }}">
       {% endif %}
       {% include "stat-block.njk" %}
       {% include "combat-block.njk" %}

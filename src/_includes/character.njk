@@ -6,7 +6,7 @@ breadcrumbSectionUrl: /Characters/
 ---
 <div class="container">
   <div class="sidebar">
-    <img class="portrait" src="{{ portrait }}" alt="Портрет">
+    <img class="portrait" eleventy:widths="800,1200" sizes="(orientation: portrait) 98vw, 30vw" src="{{ portrait }}" alt="Портрет">
     {% include "stat-block.njk" %}
     {% include "combat-block.njk" %}
     {% include "add-to-battle.njk" %}
