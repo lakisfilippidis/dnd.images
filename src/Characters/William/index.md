@@ -13,8 +13,8 @@ combat:
     value: "11"
     note: "роба послушника + ловкость"
   КЗ:
-    value: "8"
-    note: "1-lvl-8, 2-lvl-6, телосложение +0"
+    value: "15" 
+    note: "1-lvl-8, 2-lvl-6, 2-lvl-1 телосложение +0"
   Инициатива:
     value: "+1"
   Скорость:
@@ -95,7 +95,7 @@ combat:
 
 - **[Присутствие (Presence)](../../Classes/priest/#presence)**
 
-- **[Домен воздаяния (Domain of Retribution)](../../Classes/priest/#domain-table)**
+- **[Домен Искупления (Domain of Redemption)](../../Classes/priest/#domain-table)**
 
 ## Биография
 
