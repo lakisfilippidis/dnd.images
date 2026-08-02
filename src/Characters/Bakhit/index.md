@@ -12,7 +12,7 @@ combat:
   КБ:
     value: "10"
   КЗ:
-    value: "13"
+    value: "15"
     note: "1-lvl-6, 2-lvl-3, 3-lvl-2, телосложение +4"
   Инициатива:
     value: "+0"
