@@ -2,6 +2,7 @@
 title: "Бродячий пёс"
 creatureName: "Бродячий пёс"
 creatureType: "Зверь"
+type: "beast"
 size: "medium"
 portrait: "creature_image.jpg"
 stats:

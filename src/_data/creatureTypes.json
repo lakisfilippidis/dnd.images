@@ -1,0 +1,5 @@
+{
+  "humanoid": { "icon": "person.svg", "label": "Гуманоид" },
+  "monster": { "icon": "dragon2.svg", "label": "Монстр" },
+  "beast": { "icon": "wolf.svg", "label": "Зверь" }
+}

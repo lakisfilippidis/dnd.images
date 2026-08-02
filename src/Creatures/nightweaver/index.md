@@ -2,6 +2,7 @@
 title: "Ночеплёт"
 creatureName: "Ночеплёт"
 creatureType: "Монстр / Зверь"
+type: "monster"
 size: "large"
 portrait: "creature_image.jpg"
 stats:

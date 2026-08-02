@@ -2,6 +2,7 @@
 title: "Митера-гвардеец"
 creatureName: "Митера-гвардеец"
 creatureType: "Гуманоид / Человек-маниот (упорядоченный добрый)"
+type: "humanoid"
 size: "medium"
 portrait: "creature_image.jpg"
 stats:

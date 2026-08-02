@@ -2,6 +2,7 @@
 title: "Ревущий в лесах (Rugens Silva)"
 creatureName: "Ревущий в лесах (Rugens Silva)"
 creatureType: "Монстр / Зверь"
+type: "monster"
 size: "large"
 portrait: "creature_image.jpg"
 stats:

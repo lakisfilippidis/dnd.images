@@ -5,6 +5,10 @@ layout: base.njk
 <div id="status">{{ statusPrefix }} {{ collections[collectionTag].length }} {{ statusSuffix }}:</div>
 <div class="list">
   {% for item in collections[collectionTag] %}
-  <a class="item" href="{{ item.url | url }}">{{ item.data.title }}</a>
+  {% set typeMeta = creatureTypes[item.data.type] %}
+  <a class="item" href="{{ item.url | url }}">
+    {%- if typeMeta %}<img class="item-icon" eleventy:ignore src="{{ ('/icons/' + typeMeta.icon) | url }}" alt="{{ typeMeta.label }}" title="{{ typeMeta.label }}"> {% endif -%}
+    {{ item.data.title }}
+  </a>
   {% endfor %}
 </div>

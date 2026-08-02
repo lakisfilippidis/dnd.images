@@ -2,6 +2,7 @@
 title: "Малван-стрелок"
 creatureName: "Малван-стрелок"
 creatureType: "Гуманоид / Человек-южанин (нейтральный)"
+type: "humanoid"
 size: "medium"
 portrait: "creature_image.jpg"
 stats:

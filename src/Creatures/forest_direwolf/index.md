@@ -2,6 +2,7 @@
 title: "Лесной лютоволк"
 creatureName: "Лесной лютоволк"
 creatureType: "Монстр / Зверь"
+type: "monster"
 size: "large"
 portrait: "creature_image.jpg"
 stats:

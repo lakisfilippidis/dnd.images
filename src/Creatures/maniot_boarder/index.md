@@ -2,6 +2,7 @@
 title: "Маниот абордажник"
 creatureName: "Маниот абордажник"
 creatureType: "Гуманоид / Человек-маниот (нейтральный)"
+type: "humanoid"
 size: "medium"
 portrait: "creature_image.jpg"
 stats:

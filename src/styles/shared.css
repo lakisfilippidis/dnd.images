@@ -237,6 +237,13 @@ body.list-page {
   transform: translateY(-2px);
 }
 
+.list-page .item-icon {
+  width: 20px;
+  height: 20px;
+  vertical-align: -4px;
+  margin-right: 6px;
+}
+
 .list-page .error {
   color: var(--color-error);
 }

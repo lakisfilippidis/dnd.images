@@ -2,6 +2,7 @@
 title: "Мусорщик"
 creatureName: "Мусорщик"
 creatureType: "Гуманоид / Человек (хаотичный нейтральный)"
+type: "humanoid"
 size: "medium"
 portrait: "creature_image.jpg"
 stats:

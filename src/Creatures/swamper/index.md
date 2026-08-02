@@ -2,6 +2,7 @@
 title: "Трясинник"
 creatureName: "Трясинник"
 creatureType: "Монстр / Зверь"
+type: "monster"
 size: "small"
 portrait: "creature_image.jpg"
 stats:

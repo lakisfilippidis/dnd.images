@@ -2,6 +2,7 @@
 title: "Болотный лютоволк"
 creatureName: "Болотный лютоволк"
 creatureType: "Монстр / Зверь"
+type: "monster"
 size: "large"
 portrait: "creature_image.jpg"
 stats:

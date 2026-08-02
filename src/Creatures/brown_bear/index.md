@@ -2,6 +2,7 @@
 title: "Бурый медведь"
 creatureName: "Бурый медведь"
 creatureType: "Зверь / Хищник"
+type: "beast"
 size: "large"
 portrait: "creature_image.jpg"
 stats:

@@ -2,6 +2,7 @@
 title: "Шкуролюд разведчик"
 creatureName: "Шкуролюд разведчик"
 creatureType: "Гуманоид / Человек-северянин (нейтральный)"
+type: "humanoid"
 size: "medium"
 portrait: "creature_image.jpg"
 stats:
