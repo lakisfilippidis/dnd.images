@@ -1,5 +1,4 @@
 {
   "layout": "race.njk",
-  "tags": "race",
-  "needsFont": false
+  "tags": "race"
 }

@@ -1,5 +1,4 @@
 {
   "layout": "personalities.njk",
-  "tags": "personalities",
-  "needsFont": false
+  "tags": "personalities"
 }

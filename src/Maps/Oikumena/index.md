@@ -2,7 +2,6 @@
 layout: base.njk
 title: "Карта Ойкумены"
 bodyClass: "map-page"
-needsFont: true
 ---
 <div class="container">
     <div class="map-container">

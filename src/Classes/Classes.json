@@ -1,8 +1,8 @@
 {
   "layout": "base.njk",
   "tags": "class",
-  "bodyClass": "class-page",
-  "needsFont": false,
+  "bodyClass": "class-page"
+,
   "breadcrumbSection": "Классы",
   "breadcrumbSectionUrl": "/Classes/"
 }

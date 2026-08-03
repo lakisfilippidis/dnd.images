@@ -2,7 +2,6 @@
 layout: base.njk
 title: "Карта Гнилая лужа"
 bodyClass: "map-page"
-needsFont: true
 ---
 <div class="container">
             <div class="map-container">

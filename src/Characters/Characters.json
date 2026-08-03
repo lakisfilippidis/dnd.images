@@ -1,5 +1,4 @@
 {
   "layout": "character.njk",
-  "tags": "character",
-  "needsFont": false
+  "tags": "character"
 }

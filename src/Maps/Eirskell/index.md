@@ -2,7 +2,6 @@
 layout: base.njk
 title: "Карта Острова Эйрскелл"
 bodyClass: "map-page"
-needsFont: true
 ---
 <div class="container">
     <div class="map-container">

@@ -5,7 +5,6 @@ tags: []
 eleventyExcludeFromCollections: true
 breadcrumbSection: "Карты"
 breadcrumbSectionUrl: "/Maps/"
-needsFont: true
 ---
 <div class="content">
     <h1>Виндхейм</h1>
