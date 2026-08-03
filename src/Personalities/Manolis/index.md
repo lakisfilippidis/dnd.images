@@ -1,5 +1,6 @@
 ---
 title: "Кириос Манолис"
+class: "ranger"
 portrait: character_image.jpg
 stats:
   Сила: 16

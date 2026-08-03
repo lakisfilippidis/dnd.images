@@ -1,5 +1,6 @@
 ---
 title: "Лира"
+class: "ranger"
 portrait: character_image.jpg
 stats:
   Сила: 8

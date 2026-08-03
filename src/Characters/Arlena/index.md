@@ -1,5 +1,6 @@
 ---
 title: "Арлена"
+class: "ranger"
 portrait: character_image.jpg
 stats:
   Сила: 12

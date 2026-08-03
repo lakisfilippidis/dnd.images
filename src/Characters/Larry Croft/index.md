@@ -1,5 +1,6 @@
 ---
 title: "Ларри Крофт"
+class: "artist"
 portrait: character_image.jpg
 stats:
   Сила: 11

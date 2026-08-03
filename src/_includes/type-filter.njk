@@ -1,0 +1,8 @@
+<div class="type-filter" role="toolbar" aria-label="Фильтр по типу">
+  {% for key, meta in creatureTypes %}
+  <button type="button" class="type-filter-chip" data-type="{{ key }}"
+          aria-pressed="false" aria-label="{{ meta.label }}" title="{{ meta.label }}">
+    <img eleventy:ignore src="{{ ('/icons/' + meta.icon) | url }}" alt="" width="28" height="28">
+  </button>
+  {% endfor %}
+</div>

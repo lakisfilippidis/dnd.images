@@ -3,6 +3,9 @@ layout: base.njk
 ---
 <h1>{{ listTitle }}</h1>
 <div id="status">{{ statusPrefix }} {{ collections[collectionTag].length }} {{ statusSuffix }}:</div>
+{% if typeFilter %}
+{% include "type-filter.njk" %}
+{% endif %}
 <div class="list{% if mapPreview %} home-section--maps{% endif %}">
   <div class="home-section-list">
     {% for item in collections[collectionTag] %}

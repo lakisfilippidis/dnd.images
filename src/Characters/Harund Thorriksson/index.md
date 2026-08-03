@@ -1,5 +1,6 @@
 ---
 title: "Харунд Торрикссон"
+class: "savage"
 portrait: character_image.jpg
 stats:
   Сила: 16

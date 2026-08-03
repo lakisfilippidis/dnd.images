@@ -1,5 +1,6 @@
 ---
 title: "Бахит"
+class: "warlock"
 portrait: character_image.jpg
 stats:
   Сила: 9

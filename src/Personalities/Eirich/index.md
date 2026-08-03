@@ -1,5 +1,6 @@
 ---
 title: "Эйрих Торнвальдс Сундерсон"
+class: "savage"
 portrait: character_image.jpg
 stats:
   Сила: 18

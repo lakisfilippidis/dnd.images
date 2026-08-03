@@ -1,5 +1,6 @@
 ---
 title: "Рикард фон Эллен"
+class: "fighter"
 portrait: character_image.jpg
 stats:
   Сила: 17

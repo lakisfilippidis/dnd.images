@@ -1,5 +1,6 @@
 ---
 title: "Майя стойкая"
+class: "fighter"
 portrait: character_image.jpg
 stats:
   Сила: 13

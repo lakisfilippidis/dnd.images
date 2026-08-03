@@ -1,5 +1,6 @@
 ---
 title: "Олаф Калдриксон"
+class: "fighter"
 portrait: character_image.jpg
 stats:
   Сила: 16

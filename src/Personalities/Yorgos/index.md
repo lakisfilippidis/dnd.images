@@ -1,5 +1,6 @@
 ---
 title: "Капитан Йоргос «Безумный»"
+class: "fighter"
 portrait: character_image.jpg
 stats:
   Сила: 12

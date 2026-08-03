@@ -17,6 +17,9 @@
     {% if bodyClass == "map-page" %}
     <script type="module" src="{{ '/scripts/map-canvas.js' | url }}"></script>
     {% endif %}
+    {% if typeFilter %}
+    <script type="module" src="{{ '/scripts/type-filter.js' | url }}"></script>
+    {% endif %}
   </head>
   <body{% if bodyClass %} class="{{ bodyClass }}"{% endif %}>
     <nav class="top-menu">

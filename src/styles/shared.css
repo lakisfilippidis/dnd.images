@@ -231,6 +231,54 @@ body.list-page {
   color: var(--color-error);
 }
 
+.type-filter {
+  max-width: 900px;
+  margin: 12px auto;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.type-filter-chip {
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: var(--color-bg-white);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-item);
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.type-filter-chip:hover {
+  box-shadow: var(--shadow-item-hover);
+  transform: translateY(-2px);
+}
+
+.type-filter-chip:focus-visible {
+  outline: 2px solid var(--color-border);
+  outline-offset: 2px;
+}
+
+.type-filter-chip img {
+  width: 28px;
+  height: 28px;
+  display: block;
+  transition: 0.2s;
+}
+
+.type-filter-chip[aria-pressed="true"] {
+  border-color: var(--color-border);
+  background: var(--color-bg-dots);
+}
+
+.home-section-item[hidden] {
+  display: none;
+}
+
 /* ===== Home Page Styles ===== */
 .home-page body,
 body.home-page {

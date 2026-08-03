@@ -1,5 +1,6 @@
 ---
 title: "Херихор"
+class: "priest"
 portrait: character_image.jpg
 stats:
   Сила: 12

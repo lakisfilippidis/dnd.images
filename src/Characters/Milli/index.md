@@ -1,5 +1,6 @@
 ---
 title: "Милли Сундердоттир"
+class: "savage"
 portrait: character_image.jpg
 stats:
   Сила: 18

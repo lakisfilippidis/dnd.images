@@ -1,5 +1,6 @@
 ---
 title: "Пуупь"
+class: "savage"
 portrait: character_image.jpg
 stats:
   Сила: 17

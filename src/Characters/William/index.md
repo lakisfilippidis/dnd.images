@@ -1,5 +1,6 @@
 ---
 title: "Уильям Альберих"
+class: "priest"
 portrait: character_image.jpg
 stats:
   Сила: 8

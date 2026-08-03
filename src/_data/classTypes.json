@@ -1,0 +1,8 @@
+{
+  "artist": { "icon": "theatre.svg", "label": "Артист" },
+  "fighter": { "icon": "sword2.svg", "label": "Боец" },
+  "priest": { "icon": "cross.svg", "label": "Жрец" },
+  "ranger": { "icon": "bow.svg", "label": "Следопыт" },
+  "savage": { "icon": "battleaxe.svg", "label": "Дикарь" },
+  "warlock": { "icon": "wizards-hat.svg", "label": "Колдун" }
+}

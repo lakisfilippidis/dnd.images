@@ -3,6 +3,7 @@ layout: base.njk
 title: "Мир DnD — Главная"
 bodyClass: "home-page"
 needsFont: true
+typeFilter: true
 sections:
   - title: "Карты"
     url: "/Maps/"
@@ -27,6 +28,7 @@ sections:
     url: "/Creatures/"
     tag: "creatures"
     withPreview: true
+    typeFilter: true
 ---
 <header>
   <h1>Мир DnD</h1>
@@ -37,6 +39,9 @@ sections:
   {% for section in sections %}
   <section class="home-section{% if section.withPreview %} home-section--previews{% endif %}{% if section.mapPreview %} home-section--maps{% endif %}">
     <h2><a href="{{ section.url | url }}">{{ section.title }}</a></h2>
+    {% if section.typeFilter %}
+    {% include "type-filter.njk" %}
+    {% endif %}
     <div class="home-section-list">
       {% set withPreview = section.withPreview %}
       {% set mapPreview = section.mapPreview %}

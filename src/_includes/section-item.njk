@@ -1,5 +1,5 @@
-{% set typeMeta = creatureTypes[item.data.type] %}
-<a class="home-section-item" href="{{ item.url | url }}">
+{% set typeMeta = creatureTypes[item.data.type] or classTypes[item.data.class] %}
+<a class="home-section-item"{% if item.data.type %} data-type="{{ item.data.type }}"{% endif %} href="{{ item.url | url }}">
   {% if mapPreview %}
     <span class="home-section-item-title">{{ item.data.title }}</span>
     <img class="home-section-map-preview" eleventy:widths="440,800" sizes="(max-width: 600px) 90vw, 320px" src="{{ item.url }}map.jpg" alt="">

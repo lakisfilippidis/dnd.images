@@ -1,5 +1,6 @@
 ---
 title: "Грима"
+class: "artist"
 portrait: character_image.jpg
 stats:
   Сила: 8

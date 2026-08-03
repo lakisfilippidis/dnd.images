@@ -1,5 +1,6 @@
 ---
 title: "Бруно сокрушитель"
+class: "fighter"
 portrait: character_image.jpg
 stats:
   Сила: 16
