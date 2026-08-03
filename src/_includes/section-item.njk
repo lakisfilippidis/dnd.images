@@ -1,0 +1,27 @@
+{% set typeMeta = creatureTypes[item.data.type] %}
+<a class="home-section-item" href="{{ item.url | url }}">
+  {% if mapPreview %}
+    <span class="home-section-item-title">{{ item.data.title }}</span>
+    <img class="home-section-map-preview" eleventy:widths="440,800" sizes="(max-width: 600px) 90vw, 320px" src="{{ item.url }}map.jpg" alt="">
+  {% else %}
+    {% if withPreview %}
+      {% if item.data.portrait %}
+        <img class="home-section-preview" width="96" src="{{ item.url }}{{ item.data.portrait }}" alt="">
+      {% elif item.data.gallery %}
+        <img class="home-section-preview" width="96" src="{{ item.url }}{{ item.data.gallery | first }}" alt="">
+      {% endif %}
+    {% endif %}
+    {% if typeMeta %}<img class="item-icon" eleventy:ignore src="{{ ('/icons/' + typeMeta.icon) | url }}" alt="{{ typeMeta.label }}" title="{{ typeMeta.label }}">{% endif %}
+    <span class="home-section-item-title">{{ item.data.title }}</span>
+    {% if withPreview and item.data.combat %}
+    <add-to-battle compact
+      name="{{ item.data.creatureName | default(item.data.title) }}"
+      kind="{% if 'character' in item.data.tags %}player{% else %}monster{% endif %}"
+      ac="{{ item.data.combat['КБ'].value }}"
+      hp="{{ item.data.combat['КЗ'].value }}"
+      init-mod="{{ item.data.combat['Инициатива'].value }}"
+      image="{% if item.data.portrait %}{{ item.url | url }}{{ item.data.portrait }}{% elif item.data.gallery %}{{ item.url | url }}{{ item.data.gallery | first }}{% endif %}"
+      size="{{ item.data.size | default('medium') }}"></add-to-battle>
+    {% endif %}
+  {% endif %}
+</a>

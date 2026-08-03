@@ -7,6 +7,8 @@ breadcrumbSectionUrl: /Creatures/
 ---
 <div class="creature-card">
   <div class="creature-header">
+    {% set typeMeta = creatureTypes[type] %}
+    {% if typeMeta %}<img class="type-icon" eleventy:ignore src="{{ ('/icons/' + typeMeta.icon) | url }}" alt="{{ typeMeta.label }}" title="{{ typeMeta.label }}">{% endif %}
     <h1>{{ creatureName }}</h1>
     <div class="subinfo">{{ creatureType }}</div>
   </div>

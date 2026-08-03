@@ -221,27 +221,10 @@ body.list-page {
   gap: 8px;
 }
 
-.list-page .item {
-  display: block;
-  padding: 10px 12px;
-  background: var(--color-bg-white);
-  border-radius: var(--radius-item);
-  border: 1px solid var(--color-border-light);
-  text-decoration: none;
-  color: var(--color-text-item);
-  transition: 0.2s;
-}
-
-.list-page .item:hover {
-  box-shadow: var(--shadow-item-hover);
-  transform: translateY(-2px);
-}
-
-.list-page .item-icon {
-  width: 20px;
-  height: 20px;
-  vertical-align: -4px;
-  margin-right: 6px;
+.home-section-item .item-icon {
+  width: 60px;
+  height: 60px;
+  flex: none;
 }
 
 .list-page .error {
@@ -829,9 +812,26 @@ body.creature-page {
   background: var(--color-bg-dots);
   padding: 20px;
   text-align: center;
+  display: grid;
+  grid-template-areas:
+    "icon h1"
+    "icon subinfo";
+  grid-template-columns: repeat(2, max-content);
+  place-content: center;
+  place-items: start;
+  column-gap: 16px;
+}
+
+.creature-header .type-icon {
+  grid-area: icon;
+  height: 4em;
+  width: auto;
+  place-self: center;
+  scale: 1.5;
 }
 
 .creature-header h1 {
+  grid-area: h1;
   margin: 0;
   font-family: var(--font-fantasy);
   font-size: 2em;
@@ -839,6 +839,7 @@ body.creature-page {
 }
 
 .creature-header .subinfo {
+  grid-area: subinfo;
   font-size: 0.9em;
   color: var(--color-text-muted);
   margin-top: 4px;

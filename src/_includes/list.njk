@@ -3,12 +3,10 @@ layout: base.njk
 ---
 <h1>{{ listTitle }}</h1>
 <div id="status">{{ statusPrefix }} {{ collections[collectionTag].length }} {{ statusSuffix }}:</div>
-<div class="list">
-  {% for item in collections[collectionTag] %}
-  {% set typeMeta = creatureTypes[item.data.type] %}
-  <a class="item" href="{{ item.url | url }}">
-    {%- if typeMeta %}<img class="item-icon" eleventy:ignore src="{{ ('/icons/' + typeMeta.icon) | url }}" alt="{{ typeMeta.label }}" title="{{ typeMeta.label }}"> {% endif -%}
-    {{ item.data.title }}
-  </a>
-  {% endfor %}
+<div class="list{% if mapPreview %} home-section--maps{% endif %}">
+  <div class="home-section-list">
+    {% for item in collections[collectionTag] %}
+      {% include "section-item.njk" %}
+    {% endfor %}
+  </div>
 </div>
