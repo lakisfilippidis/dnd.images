@@ -222,9 +222,10 @@ body.list-page {
 }
 
 .home-section-item .item-icon {
+  grid-column: icon;
+  margin-right: 12px;
   width: 60px;
   height: 60px;
-  flex: none;
 }
 
 .list-page .error {
@@ -336,7 +337,7 @@ body.home-page {
 
 .home-section {
   min-width: 0;
-  background-color: var(--color-bg-page);
+  background-color: var(--color-bg-white);
   border-radius: var(--radius-card);
   padding: 24px;
   box-shadow: var(--shadow-card);
@@ -396,29 +397,34 @@ body.home-page {
 
 .home-section-list {
   display: grid;
-  gap: 6px;
+  grid-template-columns: [preview] max-content [icon] max-content [title] 1fr [action] max-content;
+  row-gap: 0;
+  column-gap: 0;
 }
 
 .home-section-item {
   min-width: 0;
-  display: flex;
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
   align-items: center;
-  gap: 12px;
+  min-height: 60px;
   padding: 8px 12px;
-  border-radius: var(--radius-item);
-  background: var(--color-bg-white);
-  border: 1px solid var(--color-border-light);
   color: var(--color-text-item);
   text-decoration: none;
   transition: 0.2s;
 }
 
+.home-section-item + .home-section-item {
+  border-top: 1px solid var(--color-border-light);
+}
+
 .home-section-item:hover {
-  box-shadow: var(--shadow-item-hover);
-  transform: translateY(-2px);
+  background: var(--color-bg-light);
 }
 
 .home-section-item-title {
+  grid-column: title;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -426,12 +432,13 @@ body.home-page {
 }
 
 .home-section-preview {
+  grid-column: preview;
+  margin-right: 12px;
   width: 48px;
   height: 48px;
   object-fit: cover;
   border-radius: 50%;
   border: 1px solid var(--color-border-light);
-  flex-shrink: 0;
 }
 
 .home-section--maps .home-section-list {
@@ -440,10 +447,21 @@ body.home-page {
 }
 
 .home-section--maps .home-section-item {
+  display: flex;
+  grid-column: auto;
   flex-direction: column;
   align-items: stretch;
   gap: 8px;
   padding: 8px;
+  background: var(--color-bg-white);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-item);
+}
+
+.home-section--maps .home-section-item:hover {
+  background: var(--color-bg-white);
+  box-shadow: var(--shadow-item-hover);
+  transform: translateY(-2px);
 }
 
 .home-section--maps .home-section-item-title {
@@ -530,7 +548,7 @@ body.race-page {
 }
 
 .combat-block {
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(2, 1fr);
 }
 
 .combat-block button.stat {
@@ -592,10 +610,6 @@ body.race-page {
 .creature-page .combat-block {
   width: 100%;
   margin: 16px 0 0;
-}
-
-.creature-page .combat-block {
-  grid-template-columns: repeat(2, 1fr);
 }
 
 [popover].stat-note {
@@ -679,7 +693,8 @@ add-to-battle:not([compact]) {
 }
 
 .home-section-item add-to-battle {
-  margin-left: auto;
+  grid-column: action;
+  margin-left: 12px;
 }
 
 .character-page .content,
