@@ -832,7 +832,8 @@ body.class-page {
 /* Marks unreviewed sections; remove the "draft" class from the heading after reading */
 h1.draft::before,
 h2.draft::before,
-h3.draft::before {
+h3.draft::before,
+strong.draft::before {
   content: "draft";
   display: inline-block;
   vertical-align: middle;
