@@ -1,0 +1,9 @@
+[
+  { "from": "/Characters/Larry Croft/", "to": "/Characters/Larry-Croft/" },
+  { "from": "/Characters/Lyn Aster/", "to": "/Characters/Lyn-Aster/" },
+  { "from": "/Characters/Harund Thorriksson/", "to": "/Characters/Harund-Thorriksson/" },
+  { "from": "/Characters/Ricard von Ellen/", "to": "/Characters/Ricard-von-Ellen/" },
+  { "from": "/Personalities/Lara Croft/", "to": "/Personalities/Lara-Croft/" },
+  { "from": "/Races/Kel'drum/", "to": "/Races/Kel-drum/" },
+  { "from": "/Maps/Rotten_puddle/", "to": "/Maps/Rotten-puddle/" }
+]

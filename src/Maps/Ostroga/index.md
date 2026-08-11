@@ -10,7 +10,7 @@ bodyClass: "map-page"
                 </map-canvas>
                     <a href="#stronghold-ostroga" class="map-label" style="top: 50%; left: 40%;">Крепость Острога</a>
                     <a href="#abbey-court" class="map-label" style="top: 45%; left: 4%;">Монастырский двор</a>
-                    <a href="../Rotten_puddle/" class="map-label" style="bottom: 28%; right: 13%;">Гнилая лужа</a>
+                    <a href="../Rotten-puddle/" class="map-label" style="bottom: 28%; right: 13%;">Гнилая лужа</a>
                     <a href="#grunfeld" class="map-label" style="bottom: 9%; left: 40%;">Грюнфельд</a>
                     <a href="#bears-court" class="map-label" style="bottom: 21%; left: 16%;">Медвежий двор</a>
             </div>

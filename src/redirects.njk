@@ -1,0 +1,13 @@
+---
+pagination:
+  data: redirects
+  size: 1
+  alias: redirect
+permalink: "{{ redirect.from }}index.html"
+eleventyExcludeFromCollections: true
+---
+<meta charset="utf-8">
+<meta http-equiv="refresh" content="0; url={{ redirect.to | url }}">
+<link rel="canonical" href="{{ redirect.to | url }}">
+<title>Страница переехала</title>
+<p>Страница переехала: <a href="{{ redirect.to | url }}">{{ redirect.to }}</a></p>
