@@ -16,8 +16,8 @@ breadcrumbSectionUrl: "/Maps/"
             <img eleventy:ignore src="map.jpg" alt="Карта">
         </map-canvas>
             <a href="#Miterion" class="map-label" style="bottom: 40%; right: 37%;">Митерион</a>
-            <a href="#Blackforest" class="map-label" style="bottom: 20%; right: 25%;">Чёрный лес</a>
-            <a href="#Kadaranbay" class="map-label" style="top: 15%; right: 20%;">Бухта Кадаран</a>
+            <a href="#Blackforest" class="map-label" style="bottom: 20%; right: 20%;">Чёрный лес</a>
+            <a href="#Kadaranbay" class="map-label" style="top: 15%; left: 20%;">Бухта Кадаран</a>
             <a href="#Dendra-Hilja" class="map-label" style="top: 48%; right: 48%;">Дендра-Хилья</a>
             <a href="#Western-Valleys" class="map-label" style="top: 48%; right: 48%;">Западные долины</a>
             <a href="#Gurdian-Bay" class="map-label" style="top: 48%; right: 48%;">Гурдийская бухта</a>
