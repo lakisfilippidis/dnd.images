@@ -15,12 +15,12 @@ breadcrumbSectionUrl: "/Maps/"
         <map-canvas>
             <img eleventy:ignore src="map.jpg" alt="Карта">
         </map-canvas>
-            <a href="#Miterion" class="map-label" style="bottom: 40%; right: 37%;">Митерион</a>
-            <a href="#Blackforest" class="map-label" style="bottom: 20%; right: 20%;">Чёрный лес</a>
+            <a href="#Miterion" class="map-label" style="bottom: 42%; right: 36%;">Митерион</a>
+            <a href="#Blackforest" class="map-label" style="bottom: 23%; right: 17%;">Чёрный лес</a>
             <a href="#Kadaranbay" class="map-label" style="top: 15%; left: 20%;">Бухта Кадаран</a>
-            <a href="#Dendra-Hilja" class="map-label" style="top: 48%; right: 48%;">Дендра-Хилья</a>
+            <a href="#Dendra-Hilja" class="map-label" style="top: 28%; right: 28%;">Дендра-Хилья</a>
             <a href="#Western-Valleys" class="map-label" style="bottom: 40%; right: 45%;">Западные долины</a>
-            <a href="#Gurdian-Bay" class="map-label" style="bottom: 35%; right: 30%;">Гурдийская бухта</a>
+            <a href="#Gurdianbay" class="map-label" style="bottom: 35%; right: 24%;">Гурдийская бухта</a>
     </div>
     <div class="town-container">
         <div id="Miterion" class="town-description">
@@ -43,7 +43,7 @@ breadcrumbSectionUrl: "/Maps/"
             <h2>Западные долины</h2>
             <p>Плодородные западные земли клана Сазмакис. Широкие травянистые долины, разделённые невысокими холмами и зарослями кустарника. Лучшие пастбища Мани: здесь разводят коз, овец, лошадей и часть крупного скота острова. В отличие от лесистого востока, местность открытая и хорошо просматривается на многие мили.</p>
         </div>
-        <div id="Gurdian-Bay" class="town-description">
+        <div id="Gurdianbay" class="town-description">
             <h2>Гурдийская бухта</h2>
             <p>Юго-западные ворота Мани. Защищённая от большей части морских ветров гавань, куда традиционно заходят корабли из Гурдии, а также альфаранские контрабандисты. На берегу выросло отдельное поселение гурдийских беженцев — более пёстрое и чужеземное, чем остальные поселения острова. Через бухту на Мани попадают товары, оружие, слухи и люди.</p>
         </div>
