@@ -19,8 +19,8 @@ breadcrumbSectionUrl: "/Maps/"
             <a href="#Blackforest" class="map-label" style="bottom: 20%; right: 20%;">Чёрный лес</a>
             <a href="#Kadaranbay" class="map-label" style="top: 15%; left: 20%;">Бухта Кадаран</a>
             <a href="#Dendra-Hilja" class="map-label" style="top: 48%; right: 48%;">Дендра-Хилья</a>
-            <a href="#Western-Valleys" class="map-label" style="top: 48%; right: 48%;">Западные долины</a>
-            <a href="#Gurdian-Bay" class="map-label" style="top: 48%; right: 48%;">Гурдийская бухта</a>
+            <a href="#Western-Valleys" class="map-label" style="bottom: 40%; right: 45%;">Западные долины</a>
+            <a href="#Gurdian-Bay" class="map-label" style="bottom: 35%; right: 30%;">Гурдийская бухта</a>
     </div>
     <div class="town-container">
         <div id="Miterion" class="town-description">
