@@ -1,10 +1,7 @@
 ---
 layout: base.njk
 title: "Мани"
-tags: []
-eleventyExcludeFromCollections: true
-breadcrumbSection: "Карты"
-breadcrumbSectionUrl: "/Maps/"
+bodyClass: "map-page"
 ---
 
 <div class="container">
