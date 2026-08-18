@@ -2,8 +2,8 @@
 // <add-to-battle> и задаёт русский набор прилагательных для инстансов
 // («Отчаянный Волк», «Трусливый Волк» — второй и последующие бойцы одного
 // типа в пуле мата). Род не согласуется, список подобран под мужской род
-// имён существ. <battle-mat> и <initiative-tracker> грузятся своими
-// script-тегами в base.njk; add-to-battle.js импортируется только отсюда.
+// имён существ. <battle-toolbar> (док с боевым экраном) грузится своим
+// script-тегом в base.njk; add-to-battle.js импортируется только отсюда.
 
 import { AddToBattle } from 'https://ramil-k.github.io/dice-roller/add-to-battle.js';
 
