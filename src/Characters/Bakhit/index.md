@@ -42,7 +42,7 @@ combat:
 
 ### Оружие
 
-- **Серп:** <roll-dice>1d6</roll-dice> режущего урона, <roll-dice>1d20+4</roll-dice> к попаданию. [Колдовское оружие](../../Classes/warlock/#warlock's-weapon): +<roll-dice>1d4</roll-dice> к урону по целям, хп которых меньше половины
+- **Серп:** <roll-dice>1d6+4</roll-dice> режущего урона (Харизма +4), <roll-dice>1d20+6</roll-dice> к попаданию (Харизма +4, Владение +2). [Колдовское оружие](../../Classes/warlock/#warlock's-weapon): +<roll-dice>1d4</roll-dice> к урону по целям, хп которых меньше половины
 
 ### Доп. снаряжение
 
