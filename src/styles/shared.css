@@ -122,16 +122,15 @@ body {
 }
 
 /* ===== Боевой док dice-roller ===== */
-/* <battle-toolbar> прибивает себя сам; тут — тема сайта и подъём над нижним
-   TOC-баром. Кнопки открывают единый боевой экран (карта/пул/инициатива). */
+/* <battle-toolbar> прибивает себя вплотную в правый нижний угол (поверх
+   нижнего TOC-бара); тут — только тема сайта. Кнопки открывают единый
+   боевой экран (карта/пул/инициатива). */
 battle-toolbar {
   --bt-bg: rgb(from var(--color-bg-white) r g b / 0.85);
   --bt-edge: var(--color-border-light);
   --bt-accent-tracker: var(--color-error);
   --bt-accent-mat: var(--color-creature-heading);
   --bt-accent-dice: var(--color-text);
-  --bt-bottom: calc(var(--height-footer) + 1rem);
-  --bt-right: 1rem;
   --bt-z: 1001;
 }
 
