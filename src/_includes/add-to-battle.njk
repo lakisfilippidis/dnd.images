@@ -5,7 +5,7 @@
   ac="{{ combat['КБ'].value }}"
   hp="{{ combat['КЗ'].value }}"
   init-mod="{{ combat['Инициатива'].value }}"
-  image="{% if portrait %}{{ page.url | url }}{{ portrait }}{% elif gallery %}{{ page.url | url }}{{ gallery | first }}{% endif %}"
+  image="{% if preview %}{{ page.url | url }}{{ preview }}{% elif portrait %}{{ page.url | url }}{{ portrait }}{% elif gallery %}{{ page.url | url }}{{ gallery | first }}{% endif %}"
   size="{{ size or 'medium' }}"
   label-added="Добавлено">В бой</add-to-battle>
 {% endif %}

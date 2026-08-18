@@ -1,4 +1,5 @@
 {
   "layout": "personalities.njk",
-  "tags": "personalities"
+  "tags": "personalities",
+  "preview": "head.jpg"
 }

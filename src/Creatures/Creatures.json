@@ -1,4 +1,5 @@
 {
   "layout": "creature.njk",
-  "tags": "creature"
+  "tags": "creature",
+  "preview": "head.jpg"
 }
