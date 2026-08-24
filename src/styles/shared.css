@@ -1061,3 +1061,108 @@ body.map-page {
     box-sizing: border-box;
   }
 }
+
+/* ===== Feat Cards (черты плута) ===== */
+.feat-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+  margin: 1em 0;
+}
+
+.feat-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 12px 14px;
+  background: var(--color-bg-white);
+  border: 1px solid var(--color-border-table);
+  border-radius: var(--radius-item);
+  box-shadow: var(--shadow-table);
+}
+
+.feat-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.feat-card-name {
+  margin: 0;
+  font-family: var(--font-fantasy);
+  font-size: 1.15em;
+  font-weight: normal;
+  color: var(--color-text-heading);
+}
+
+.feat-card-header .feat-card-icon {
+  flex: none;
+  width: 40px;
+  height: 40px;
+}
+
+.feat-card-header .feat-card-icon:first-of-type {
+  margin-left: auto;
+}
+
+.feat-card-level {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.7em;
+  height: 1.7em;
+  font-size: 0.85em;
+  color: var(--color-text-subtle);
+  background: var(--color-bg-light);
+  border: 1px solid var(--color-border-table-dark);
+  border-radius: 50%;
+}
+
+.feat-card-req {
+  margin: 0;
+  font-size: 0.8em;
+  font-style: italic;
+  color: var(--color-text-muted);
+}
+
+.feat-card-desc {
+  margin: 0;
+  font-size: 0.92em;
+  color: var(--color-text-subtle);
+}
+
+.feat-card-note {
+  margin: 0;
+  padding-top: 6px;
+  border-top: 1px dashed var(--color-border-light);
+  font-size: 0.85em;
+  font-style: italic;
+  color: var(--color-text-muted);
+}
+
+.feat-legend {
+  margin: 1em 0;
+  font-size: 0.9em;
+}
+
+.feat-legend-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3em 0.8em;
+  margin: 0.3em 0;
+}
+
+.feat-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.feat-legend-item .feat-card-icon {
+  width: 40px;
+  height: 40px;
+  vertical-align: middle;
+}

@@ -23,6 +23,68 @@ module.exports = async function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy("src/**/*.jpg");
   eleventyConfig.addPassthroughCopy("src/**/*.png");
 
+
+  // Карточки черт плута (src/_data/rogueFeats.js). Страницы, где они
+  // используются, лежат на глубине два (/Classes/rogue/, /Personalities/X/),
+  // поэтому иконки и ссылки — относительные.
+  const rogueFeats = require("./src/_data/rogueFeats.js");
+  const featById = new Map(rogueFeats.feats.map((f) => [f.id, f]));
+  const groupById = new Map(rogueFeats.groups.map((g) => [g.id, g]));
+  const sphereById = new Map(rogueFeats.spheres.map((sp) => [sp.id, sp]));
+
+  function featIcon(meta, extraClass = "") {
+    return `<img class="feat-card-icon${extraClass}" eleventy:ignore src="../../icons/${meta.icon}" alt="${meta.title}" title="${meta.title}" width="40" height="40">`;
+  }
+
+  function featCardHtml(feat, { level = null, note = null, link = false } = {}) {
+    const group = groupById.get(feat.group);
+    const sphere = sphereById.get(feat.sphere);
+    const name = link
+      ? `<a href="../../Classes/rogue/#feat-${feat.id}">${feat.name}</a>`
+      : feat.name;
+    return [
+      `<article class="feat-card"${link ? "" : ` id="feat-${feat.id}"`}>`,
+      `<header class="feat-card-header">`,
+      level == null ? "" : `<span class="feat-card-level" title="Уровень ${level}">${level}</span>`,
+      `<h4 class="feat-card-name">${name}</h4>`,
+      featIcon(sphere), featIcon(group),
+      `</header>`,
+      feat.req ? `<p class="feat-card-req">${feat.req}</p>` : "",
+      `<p class="feat-card-desc">${feat.desc}</p>`,
+      note ? `<p class="feat-card-note">${note}</p>` : "",
+      `</article>`,
+    ].join("");
+  }
+
+  // Все черты одной группы — для страницы класса
+  eleventyConfig.addShortcode("featCards", function (groupId) {
+    if (!groupById.has(groupId)) throw new Error(`featCards: unknown group "${groupId}"`);
+    const cards = rogueFeats.feats
+      .filter((f) => f.group === groupId)
+      .map((f) => featCardHtml(f));
+    return `<div class="feat-cards">${cards.join("")}</div>`;
+  });
+
+  // Легенда иконок — для страницы класса
+  eleventyConfig.addShortcode("featLegend", function () {
+    const row = (items, caption) =>
+      `<p class="feat-legend-row"><strong>${caption}:</strong> ` +
+      items.map((m) => `<span class="feat-legend-item">${featIcon(m)} ${m.title}</span>`).join(" ") +
+      `</p>`;
+    return `<div class="feat-legend">${row(rogueFeats.groups, "Группы")}${row(rogueFeats.spheres, "Тип влияния")}</div>`;
+  });
+
+  // Сборка персонажа: "id:уровень; id:уровень:пометка; ..."
+  eleventyConfig.addShortcode("featPicks", function (picks) {
+    const cards = picks.split(";").map((entry) => {
+      const [id, level, note] = entry.trim().split(":").map((v) => v && v.trim());
+      const feat = featById.get(id);
+      if (!feat) throw new Error(`featPicks: unknown feat "${id}"`);
+      return featCardHtml(feat, { level, note, link: true });
+    });
+    return `<div class="feat-cards">${cards.join("")}</div>`;
+  });
+
   eleventyConfig.addCollection("characters", function (collectionApi) {
     return collectionApi
       .getFilteredByTag("character")
