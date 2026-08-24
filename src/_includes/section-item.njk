@@ -23,7 +23,8 @@
       hp="{{ item.data.combat['КЗ'].value }}"
       init-mod="{{ item.data.combat['Инициатива'].value }}"
       image="{% if item.data.preview %}{{ item.url | url }}{{ item.data.preview }}{% elif item.data.portrait %}{{ item.url | url }}{{ item.data.portrait }}{% elif item.data.gallery %}{{ item.url | url }}{{ item.data.gallery | first }}{% endif %}"
-      size="{{ item.data.size | default('medium') }}"></add-to-battle>
+      size="{{ item.data.size | default('medium') }}"
+      link="{{ item.url | url }}"></add-to-battle>
     {% endif %}
   {% endif %}
 </a>
