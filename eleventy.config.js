@@ -31,6 +31,7 @@ module.exports = async function (eleventyConfig) {
   const featById = new Map(rogueFeats.feats.map((f) => [f.id, f]));
   const groupById = new Map(rogueFeats.groups.map((g) => [g.id, g]));
   const sphereById = new Map(rogueFeats.spheres.map((sp) => [sp.id, sp]));
+  const sideById = new Map(rogueFeats.sides.map((s) => [s.id, s]));
 
   function featIcon(meta, extraClass = "") {
     return `<img class="feat-card-icon${extraClass}" eleventy:ignore src="../../icons/${meta.icon}" alt="${meta.title}" title="${meta.title}" width="40" height="40">`;
@@ -39,15 +40,16 @@ module.exports = async function (eleventyConfig) {
   function featCardHtml(feat, { level = null, note = null, link = false } = {}) {
     const group = groupById.get(feat.group);
     const sphere = sphereById.get(feat.sphere);
+    const side = feat.side ? sideById.get(feat.side) : null;
     const name = link
       ? `<a href="../../Classes/rogue/#feat-${feat.id}">${feat.name}</a>`
       : feat.name;
     return [
-      `<article class="feat-card"${link ? "" : ` id="feat-${feat.id}"`}>`,
+      `<article class="feat-card${side ? ` feat-card--${side.id}` : ""}"${link ? "" : ` id="feat-${feat.id}"`}>`,
       `<header class="feat-card-header">`,
       level == null ? "" : `<span class="feat-card-level" title="Уровень ${level}">${level}</span>`,
       `<h4 class="feat-card-name">${name}</h4>`,
-      featIcon(sphere), featIcon(group),
+      featIcon(sphere), featIcon(group), side ? featIcon(side) : "",
       `</header>`,
       feat.req ? `<p class="feat-card-req">${feat.req}</p>` : "",
       `<p class="feat-card-desc">${feat.desc}</p>`,
@@ -71,7 +73,7 @@ module.exports = async function (eleventyConfig) {
       `<p class="feat-legend-row"><strong>${caption}:</strong> ` +
       items.map((m) => `<span class="feat-legend-item">${featIcon(m)} ${m.title}</span>`).join(" ") +
       `</p>`;
-    return `<div class="feat-legend">${row(rogueFeats.groups, "Группы")}${row(rogueFeats.spheres, "Тип влияния")}</div>`;
+    return `<div class="feat-legend">${row(rogueFeats.groups, "Группы")}${row(rogueFeats.spheres, "Тип влияния")}${row(rogueFeats.sides, "Сторона шкалы")}</div>`;
   });
 
   // Сборка персонажа: "id:уровень; id:уровень:пометка; ..."
