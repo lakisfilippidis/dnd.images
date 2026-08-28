@@ -1065,7 +1065,7 @@ body.map-page {
 /* ===== Feat Cards (черты плута) ===== */
 .feat-cards {
   --feat-side-shadow: var(--color-text-heading);
-  --feat-side-light: var(--color-error);
+  --feat-side-panache: var(--color-error);
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 12px;
@@ -1088,8 +1088,8 @@ body.map-page {
   border-left: 3px solid rgb(from var(--feat-side-shadow) r g b / 0.6);
 }
 
-.feat-card--light {
-  border-left: 3px solid rgb(from var(--feat-side-light) r g b / 0.6);
+.feat-card--panache {
+  border-left: 3px solid rgb(from var(--feat-side-panache) r g b / 0.6);
 }
 
 .feat-card-header {

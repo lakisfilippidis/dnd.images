@@ -40,7 +40,8 @@ module.exports = async function (eleventyConfig) {
   function featCardHtml(feat, { level = null, note = null, link = false } = {}) {
     const group = groupById.get(feat.group);
     const sphere = sphereById.get(feat.sphere);
-    const side = feat.side ? sideById.get(feat.side) : null;
+    const side = sideById.get(feat.side);
+    if (feat.side && !side) throw new Error(`feat "${feat.id}": unknown side "${feat.side}"`);
     const name = link
       ? `<a href="../../Classes/rogue/#feat-${feat.id}">${feat.name}</a>`
       : feat.name;
