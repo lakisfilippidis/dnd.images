@@ -5,12 +5,8 @@
     <img class="home-section-map-preview" eleventy:widths="440,800" sizes="(max-width: 600px) 90vw, 320px" src="{{ item.url }}map.jpg" alt="">
   {% else %}
     {% if withPreview %}
-      {% if item.data.preview %}
-        <img class="home-section-preview" width="96" src="{{ item.url }}{{ item.data.preview }}" alt="">
-      {% elif item.data.portrait %}
-        <img class="home-section-preview" width="96" src="{{ item.url }}{{ item.data.portrait }}" alt="">
-      {% elif item.data.gallery %}
-        <img class="home-section-preview" width="96" src="{{ item.url }}{{ item.data.gallery | first }}" alt="">
+      {% if item.data.previewImage %}
+        <img class="home-section-preview" width="96" src="{{ item.url }}{{ item.data.previewImage }}" alt="">
       {% endif %}
     {% endif %}
     {% if typeMeta %}<img class="item-icon" eleventy:ignore src="{{ ('/icons/' + typeMeta.icon) | url }}" alt="{{ typeMeta.label }}" title="{{ typeMeta.label }}">{% endif %}
@@ -22,7 +18,7 @@
       ac="{{ item.data.combat['КБ'].value }}"
       hp="{{ item.data.combat['КЗ'].value }}"
       init-mod="{{ item.data.combat['Инициатива'].value }}"
-      image="{% if item.data.preview %}{{ item.url | url }}{{ item.data.preview }}{% elif item.data.portrait %}{{ item.url | url }}{{ item.data.portrait }}{% elif item.data.gallery %}{{ item.url | url }}{{ item.data.gallery | first }}{% endif %}"
+      image="{% if item.data.previewImage %}{{ item.url | url }}{{ item.data.previewImage }}{% endif %}"
       size="{{ item.data.size | default('medium') }}"
       link="{{ item.url | url }}"></add-to-battle>
     {% endif %}

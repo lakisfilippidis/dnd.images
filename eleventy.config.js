@@ -1,3 +1,6 @@
+const fs = require("node:fs");
+const path = require("node:path");
+
 module.exports = async function (eleventyConfig) {
   const { eleventyImageTransformPlugin } = await import("@11ty/eleventy-img");
 
@@ -22,6 +25,19 @@ module.exports = async function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy("src/icons");
   eleventyConfig.addPassthroughCopy("src/**/*.jpg");
   eleventyConfig.addPassthroughCopy("src/**/*.png");
+
+  // Картинка-превью страницы (главная, «В бой»): первая из preview /
+  // portrait / gallery[0], которая реально лежит рядом с index.md. Раздел
+  // задаёт preview: head.jpg по умолчанию, а голову рисуют не всем — без
+  // проверки главная падала на первом персонаже без head.jpg.
+  eleventyConfig.addGlobalData("eleventyComputed", {
+    previewImage: (data) => {
+      if (!data.page?.inputPath) return "";
+      const dir = path.dirname(data.page.inputPath);
+      const candidates = [data.preview, data.portrait, data.gallery?.[0]];
+      return candidates.find((f) => typeof f === "string" && f !== "" && fs.existsSync(path.join(dir, f))) ?? "";
+    },
+  });
 
 
   // Карточки черт плута (src/_data/rogueFeats.js). Страницы, где они

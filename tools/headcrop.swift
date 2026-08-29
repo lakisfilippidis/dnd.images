@@ -6,7 +6,9 @@ import UniformTypeIdentifiers
 
 // Usage: swift headcrop.swift <input> <output> [--size N]
 // Crops a square head close-up from a portrait image using Vision:
-// human face -> animal -> attention saliency -> top-center fallback.
+// human face -> body-pose head joints -> animal -> attention saliency ->
+// top-center fallback. The pose stage catches profile and shadowed faces the
+// face detector misses.
 
 let args = CommandLine.arguments
 guard args.count >= 3 else {
@@ -38,6 +40,38 @@ func detect<T: VNObservation>(_ request: VNImageBasedRequest, as type: T.Type) -
     return (request.results as? [T]) ?? []
 }
 
+// Head from body-pose keypoints: the centre of the nose/eyes/ears cluster,
+// nudged up to take in the hair; the crop side scales with the neck-to-nose
+// distance (roughly one head height), falling back to the eye span.
+func headFromPose() -> (center: CGPoint, side: CGFloat)? {
+    let request = VNDetectHumanBodyPoseRequest()
+    let poses = detect(request, as: VNHumanBodyPoseObservation.self)
+    var best: (center: CGPoint, side: CGFloat)? = nil
+    for pose in poses {
+        guard let points = try? pose.recognizedPoints(.all) else { continue }
+        func pt(_ name: VNHumanBodyPoseObservation.JointName) -> CGPoint? {
+            guard let p = points[name], p.confidence > 0.3 else { return nil }
+            return CGPoint(x: p.x * W, y: (1 - p.y) * H)
+        }
+        let headPoints = [pt(.nose), pt(.leftEye), pt(.rightEye), pt(.leftEar), pt(.rightEar)].compactMap { $0 }
+        guard headPoints.count >= 2 else { continue }
+        let cx = headPoints.map(\.x).reduce(0, +) / CGFloat(headPoints.count)
+        let cy = headPoints.map(\.y).reduce(0, +) / CGFloat(headPoints.count)
+        var unit: CGFloat
+        if let nose = pt(.nose), let neck = pt(.neck) {
+            unit = hypot(nose.x - neck.x, nose.y - neck.y)
+        } else {
+            let xs = headPoints.map(\.x)
+            unit = (xs.max()! - xs.min()!) * 1.6
+        }
+        guard unit > 0 else { continue }
+        let side = unit * 3.2
+        let candidate = (center: CGPoint(x: cx, y: cy - unit * 0.3), side: side)
+        if best == nil || side > best!.side { best = candidate }
+    }
+    return best
+}
+
 var cropCenter: CGPoint
 var cropSide: CGFloat
 var method: String
@@ -49,6 +83,10 @@ if let face = faces.max(by: { $0.boundingBox.width < $1.boundingBox.width }) {
     cropCenter = CGPoint(x: f.midX, y: f.midY - f.height * 0.12)
     cropSide = max(f.width, f.height) * 2.1
     method = "face"
+} else if let head = headFromPose() {
+    cropCenter = head.center
+    cropSide = head.side
+    method = "pose"
 } else {
     let animals = detect(VNRecognizeAnimalsRequest(), as: VNRecognizedObjectObservation.self)
     if let animal = animals.max(by: { $0.boundingBox.width * $0.boundingBox.height < $1.boundingBox.width * $1.boundingBox.height }) {
