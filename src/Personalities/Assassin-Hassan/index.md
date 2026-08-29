@@ -56,7 +56,7 @@ combat:
 
 ### Доп. снаряжение
 
-- **Две дозы зелья гашишина**
+- **Четыре дозы гашиша по три доли**
 
 - **Верёвка с кошкой, тёмный плащ**
 
@@ -82,7 +82,7 @@ combat:
 
 Выбор на каждом уровне:
 
-{% featPicks "assassinate:1; hashishin-brew:2; nimble:3; training:4:Ловкость 14 → 16; ambush:5; uncanny-dodge:6; evasion:7; training:8:Ловкость 16 → 18; silent-step:9; reliable-talent:10; stash:11:Клинок и флаконы не находят при обыске" %}
+{% featPicks "assassinate:1; apothecary-kit:2:Гашиш и Жгучий корень; nimble:3; training:4:Ловкость 14 → 16; ambush:5; uncanny-dodge:6; evasion:7; training:8:Ловкость 16 → 18; silent-step:9; reliable-talent:10; stash:11:Клинок и флаконы не находят при обыске" %}
 
 *Дальше:* на 13-м — Смертельный удар, на 17-м — Тихая смерть.
 
