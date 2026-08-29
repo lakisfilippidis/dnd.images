@@ -1151,6 +1151,53 @@ body.map-page {
   color: var(--color-text-muted);
 }
 
+.recipe-cards {
+  --recipe-kind-poison: #4a6b2a;
+  --recipe-kind-potion: #2a5a6b;
+  --recipe-kind-base: var(--color-text-muted);
+}
+
+.recipe-card--poison {
+  border-left: 3px solid rgb(from var(--recipe-kind-poison) r g b / 0.6);
+}
+
+.recipe-card--potion {
+  border-left: 3px solid rgb(from var(--recipe-kind-potion) r g b / 0.6);
+}
+
+.recipe-card--base {
+  border-left: 3px solid rgb(from var(--recipe-kind-base) r g b / 0.5);
+}
+
+.recipe-card-doles {
+  margin: 0;
+  font-size: 0.85em;
+  color: var(--color-text-muted);
+}
+
+.recipe-stack {
+  display: grid;
+  grid-template-columns: 4.6em 1fr;
+  gap: 0 8px;
+  margin: 0;
+  padding-top: 5px;
+  border-top: 1px solid var(--color-border-light);
+  font-size: 0.9em;
+  color: var(--color-text-subtle);
+}
+
+.recipe-stack:first-of-type {
+  border-top: none;
+  padding-top: 0;
+}
+
+.recipe-stack-label {
+  font-size: 0.85em;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+}
+
 .feat-legend {
   margin: 1em 0;
   font-size: 0.9em;
