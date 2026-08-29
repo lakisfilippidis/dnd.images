@@ -1,8 +1,11 @@
-// Конструктор дозы: выбираешь ступень, основу, ингредиенты — и видишь, какие
-// эффекты попадут в дозу и какой силы. Данные приходят из шорткода alchemyLab
-// (eleventy.config.js) в атрибуте data-lab (JSON в base64 — markdown-типограф не трогает); правила те же, что в Рецептуре:
-// эффект попадает в дозу, если есть хотя бы у двух ингредиентов, сила — их число
-// минус один (не больше трёх долей), эффекты выше ступени не попадают.
+// Конструктор дозы: открывается кнопкой в диалоге; выбираешь ступень, основу,
+// ингредиенты — и видишь, какие эффекты попадут в дозу и какой силы. Данные
+// приходят из шорткода alchemyLab (eleventy.config.js) в атрибуте data-lab
+// (JSON в base64 — markdown-типограф не трогает). Правила те же, что в
+// Рецептуре: эффект попадает в дозу, если есть хотя бы у двух ингредиентов,
+// сила — их число минус один (не больше трёх долей), эффекты выше ступени не
+// попадают. На странице персонажа (options.known = "page") в выбор идут только
+// травы из его карточек — список лежит в data-known-ingredients у ingredientPicks.
 
 const CAPACITY = { apprentice: 2, journeyman: 3, master: 4, virtuoso: 5, legend: 7 };
 const PROFICIENCY = { apprentice: 2, journeyman: 3, master: 4, virtuoso: 5, legend: 6 };
@@ -18,18 +21,31 @@ function initLab(root) {
   const tierIndex = new Map(data.tiers.map((t, i) => [t.id, i]));
   const effectById = new Map(data.effects.map((e) => [e.id, e]));
 
+  const options = data.options ?? {};
+  const knownList = options.known === "page"
+    ? (document.querySelector("[data-known-ingredients]")?.dataset.knownIngredients ?? "").split(",").filter(Boolean)
+    : [];
+  const known = new Set(knownList);
+
   const state = {
-    tier: "apprentice",
+    tier: options.tier && CAPACITY[options.tier] ? options.tier : "apprentice",
     base: "blade",
-    intMod: 2,
-    still: 0,   // Перегонный куб — сколько полезных эффектов можно убрать
-    retort: 0,  // Реторта — сколько вредных
+    intMod: Number(options.int ?? 2) || 0,
+    still: Number(options.still ?? 0) || 0,   // Перегонный куб — сколько полезных эффектов можно убрать
+    retort: Number(options.retort ?? 0) || 0, // Реторта — сколько вредных
+    onlyKnown: known.size > 0,
     selected: new Set(),
     removed: new Set(),
   };
 
   root.innerHTML = "";
   root.classList.add("alchemy-lab--ready");
+
+  const head = document.createElement("div");
+  head.className = "alchemy-lab-head";
+  head.innerHTML = `<p class="alchemy-lab-title">Конструктор дозы</p><button type="button" class="alchemy-lab-close" aria-label="Закрыть">Закрыть</button>`;
+  root.append(head);
+  head.querySelector(".alchemy-lab-close").addEventListener("click", () => root.closest("dialog")?.close());
 
   const controls = document.createElement("div");
   controls.className = "alchemy-lab-controls";
@@ -49,7 +65,12 @@ function initLab(root) {
     <label class="alchemy-lab-field">Реторта
       <input type="number" data-field="retort" value="0" min="0" max="4" step="1" title="Сколько раз взят Аптекарь: столько вредных эффектов можно убрать">
     </label>
+    ${known.size ? `<label class="alchemy-lab-field alchemy-lab-field--check"><input type="checkbox" data-field="onlyKnown" checked> только известные травы</label>` : ""}
   `;
+  controls.querySelector("[data-field=tier]").value = state.tier;
+  controls.querySelector("[data-field=intMod]").value = state.intMod;
+  controls.querySelector("[data-field=still]").value = state.still;
+  controls.querySelector("[data-field=retort]").value = state.retort;
   root.append(controls);
 
   const picker = document.createElement("div");
@@ -64,6 +85,7 @@ function initLab(root) {
     const field = event.target.dataset.field;
     if (!field) return;
     if (field === "tier" || field === "base") state[field] = event.target.value;
+    else if (field === "onlyKnown") state.onlyKnown = event.target.checked;
     else state[field] = Number(event.target.value) || 0;
     trim();
     render();
@@ -133,7 +155,8 @@ function initLab(root) {
     for (const id of [...state.removed]) if (!activeIds.has(id)) state.removed.delete(id);
 
     picker.innerHTML = data.regions.map((region) => {
-      const items = data.ingredients.filter((i) => i.region === region.id);
+      const items = data.ingredients.filter((i) => i.region === region.id && (!state.onlyKnown || known.has(i.id)));
+      if (items.length === 0) return "";
       return `<div class="alchemy-lab-region"><p class="alchemy-lab-region-title">${region.title}</p><div class="alchemy-lab-chips">${items.map((i) => {
         const on = state.selected.has(i.id);
         const disabled = !on && state.selected.size >= cap;
@@ -183,4 +206,16 @@ function initLab(root) {
   render();
 }
 
-for (const root of document.querySelectorAll(".alchemy-lab")) initLab(root);
+// Диалог собирается при первом открытии — на странице может быть только кнопка
+for (const button of document.querySelectorAll(".alchemy-lab-open")) {
+  const dialog = button.parentElement.nextElementSibling;
+  if (!(dialog instanceof HTMLDialogElement)) continue;
+  button.addEventListener("click", () => {
+    const root = dialog.querySelector(".alchemy-lab");
+    if (root && !root.classList.contains("alchemy-lab--ready")) initLab(root);
+    dialog.showModal();
+  });
+  dialog.addEventListener("click", (event) => {
+    if (event.target === dialog) dialog.close();
+  });
+}

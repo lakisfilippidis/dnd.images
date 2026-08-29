@@ -1,6 +1,7 @@
 ---
 title: "Сурен Горчак"
 class: "rogue"
+alchemyLab: true
 stats:
   Сила: 12
   Ловкость: 14
@@ -72,6 +73,8 @@ combat:
 ### Ингредиенты
 
 {% ingredientPicks "burning-root; wormwood; hemp:Первое, что научился варить, — и единственное, чего сам не пьёт; poppy; snow-hellebore; owl-fern" %}
+
+{% alchemyLab "known:page; tier:apprentice; int:3; still:1; retort:1" %}
 
 ---
 

@@ -171,9 +171,10 @@ module.exports = async function (eleventyConfig) {
       const [id, ...noteParts] = pick.split(":").map((x) => x.trim());
       const ingredient = ingredientById.get(id);
       if (!ingredient) throw new Error(`ingredientPicks: unknown ingredient "${id}"`);
-      return ingredientCardHtml(ingredient, { note: noteParts.join(":") || null, link: true });
+      return { card: ingredientCardHtml(ingredient, { note: noteParts.join(":") || null, link: true }), id };
     });
-    return `<div class="feat-cards recipe-cards">${cards.join("")}</div>`;
+    const ids = cards.map((c) => c.id).join(",");
+    return `<div class="feat-cards recipe-cards" data-known-ingredients="${ids}">${cards.map((c) => c.card).join("")}</div>`;
   });
 
   // Основы — способ доставки
@@ -193,19 +194,34 @@ module.exports = async function (eleventyConfig) {
     return `<div class="feat-cards recipe-cards">${cards.join("")}</div>`;
   });
 
-  // Конструктор дозы — контейнер с данными для src/scripts/alchemy-lab.js
-  eleventyConfig.addShortcode("alchemyLab", function () {
+  // Конструктор дозы: кнопка и диалог с данными для src/scripts/alchemy-lab.js.
+  // Аргумент — настройки "ключ:значение; ...": tier (ступень), int (модификатор
+  // Интеллекта), still (перегонных кубов), retort (реторт), known:page — брать
+  // список известных трав из ingredientPicks на той же странице.
+  eleventyConfig.addShortcode("alchemyLab", function (options = "") {
+    const opts = {};
+    for (const pair of String(options).split(";")) {
+      const [key, value] = pair.split(":").map((x) => x.trim());
+      if (key) opts[key] = value ?? "true";
+    }
+    if (opts.tier && !recipeTierById.has(opts.tier)) throw new Error(`alchemyLab: unknown tier "${opts.tier}"`);
     const payload = {
       tiers: rogueRecipes.tiers,
       regions: rogueRecipes.regions.map(({ id, title }) => ({ id, title })),
       effects: rogueRecipes.effects,
       ingredients: rogueRecipes.ingredients,
       bases: rogueRecipes.bases.map(({ id, name, slots }) => ({ id, name, slots })),
+      options: opts,
     };
     // Страница — markdown, и типограф правит кавычки даже внутри <script>,
     // поэтому данные едут в base64 и распаковываются скриптом.
     const encoded = Buffer.from(JSON.stringify(payload), "utf8").toString("base64");
-    return `<div class="alchemy-lab" id="alchemy-lab" data-lab="${encoded}"><p class="alchemy-lab-noscript">Конструктор дозы работает при включённом JavaScript.</p></div>`;
+    return [
+      `<p class="alchemy-lab-launch"><button type="button" class="alchemy-lab-open">Сварить дозу</button></p>`,
+      `<dialog class="alchemy-lab-dialog">`,
+      `<div class="alchemy-lab" data-lab="${encoded}"><p class="alchemy-lab-noscript">Конструктор дозы работает при включённом JavaScript.</p></div>`,
+      `</dialog>`,
+    ].join("");
   });
 
   // Сборка персонажа: "id:уровень; id:уровень:пометка; ..."

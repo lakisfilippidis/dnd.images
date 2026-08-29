@@ -1,6 +1,7 @@
 ---
 title: "Ширин из Аптекарского ряда"
 class: "rogue"
+alchemyLab: true
 preview: ""
 stats:
   Сила: 8
@@ -69,6 +70,8 @@ combat:
 ## Ингредиенты
 
 {% ingredientPicks "burning-root; poppy; wormwood; rose-oil:Покупает у румских парфюмеров; urchin-spine; moon-kelp; snow-hellebore:Привозная, с гурдийских снежников" %}
+
+{% alchemyLab "known:page; tier:journeyman; int:2; still:1; retort:0" %}
 
 ---
 
