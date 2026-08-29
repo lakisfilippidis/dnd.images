@@ -1,6 +1,7 @@
 ---
 title: "Идомен Маврокардиа"
 class: "savage"
+preview: ""
 portrait: character_image.jpg
 stats:
   Сила: 17
