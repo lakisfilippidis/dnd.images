@@ -1289,12 +1289,58 @@ body.map-page {
   color: var(--color-text-heading);
 }
 
-.alchemy-lab-field.alchemy-lab-field--check {
-  flex-direction: row;
-  align-items: center;
-  align-self: flex-end;
-  gap: 6px;
-  padding-bottom: 6px;
+.alchemy-lab-scope {
+  display: inline-flex;
+  margin-bottom: 10px;
+  border: 1px solid var(--color-border-table-dark);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.alchemy-lab-scope-button {
+  padding: 5px 14px;
+  font: inherit;
+  font-size: 0.9em;
+  color: var(--color-text-subtle);
+  background: var(--color-bg-white);
+  border: none;
+  cursor: pointer;
+}
+
+.alchemy-lab-scope-button + .alchemy-lab-scope-button {
+  border-left: 1px solid var(--color-border-table-dark);
+}
+
+.alchemy-lab-scope-button.is-on {
+  color: var(--color-bg-white);
+  background: var(--color-text-heading);
+}
+
+.alchemy-lab-chip.is-foreign {
+  border-style: dashed;
+}
+
+.alchemy-lab-chip-count {
+  font-family: var(--font-sans-full);
+  font-size: 0.8em;
+  color: var(--color-text-muted);
+}
+
+.alchemy-lab-chip-minus {
+  align-self: stretch;
+  padding: 0 8px;
+  margin-left: -6px;
+  font: inherit;
+  color: var(--color-text-subtle);
+  background: var(--color-bg-light);
+  border: 1px solid var(--color-text-heading);
+  border-left: none;
+  border-radius: 0 var(--radius-item) var(--radius-item) 0;
+  cursor: pointer;
+}
+
+.alchemy-lab-chip.is-on {
+  border-radius: var(--radius-item) 0 0 var(--radius-item);
 }
 
 .alchemy-lab--ready .alchemy-lab-noscript {
@@ -1377,6 +1423,10 @@ body.map-page {
 .alchemy-lab-chip:disabled {
   opacity: 0.45;
   cursor: default;
+}
+
+.alchemy-lab-chip.is-on:disabled {
+  opacity: 1;
 }
 
 .alchemy-lab-chip-name {

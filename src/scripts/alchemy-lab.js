@@ -33,7 +33,7 @@ function initLab(root) {
     still: Number(options.still ?? 0) || 0,   // Перегонный куб — сколько полезных эффектов можно убрать
     retort: Number(options.retort ?? 0) || 0, // Реторта — сколько вредных
     onlyKnown: known.size > 0,
-    selected: new Set(),
+    selected: new Map(), // id ингредиента → число порций
     removed: new Set(),
   };
 
@@ -64,13 +64,28 @@ function initLab(root) {
     <label class="alchemy-lab-field">Реторта
       <input type="number" data-field="retort" value="0" min="0" max="4" step="1" title="Сколько раз взят Аптекарь: столько вредных эффектов можно убрать">
     </label>
-    ${known.size ? `<label class="alchemy-lab-field alchemy-lab-field--check"><input type="checkbox" data-field="onlyKnown" checked> только известные травы</label>` : ""}
   `;
   controls.querySelector("[data-field=tier]").value = state.tier;
   controls.querySelector("[data-field=intMod]").value = state.intMod;
   controls.querySelector("[data-field=still]").value = state.still;
   controls.querySelector("[data-field=retort]").value = state.retort;
   root.append(controls);
+
+  // Переключатель списка: свои травы персонажа или все, что есть в Рецептуре
+  if (known.size) {
+    const scope = document.createElement("div");
+    scope.className = "alchemy-lab-scope";
+    scope.innerHTML = `<button type="button" class="alchemy-lab-scope-button" data-scope="known">Свои травы (${known.size})</button><button type="button" class="alchemy-lab-scope-button" data-scope="all">Все травы (${data.ingredients.length})</button>`;
+    scope.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-scope]");
+      if (!button) return;
+      state.onlyKnown = button.dataset.scope === "known";
+      for (const b of scope.querySelectorAll("[data-scope]")) b.classList.toggle("is-on", b === button);
+      render();
+    });
+    scope.querySelector("[data-scope=known]").classList.add("is-on");
+    root.append(scope);
+  }
 
   const picker = document.createElement("div");
   picker.className = "alchemy-lab-picker";
@@ -84,18 +99,25 @@ function initLab(root) {
     const field = event.target.dataset.field;
     if (!field) return;
     if (field === "tier" || field === "base") state[field] = event.target.value;
-    else if (field === "onlyKnown") state.onlyKnown = event.target.checked;
     else state[field] = Number(event.target.value) || 0;
     trim();
     render();
   });
 
   picker.addEventListener("click", (event) => {
+    const minus = event.target.closest("[data-minus]");
+    if (minus) {
+      const id = minus.dataset.minus;
+      const n = (state.selected.get(id) ?? 0) - 1;
+      if (n > 0) state.selected.set(id, n);
+      else state.selected.delete(id);
+      render();
+      return;
+    }
     const button = event.target.closest("[data-ingredient]");
     if (!button) return;
     const id = button.dataset.ingredient;
-    if (state.selected.has(id)) state.selected.delete(id);
-    else if (state.selected.size < capacity()) state.selected.add(id);
+    if (selectedCount() < capacity()) state.selected.set(id, (state.selected.get(id) ?? 0) + 1);
     render();
   });
 
@@ -116,19 +138,28 @@ function initLab(root) {
     return Math.max(0, CAPACITY[state.tier] - baseSlots());
   }
 
-  // Если ёмкость уменьшилась — лишние ингредиенты выпадают, последние первыми
+  function selectedCount() {
+    let n = 0;
+    for (const c of state.selected.values()) n += c;
+    return n;
+  }
+
+  // Если ёмкость уменьшилась — лишние порции выпадают, последние первыми
   function trim() {
     const cap = capacity();
-    const list = [...state.selected];
-    while (list.length > cap) list.pop();
-    state.selected = new Set(list);
+    while (selectedCount() > cap) {
+      const lastId = [...state.selected.keys()].pop();
+      const n = state.selected.get(lastId) - 1;
+      if (n > 0) state.selected.set(lastId, n);
+      else state.selected.delete(lastId);
+    }
   }
 
   function brew() {
     const count = new Map();
-    for (const id of state.selected) {
+    for (const [id, portions] of state.selected) {
       const ingredient = data.ingredients.find((i) => i.id === id);
-      for (const e of ingredient.effects) count.set(e, (count.get(e) ?? 0) + 1);
+      for (const e of ingredient.effects) count.set(e, (count.get(e) ?? 0) + portions);
     }
     const rows = [];
     for (const [effectId, n] of count) {
@@ -155,24 +186,26 @@ function initLab(root) {
       const items = data.ingredients.filter((i) => i.region === region.id && (!state.onlyKnown || known.has(i.id)));
       if (items.length === 0) return "";
       return `<div class="alchemy-lab-region"><p class="alchemy-lab-region-title">${region.title}</p><div class="alchemy-lab-chips">${items.map((i) => {
-        const on = state.selected.has(i.id);
-        const disabled = !on && state.selected.size >= cap;
+        const portions = state.selected.get(i.id) ?? 0;
+        const on = portions > 0;
+        const disabled = selectedCount() >= cap;
         const effects = i.effects.map((e) => {
           const effect = effectById.get(e);
           return `<span class="alchemy-lab-mini alchemy-lab-mini--${effect.kind}">${effect.kind === "harm" ? "−" : "+"}${effect.name}</span>`;
         }).join("");
-        return `<button type="button" class="alchemy-lab-chip${on ? " is-on" : ""}" data-ingredient="${i.id}"${disabled ? " disabled" : ""}><span class="alchemy-lab-chip-name">${i.name}</span><span class="alchemy-lab-chip-effects">${effects}</span></button>`;
+        const foreign = known.size > 0 && !known.has(i.id);
+        return `<button type="button" class="alchemy-lab-chip${on ? " is-on" : ""}${foreign ? " is-foreign" : ""}" data-ingredient="${i.id}"${disabled ? " disabled" : ""}${foreign ? ` title="Этой травы персонаж пока не знает"` : ""}><span class="alchemy-lab-chip-name">${i.name}${portions > 1 ? ` <span class="alchemy-lab-chip-count">×${portions}</span>` : ""}</span><span class="alchemy-lab-chip-effects">${effects}</span></button>${on ? `<button type="button" class="alchemy-lab-chip-minus" data-minus="${i.id}" title="Убрать порцию">−</button>` : ""}`;
       }).join("")}</div></div>`;
     }).join("");
 
-    const used = state.selected.size + baseSlots();
+    const used = selectedCount() + baseSlots();
     const total = CAPACITY[state.tier];
     const dc = 8 + PROFICIENCY[state.tier] + state.intMod + (state.still > 0 ? 1 : 0);
     const stillUsed = rows.filter((r) => r.effect.kind === "boon" && state.removed.has(r.effect.id)).length;
     const retortUsed = rows.filter((r) => r.effect.kind === "harm" && state.removed.has(r.effect.id)).length;
 
     let body = "";
-    if (state.selected.size < 2) {
+    if (selectedCount() < 2) {
       body = `<p class="alchemy-lab-empty">Выбери хотя бы два ингредиента.</p>`;
     } else if (rows.length === 0) {
       body = `<p class="alchemy-lab-empty">Общих эффектов нет — ингредиенты пропали.</p>`;
