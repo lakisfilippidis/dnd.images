@@ -1,6 +1,7 @@
 ---
 title: "Сурен Горчак"
 class: "rogue"
+portrait: character_image.jpg
 alchemyLab: true
 stats:
   Сила: 12
