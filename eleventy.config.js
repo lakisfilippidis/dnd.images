@@ -96,7 +96,7 @@ module.exports = async function (eleventyConfig) {
   // Рецептура (src/_data/rogueRecipes.js): эффекты, ингредиенты и основы.
   // Доза собирается из ингредиентов; эффект попадает в неё, если есть хотя бы
   // у двух, а сила — число таких ингредиентов минус один, отсюда три строки
-  // у карточки эффекта. Карточка ингредиента перечисляет его четыре эффекта
+  // у карточки эффекта. Ступень ограничивает только число ингредиентов. Карточка ингредиента перечисляет его четыре эффекта
   // со знаком: «−» вред, «+» польза.
   const rogueRecipes = require("./src/_data/rogueRecipes.js");
   const effectById = new Map(rogueRecipes.effects.map((e) => [e.id, e]));
@@ -107,12 +107,11 @@ module.exports = async function (eleventyConfig) {
 
   function effectCardHtml(effect) {
     const kind = effectKindById.get(effect.kind);
-    const tier = recipeTierById.get(effect.tier);
-    if (!kind || !tier) throw new Error(`effect "${effect.id}": unknown kind or tier`);
+    if (!kind) throw new Error(`effect "${effect.id}": unknown kind "${effect.kind}"`);
     const rows = effect.stacks.map((text, i) =>
       `<p class="recipe-stack"><span class="recipe-stack-label">${i + 1} ${i === 0 ? "доля" : "доли"}</span> ${text}</p>`
     ).join("");
-    const meta = [kind.title, tier.title, effect.save ? `спасбросок ${effect.save}` : null].filter(Boolean).join(", ");
+    const meta = [kind.title, effect.save ? `спасбросок ${effect.save}` : null].filter(Boolean).join(", ");
     return [
       `<article class="feat-card recipe-card recipe-card--${kind.id}" id="effect-${effect.id}">`,
       `<header class="feat-card-header"><h4 class="feat-card-name">${effect.name}</h4>${featIcon(kind)}</header>`,
@@ -148,13 +147,10 @@ module.exports = async function (eleventyConfig) {
     ].join("");
   }
 
-  // Эффекты одного рода и одной ступени: "harm:apprentice", "boon:master"
-  eleventyConfig.addShortcode("effectCards", function (selector) {
-    const [kindId, tierId] = String(selector).split(":").map((x) => x.trim());
+  // Эффекты одного рода: "harm" или "boon"
+  eleventyConfig.addShortcode("effectCards", function (kindId) {
     if (!effectKindById.has(kindId)) throw new Error(`effectCards: unknown kind "${kindId}"`);
-    if (!recipeTierById.has(tierId)) throw new Error(`effectCards: unknown tier "${tierId}"`);
-    const cards = rogueRecipes.effects.filter((e) => e.kind === kindId && e.tier === tierId).map(effectCardHtml);
-    if (cards.length === 0) throw new Error(`effectCards: nothing matches "${selector}"`);
+    const cards = rogueRecipes.effects.filter((e) => e.kind === kindId).map(effectCardHtml);
     return `<div class="feat-cards recipe-cards">${cards.join("")}</div>`;
   });
 

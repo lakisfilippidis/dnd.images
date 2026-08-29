@@ -3,11 +3,11 @@
 // приходят из шорткода alchemyLab (eleventy.config.js) в атрибуте data-lab
 // (JSON в base64 — markdown-типограф не трогает). Правила те же, что в
 // Рецептуре: эффект попадает в дозу, если есть хотя бы у двух ингредиентов,
-// сила — их число минус один (не больше трёх долей), эффекты выше ступени не
-// попадают. На странице персонажа (options.known = "page") в выбор идут только
+// сила — их число минус один (не больше трёх долей); ступень задаёт только
+// число ингредиентов. На странице персонажа (options.known = "page") в выбор идут только
 // травы из его карточек — список лежит в data-known-ingredients у ingredientPicks.
 
-const CAPACITY = { apprentice: 2, journeyman: 3, master: 4, virtuoso: 5, legend: 7 };
+const CAPACITY = { apprentice: 3, journeyman: 4, master: 5, virtuoso: 6, legend: 7 };
 const PROFICIENCY = { apprentice: 2, journeyman: 3, master: 4, virtuoso: 5, legend: 6 };
 const MAX_STACKS = 3;
 
@@ -18,7 +18,6 @@ function dolesWord(n) {
 function initLab(root) {
   const bytes = Uint8Array.from(atob(root.dataset.lab), (c) => c.charCodeAt(0));
   const data = JSON.parse(new TextDecoder().decode(bytes));
-  const tierIndex = new Map(data.tiers.map((t, i) => [t.id, i]));
   const effectById = new Map(data.effects.map((e) => [e.id, e]));
 
   const options = data.options ?? {};
@@ -131,7 +130,6 @@ function initLab(root) {
       const ingredient = data.ingredients.find((i) => i.id === id);
       for (const e of ingredient.effects) count.set(e, (count.get(e) ?? 0) + 1);
     }
-    const brewerTier = tierIndex.get(state.tier);
     const rows = [];
     for (const [effectId, n] of count) {
       if (n < 2) continue;
@@ -141,7 +139,6 @@ function initLab(root) {
         count: n,
         stacks: Math.min(n - 1, MAX_STACKS),
         extra: effect.kind === "harm" && effect.id !== "damage" ? Math.max(0, n - 4) : 0,
-        locked: tierIndex.get(effect.tier) > brewerTier,
       });
     }
     rows.sort((a, b) => (a.effect.kind === b.effect.kind ? b.count - a.count : a.effect.kind === "harm" ? -1 : 1));
@@ -151,7 +148,7 @@ function initLab(root) {
   function render() {
     const cap = capacity();
     const rows = brew();
-    const activeIds = new Set(rows.filter((r) => !r.locked).map((r) => r.effect.id));
+    const activeIds = new Set(rows.map((r) => r.effect.id));
     for (const id of [...state.removed]) if (!activeIds.has(id)) state.removed.delete(id);
 
     picker.innerHTML = data.regions.map((region) => {
@@ -182,18 +179,16 @@ function initLab(root) {
     } else {
       body = rows.map((r) => {
         const removed = state.removed.has(r.effect.id);
-        const canRemove = !r.locked && (r.effect.kind === "boon"
+        const canRemove = r.effect.kind === "boon"
           ? removed || stillUsed < state.still
-          : removed || retortUsed < state.retort);
-        const label = r.locked
-          ? `не по ступени — с ${data.tiers[tierIndex.get(r.effect.tier)].title.replace(/ь$/, "я").replace(/к$/, "ка")}`
-          : `${r.stacks} ${dolesWord(r.stacks)}${r.extra ? `, +${r.extra} к Сл` : ""}`;
-        const save = r.effect.kind === "harm" && !r.locked ? ` · спасбросок ${r.effect.save}, Сл ${dc + r.extra}` : "";
-        const text = r.locked ? "" : `<p class="alchemy-lab-effect-text">${r.effect.stacks[r.stacks - 1]}</p>`;
+          : removed || retortUsed < state.retort;
+        const label = `${r.stacks} ${dolesWord(r.stacks)}${r.extra ? `, +${r.extra} к Сл` : ""}`;
+        const save = r.effect.kind === "harm" ? ` · спасбросок ${r.effect.save}, Сл ${dc + r.extra}` : "";
+        const text = `<p class="alchemy-lab-effect-text">${r.effect.stacks[r.stacks - 1]}</p>`;
         const button = canRemove
           ? `<button type="button" class="alchemy-lab-remove" data-remove="${r.effect.id}">${removed ? "вернуть" : r.effect.kind === "boon" ? "убрать кубом" : "убрать ретортой"}</button>`
           : "";
-        return `<div class="alchemy-lab-effect alchemy-lab-effect--${r.effect.kind}${removed ? " is-removed" : ""}${r.locked ? " is-locked" : ""}">
+        return `<div class="alchemy-lab-effect alchemy-lab-effect--${r.effect.kind}${removed ? " is-removed" : ""}">
           <p class="alchemy-lab-effect-head"><span class="alchemy-lab-effect-sign">${r.effect.kind === "harm" ? "−" : "+"}</span><strong>${r.effect.name}</strong> <span class="alchemy-lab-effect-meta">${label}${save}</span>${button}</p>
           ${text}
         </div>`;
