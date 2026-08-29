@@ -1152,21 +1152,57 @@ body.map-page {
 }
 
 .recipe-cards {
-  --recipe-kind-poison: #4a6b2a;
-  --recipe-kind-potion: #2a5a6b;
-  --recipe-kind-base: var(--color-text-muted);
+  --recipe-harm: #4a6b2a;
+  --recipe-boon: #2a5a6b;
+  --recipe-base: var(--color-text-muted);
 }
 
-.recipe-card--poison {
-  border-left: 3px solid rgb(from var(--recipe-kind-poison) r g b / 0.6);
+.recipe-card--harm {
+  border-left: 3px solid rgb(from var(--recipe-harm) r g b / 0.6);
 }
 
-.recipe-card--potion {
-  border-left: 3px solid rgb(from var(--recipe-kind-potion) r g b / 0.6);
+.recipe-card--boon {
+  border-left: 3px solid rgb(from var(--recipe-boon) r g b / 0.6);
 }
 
 .recipe-card--base {
-  border-left: 3px solid rgb(from var(--recipe-kind-base) r g b / 0.5);
+  border-left: 3px solid rgb(from var(--recipe-base) r g b / 0.5);
+}
+
+.effect-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+}
+
+.effect-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 8px 2px 6px;
+  font-size: 0.85em;
+  color: var(--color-text-subtle);
+  text-decoration: none;
+  border: 1px solid var(--color-border-table);
+  border-radius: 999px;
+  background: var(--color-bg-light);
+}
+
+.effect-chip:hover {
+  border-color: var(--color-border-table-dark);
+}
+
+.effect-chip-sign {
+  font-weight: bold;
+}
+
+.effect-chip--harm .effect-chip-sign {
+  color: var(--recipe-harm);
+}
+
+.effect-chip--boon .effect-chip-sign {
+  color: var(--recipe-boon);
 }
 
 .recipe-card-doles {
@@ -1196,6 +1232,197 @@ body.map-page {
   text-transform: uppercase;
   letter-spacing: 0.04em;
   color: var(--color-text-muted);
+}
+
+.alchemy-lab {
+  margin: 1em 0;
+  padding: 14px;
+  background: var(--color-bg-white);
+  border: 1px solid var(--color-border-table);
+  border-radius: var(--radius-item);
+  box-shadow: var(--shadow-table);
+}
+
+.alchemy-lab--ready .alchemy-lab-noscript {
+  display: none;
+}
+
+.alchemy-lab-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  margin-bottom: 12px;
+}
+
+.alchemy-lab-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.85em;
+  color: var(--color-text-muted);
+}
+
+.alchemy-lab-field select,
+.alchemy-lab-field input {
+  font: inherit;
+  font-size: 1rem;
+  color: var(--color-text);
+  padding: 4px 6px;
+  border: 1px solid var(--color-border-table-dark);
+  border-radius: var(--radius-code);
+  background: var(--color-bg-white);
+}
+
+.alchemy-lab-field input {
+  width: 5em;
+}
+
+.alchemy-lab-region {
+  margin: 8px 0;
+}
+
+.alchemy-lab-region-title {
+  margin: 0 0 4px;
+  font-size: 0.8em;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+}
+
+.alchemy-lab-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.alchemy-lab-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  padding: 6px 10px;
+  font: inherit;
+  text-align: left;
+  color: var(--color-text);
+  background: var(--color-bg-light);
+  border: 1px solid var(--color-border-table);
+  border-radius: var(--radius-item);
+  cursor: pointer;
+}
+
+.alchemy-lab-chip:hover:not(:disabled) {
+  border-color: var(--color-border-table-dark);
+}
+
+.alchemy-lab-chip.is-on {
+  background: var(--color-bg-white);
+  border-color: var(--color-text-heading);
+  box-shadow: inset 0 0 0 1px var(--color-text-heading);
+}
+
+.alchemy-lab-chip:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.alchemy-lab-chip-name {
+  font-family: var(--font-fantasy);
+  font-size: 1.05em;
+}
+
+.alchemy-lab-chip-effects {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 6px;
+  font-size: 0.72em;
+  color: var(--color-text-muted);
+}
+
+.alchemy-lab-mini--harm {
+  color: var(--recipe-harm, #4a6b2a);
+}
+
+.alchemy-lab-mini--boon {
+  color: var(--recipe-boon, #2a5a6b);
+}
+
+.alchemy-lab-result {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--color-border-light);
+}
+
+.alchemy-lab-summary,
+.alchemy-lab-empty {
+  margin: 0 0 8px;
+  font-size: 0.92em;
+  color: var(--color-text-subtle);
+}
+
+.alchemy-lab-effect {
+  padding: 6px 0 6px 10px;
+  border-left: 3px solid var(--color-border-table);
+  margin-bottom: 6px;
+}
+
+.alchemy-lab-effect--harm {
+  border-left-color: rgb(from var(--recipe-harm, #4a6b2a) r g b / 0.6);
+}
+
+.alchemy-lab-effect--boon {
+  border-left-color: rgb(from var(--recipe-boon, #2a5a6b) r g b / 0.6);
+}
+
+.alchemy-lab-effect.is-removed,
+.alchemy-lab-effect.is-locked {
+  opacity: 0.5;
+}
+
+.alchemy-lab-effect.is-removed strong {
+  text-decoration: line-through;
+}
+
+.alchemy-lab-effect-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 8px;
+  margin: 0;
+}
+
+.alchemy-lab-effect-sign {
+  font-weight: bold;
+}
+
+.alchemy-lab-effect--harm .alchemy-lab-effect-sign {
+  color: var(--recipe-harm, #4a6b2a);
+}
+
+.alchemy-lab-effect--boon .alchemy-lab-effect-sign {
+  color: var(--recipe-boon, #2a5a6b);
+}
+
+.alchemy-lab-effect-meta {
+  font-size: 0.85em;
+  color: var(--color-text-muted);
+}
+
+.alchemy-lab-remove {
+  margin-left: auto;
+  padding: 2px 8px;
+  font: inherit;
+  font-size: 0.8em;
+  color: var(--color-text-subtle);
+  background: var(--color-bg-light);
+  border: 1px solid var(--color-border-table-dark);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.alchemy-lab-effect-text {
+  margin: 4px 0 0;
+  font-size: 0.9em;
+  color: var(--color-text-subtle);
 }
 
 .feat-legend {

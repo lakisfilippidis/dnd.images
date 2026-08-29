@@ -20,6 +20,9 @@
     {% if bodyClass == "home-page" %}
     <script type="module" src="{{ '/scripts/grid-lanes-fallback.js' | url }}"></script>
     {% endif %}
+    {% if alchemyLab %}
+    <script type="module" src="{{ '/scripts/alchemy-lab.js' | url }}"></script>
+    {% endif %}
   </head>
   <body{% if bodyClass %} class="{{ bodyClass }}"{% endif %}>
     <nav class="top-menu">

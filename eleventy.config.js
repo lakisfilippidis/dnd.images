@@ -93,67 +93,119 @@ module.exports = async function (eleventyConfig) {
     return `<div class="feat-legend">${row(rogueFeats.groups, "Группы")}${row(rogueFeats.spheres, "Тип влияния")}${row(rogueFeats.sides, "Сторона шкалы")}</div>`;
   });
 
-  // Карточки рецептов Рецептуры (src/_data/rogueRecipes.js): компоненты ядов,
-  // основы и зелья. Доза собирается из долей, поэтому у рецепта три ступени
-  // усиления; у основы вместо них — цена в долях.
+  // Рецептура (src/_data/rogueRecipes.js): эффекты, ингредиенты и основы.
+  // Доза собирается из ингредиентов; эффект попадает в неё, если есть хотя бы
+  // у двух, а сила — число таких ингредиентов минус один, отсюда три строки
+  // у карточки эффекта. Карточка ингредиента перечисляет его четыре эффекта
+  // со знаком: «−» вред, «+» польза.
   const rogueRecipes = require("./src/_data/rogueRecipes.js");
-  const recipeById = new Map(rogueRecipes.recipes.map((r) => [r.id, r]));
-  const kindById = new Map(rogueRecipes.kinds.map((k) => [k.id, k]));
+  const effectById = new Map(rogueRecipes.effects.map((e) => [e.id, e]));
+  const ingredientById = new Map(rogueRecipes.ingredients.map((i) => [i.id, i]));
+  const effectKindById = new Map(rogueRecipes.kinds.map((k) => [k.id, k]));
   const recipeTierById = new Map(rogueRecipes.tiers.map((t) => [t.id, t]));
+  const regionById = new Map(rogueRecipes.regions.map((r) => [r.id, r]));
 
-  function recipeCardHtml(recipe, { note = null, link = false } = {}) {
-    const kind = kindById.get(recipe.kind);
-    if (!kind) throw new Error(`recipe "${recipe.id}": unknown kind "${recipe.kind}"`);
-    const tier = recipeTierById.get(recipe.tier);
-    if (!tier) throw new Error(`recipe "${recipe.id}": unknown tier "${recipe.tier}"`);
-    const name = link
-      ? `<a href="../../Classes/rogue/#recipe-${recipe.id}">${recipe.name}</a>`
-      : recipe.name;
-    const doles = recipe.kind === "base"
-      ? `<p class="recipe-card-doles">${recipe.doles === 0 ? "Долей не занимает" : `Занимает долей: ${recipe.doles}`}</p>`
-      : "";
-    const body = recipe.kind === "base"
-      ? `<p class="feat-card-desc">${recipe.desc}</p>`
-      : (recipe.stacks ?? []).map((text, i) =>
-          `<p class="recipe-stack"><span class="recipe-stack-label">${i + 1} ${i === 0 ? "доля" : "доли"}</span> ${text}</p>`
-        ).join("");
+  function effectCardHtml(effect) {
+    const kind = effectKindById.get(effect.kind);
+    const tier = recipeTierById.get(effect.tier);
+    if (!kind || !tier) throw new Error(`effect "${effect.id}": unknown kind or tier`);
+    const rows = effect.stacks.map((text, i) =>
+      `<p class="recipe-stack"><span class="recipe-stack-label">${i + 1} ${i === 0 ? "доля" : "доли"}</span> ${text}</p>`
+    ).join("");
+    const meta = [kind.title, tier.title, effect.save ? `спасбросок ${effect.save}` : null].filter(Boolean).join(", ");
     return [
-      `<article class="feat-card recipe-card recipe-card--${kind.id}"${link ? "" : ` id="recipe-${recipe.id}"`}>`,
-      `<header class="feat-card-header">`,
-      `<h4 class="feat-card-name">${name}</h4>`,
-      featIcon(kind),
-      `</header>`,
-      `<p class="feat-card-req">${tier.id === "free" ? kind.title : `${kind.title}, ${tier.title}`}${recipe.tag ? ` &mdash; ${recipe.tag}` : ""}</p>`,
-      doles,
-      body,
+      `<article class="feat-card recipe-card recipe-card--${kind.id}" id="effect-${effect.id}">`,
+      `<header class="feat-card-header"><h4 class="feat-card-name">${effect.name}</h4>${featIcon(kind)}</header>`,
+      `<p class="feat-card-req">${meta}</p>`,
+      rows,
+      `</article>`,
+    ].join("");
+  }
+
+  function effectChip(effectId, { link = false } = {}) {
+    const effect = effectById.get(effectId);
+    if (!effect) throw new Error(`unknown effect "${effectId}"`);
+    const kind = effectKindById.get(effect.kind);
+    const label = `<span class="effect-chip-sign">${kind.sign}</span>${effect.name}`;
+    return link
+      ? `<a class="effect-chip effect-chip--${kind.id}" href="../../Classes/rogue/#effect-${effect.id}">${label}</a>`
+      : `<a class="effect-chip effect-chip--${kind.id}" href="#effect-${effect.id}">${label}</a>`;
+  }
+
+  function ingredientCardHtml(ingredient, { note = null, link = false } = {}) {
+    const region = regionById.get(ingredient.region);
+    if (!region) throw new Error(`ingredient "${ingredient.id}": unknown region "${ingredient.region}"`);
+    const name = link
+      ? `<a href="../../Classes/rogue/#ingredient-${ingredient.id}">${ingredient.name}</a>`
+      : ingredient.name;
+    return [
+      `<article class="feat-card recipe-card recipe-card--ingredient"${link ? "" : ` id="ingredient-${ingredient.id}"`}>`,
+      `<header class="feat-card-header"><h4 class="feat-card-name">${name}</h4></header>`,
+      `<p class="feat-card-req">${region.title}</p>`,
+      `<p class="effect-chips">${ingredient.effects.map((e) => effectChip(e, { link })).join("")}</p>`,
       note ? `<p class="feat-card-note">${note}</p>` : "",
       `</article>`,
     ].join("");
   }
 
-  // Все рецепты одного рода и одной ступени — для страницы класса.
-  // Аргумент: "kind:tier", например "poison:apprentice"; "base:all" — все основы.
-  eleventyConfig.addShortcode("recipeCards", function (selector) {
-    const [kindId, tierId = "all"] = String(selector).split(":").map((x) => x.trim());
-    if (!kindById.has(kindId)) throw new Error(`recipeCards: unknown kind "${kindId}"`);
-    if (tierId !== "all" && !recipeTierById.has(tierId)) throw new Error(`recipeCards: unknown tier "${tierId}"`);
-    const cards = rogueRecipes.recipes
-      .filter((r) => r.kind === kindId && (tierId === "all" || r.tier === tierId))
-      .map((r) => recipeCardHtml(r));
-    if (cards.length === 0) throw new Error(`recipeCards: nothing matches "${selector}"`);
+  // Эффекты одного рода и одной ступени: "harm:apprentice", "boon:master"
+  eleventyConfig.addShortcode("effectCards", function (selector) {
+    const [kindId, tierId] = String(selector).split(":").map((x) => x.trim());
+    if (!effectKindById.has(kindId)) throw new Error(`effectCards: unknown kind "${kindId}"`);
+    if (!recipeTierById.has(tierId)) throw new Error(`effectCards: unknown tier "${tierId}"`);
+    const cards = rogueRecipes.effects.filter((e) => e.kind === kindId && e.tier === tierId).map(effectCardHtml);
+    if (cards.length === 0) throw new Error(`effectCards: nothing matches "${selector}"`);
     return `<div class="feat-cards recipe-cards">${cards.join("")}</div>`;
   });
 
-  // Известные персонажу рецепты — для страниц личностей и персонажей.
-  // Аргумент: "id:пометка; id; ..." — пометка необязательна.
-  eleventyConfig.addShortcode("recipePicks", function (picks) {
+  // Ингредиенты одного региона — для страницы класса
+  eleventyConfig.addShortcode("ingredientCards", function (regionId) {
+    if (!regionById.has(regionId)) throw new Error(`ingredientCards: unknown region "${regionId}"`);
+    const cards = rogueRecipes.ingredients.filter((i) => i.region === regionId).map((i) => ingredientCardHtml(i));
+    return `<div class="feat-cards recipe-cards">${cards.join("")}</div>`;
+  });
+
+  // Известные персонажу ингредиенты: "id:пометка; id; ..."
+  eleventyConfig.addShortcode("ingredientPicks", function (picks) {
     const cards = String(picks).split(";").map((x) => x.trim()).filter(Boolean).map((pick) => {
       const [id, ...noteParts] = pick.split(":").map((x) => x.trim());
-      const recipe = recipeById.get(id);
-      if (!recipe) throw new Error(`recipePicks: unknown recipe "${id}"`);
-      return recipeCardHtml(recipe, { note: noteParts.join(":") || null, link: true });
+      const ingredient = ingredientById.get(id);
+      if (!ingredient) throw new Error(`ingredientPicks: unknown ingredient "${id}"`);
+      return ingredientCardHtml(ingredient, { note: noteParts.join(":") || null, link: true });
     });
     return `<div class="feat-cards recipe-cards">${cards.join("")}</div>`;
+  });
+
+  // Основы — способ доставки
+  eleventyConfig.addShortcode("baseCards", function () {
+    const cards = rogueRecipes.bases.map((b) => {
+      const tier = b.tier ? recipeTierById.get(b.tier) : null;
+      const slots = b.slots === 0 ? "Места не занимает" : `Занимает мест: ${b.slots}`;
+      return [
+        `<article class="feat-card recipe-card recipe-card--base" id="base-${b.id}">`,
+        `<header class="feat-card-header"><h4 class="feat-card-name">${b.name}</h4></header>`,
+        `<p class="feat-card-req">${tier ? `Основа, ${tier.title}` : "Основа — известна всем"}</p>`,
+        `<p class="recipe-card-doles">${slots}</p>`,
+        `<p class="feat-card-desc">${b.desc}</p>`,
+        `</article>`,
+      ].join("");
+    });
+    return `<div class="feat-cards recipe-cards">${cards.join("")}</div>`;
+  });
+
+  // Конструктор дозы — контейнер с данными для src/scripts/alchemy-lab.js
+  eleventyConfig.addShortcode("alchemyLab", function () {
+    const payload = {
+      tiers: rogueRecipes.tiers,
+      regions: rogueRecipes.regions.map(({ id, title }) => ({ id, title })),
+      effects: rogueRecipes.effects,
+      ingredients: rogueRecipes.ingredients,
+      bases: rogueRecipes.bases.map(({ id, name, slots }) => ({ id, name, slots })),
+    };
+    // Страница — markdown, и типограф правит кавычки даже внутри <script>,
+    // поэтому данные едут в base64 и распаковываются скриптом.
+    const encoded = Buffer.from(JSON.stringify(payload), "utf8").toString("base64");
+    return `<div class="alchemy-lab" id="alchemy-lab" data-lab="${encoded}"><p class="alchemy-lab-noscript">Конструктор дозы работает при включённом JavaScript.</p></div>`;
   });
 
   // Сборка персонажа: "id:уровень; id:уровень:пометка; ..."
