@@ -137,10 +137,18 @@ function initTracker(root) {
         ? `<p class="scale-tracker-threshold is-on"><strong>Тень 2.</strong> Скрытая атака без условий по цели, которая тебя не видит.</p>`
         : `<p class="scale-tracker-threshold is-on"><strong>Кураж 2.</strong> Скрытая атака без условий по цели в 5 футах, которая тебя видит, если рядом с тобой нет других существ.</p>`;
 
-    // Черты стороны, на которой сейчас шкала: им есть что тратить
+    // Черты стороны, на которой сейчас шкала: показываем целиком — что именно
+    // работает и на что тратить шаг, без ухода на страницу черт
     const own = data.feats.filter((f) => f.side === side);
     const featList = side && own.length
-      ? `<p class="scale-tracker-feats">Работают на ${sideTitle[side]}: ${own.map((f) => `<a href="${data.href}#feat-${f.id}">${f.name}</a>`).join(", ")}</p>`
+      ? `<div class="scale-tracker-feats">
+          <p class="scale-tracker-feats-title">Работают на ${sideTitle[side]}</p>
+          ${own.map((f) => `<article class="scale-tracker-feat">
+            <h4 class="scale-tracker-feat-name"><a href="${data.href}#feat-${f.id}">${f.name}</a></h4>
+            ${f.req ? `<p class="scale-tracker-feat-req">${f.req}</p>` : ""}
+            <p class="scale-tracker-feat-desc">${f.desc}</p>
+          </article>`).join("")}
+        </div>`
       : "";
 
     const canVanish = pos < 0;

@@ -239,10 +239,17 @@ module.exports = async function (eleventyConfig) {
     for (const id of picked) {
       if (!featById.has(id)) throw new Error(`scaleTracker: unknown feat "${id}"`);
     }
-    // Черты со стороной шкалы: трекер показывает их на своём делении
+    // Черты со стороной шкалы: трекер показывает их целиком на своём делении.
+    // Якоря внутри desc — короткие (#feat-…), разворачиваем в канонические на /Feats/.
     const sideFeats = feats.feats
       .filter((f) => f.side && (picked.length === 0 || picked.includes(f.id)))
-      .map((f) => ({ id: f.id, name: f.name, side: f.side }));
+      .map((f) => ({
+        id: f.id,
+        name: f.name,
+        side: f.side,
+        req: f.req ?? null,
+        desc: f.desc.replace(/href="#/g, `href="${url("/Feats/")}#`),
+      }));
     const payload = { sides: feats.sides, feats: sideFeats, options: opts, href: url("/Feats/") };
     const encoded = Buffer.from(JSON.stringify(payload), "utf8").toString("base64");
     return [
