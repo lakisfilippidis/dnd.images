@@ -1529,28 +1529,68 @@ body.map-page {
   color: var(--color-text-subtle);
 }
 
-.feat-legend {
-  margin: 1em 0;
-  font-size: 0.9em;
+/* Фильтр черт: три ряда чипов — группа, влияние, доступность.
+   Иконки те же, что на карточке, поэтому ряд читается как легенда. */
+.feat-filter {
+  margin: 1em 0 1.5em;
+  padding: 0.8em 1em;
+  background: var(--color-bg-dots);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-item);
 }
 
-.feat-legend-row {
+.feat-filter-row {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.3em 0.8em;
+  gap: 0.4em;
   margin: 0.3em 0;
 }
 
-.feat-legend-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  white-space: nowrap;
+.feat-filter-caption {
+  min-width: 7em;
+  font-size: 0.85em;
+  font-weight: 600;
+  color: var(--color-text-subtle);
 }
 
-.feat-legend-item .feat-card-icon {
-  width: 40px;
-  height: 40px;
-  vertical-align: middle;
+.feat-filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  padding: 0.25em 0.7em 0.25em 0.35em;
+  font: inherit;
+  font-size: 0.9em;
+  color: var(--color-text);
+  background: var(--color-bg-white);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-item);
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.feat-filter-chip:hover {
+  box-shadow: var(--shadow-item-hover);
+  transform: translateY(-1px);
+}
+
+.feat-filter-chip:focus-visible {
+  outline: 2px solid var(--color-border);
+  outline-offset: 2px;
+}
+
+.feat-filter-chip[aria-pressed="true"] {
+  border-color: var(--color-border);
+  background: var(--color-bg-dots);
+  font-weight: 600;
+}
+
+.feat-filter-icon {
+  width: 28px;
+  height: 28px;
+  flex: none;
+}
+
+.feat-card[hidden] {
+  display: none;
 }

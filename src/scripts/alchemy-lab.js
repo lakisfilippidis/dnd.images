@@ -1,14 +1,13 @@
 // Конструктор дозы: открывается кнопкой в диалоге; выбираешь ступень, основу,
 // ингредиенты — и видишь, какие эффекты попадут в дозу и какой силы. Данные
 // приходят из шорткода alchemyLab (eleventy.config.js) в атрибуте data-lab
-// (JSON в base64 — markdown-типограф не трогает). Правила те же, что в
-// Рецептуре: эффект попадает в дозу, если есть хотя бы у двух ингредиентов,
-// сила — их число минус один (не больше трёх долей); ступень задаёт только
-// число ингредиентов. На странице персонажа (options.known = "page") в выбор идут только
-// травы из его карточек — список лежит в data-known-ingredients у ingredientPicks.
+// (JSON в base64 — markdown-типограф не трогает). Правила те же, что в разделе
+// Алхимии: эффект попадает в дозу, если есть хотя бы у двух ингредиентов,
+// сила — их число минус один (не больше трёх долей); ступень задаёт число
+// ингредиентов (capacity) и бонус в Сл (bonus), обе величины приходят из
+// tiers в данных. На странице персонажа (options.known = "page") в выбор идут
+// только травы из его карточек — список лежит в data-known-ingredients у ingredientPicks.
 
-const CAPACITY = { apprentice: 3, journeyman: 4, master: 5, virtuoso: 6, legend: 7 };
-const PROFICIENCY = { apprentice: 2, journeyman: 3, master: 4, virtuoso: 5, legend: 6 };
 const MAX_STACKS = 3;
 
 function dolesWord(n) {
@@ -19,6 +18,7 @@ function initLab(root) {
   const bytes = Uint8Array.from(atob(root.dataset.lab), (c) => c.charCodeAt(0));
   const data = JSON.parse(new TextDecoder().decode(bytes));
   const effectById = new Map(data.effects.map((e) => [e.id, e]));
+  const tierById = new Map(data.tiers.map((t) => [t.id, t]));
 
   const options = data.options ?? {};
   const knownList = options.known === "page"
@@ -27,7 +27,7 @@ function initLab(root) {
   const known = new Set(knownList);
 
   const state = {
-    tier: options.tier && CAPACITY[options.tier] ? options.tier : "apprentice",
+    tier: options.tier && tierById.has(options.tier) ? options.tier : data.tiers[0].id,
     base: "blade",
     intMod: Number(options.int ?? 2) || 0,
     still: Number(options.still ?? 0) || 0,   // Перегонный куб — сколько полезных эффектов можно убрать
@@ -50,7 +50,7 @@ function initLab(root) {
   controls.className = "alchemy-lab-controls";
   controls.innerHTML = `
     <label class="alchemy-lab-field">Ступень
-      <select data-field="tier">${data.tiers.map((t) => `<option value="${t.id}">${t.title} — ${CAPACITY[t.id]} в дозе</option>`).join("")}</select>
+      <select data-field="tier">${data.tiers.map((t) => `<option value="${t.id}">${t.title} — ${t.feats} ${t.feats === 1 ? "черта" : "черт" + (t.feats < 5 ? "ы" : "")}, ${t.capacity} в дозе</option>`).join("")}</select>
     </label>
     <label class="alchemy-lab-field">Основа
       <select data-field="base">${data.bases.map((b) => `<option value="${b.id}">${b.name}${b.slots ? ` (−${b.slots})` : ""}</option>`).join("")}</select>
@@ -71,7 +71,7 @@ function initLab(root) {
   controls.querySelector("[data-field=retort]").value = state.retort;
   root.append(controls);
 
-  // Переключатель списка: свои травы персонажа или все, что есть в Рецептуре
+  // Переключатель списка: свои травы персонажа или все, что есть в Алхимии
   if (known.size) {
     const scope = document.createElement("div");
     scope.className = "alchemy-lab-scope";
@@ -135,7 +135,7 @@ function initLab(root) {
   }
 
   function capacity() {
-    return Math.max(0, CAPACITY[state.tier] - baseSlots());
+    return Math.max(0, tierById.get(state.tier).capacity - baseSlots());
   }
 
   function selectedCount() {
@@ -199,8 +199,8 @@ function initLab(root) {
     }).join("");
 
     const used = selectedCount() + baseSlots();
-    const total = CAPACITY[state.tier];
-    const dc = 8 + PROFICIENCY[state.tier] + state.intMod + (state.still > 0 ? 1 : 0);
+    const total = tierById.get(state.tier).capacity;
+    const dc = 8 + tierById.get(state.tier).bonus + state.intMod;
     const stillUsed = rows.filter((r) => r.effect.kind === "boon" && state.removed.has(r.effect.id)).length;
     const retortUsed = rows.filter((r) => r.effect.kind === "harm" && state.removed.has(r.effect.id)).length;
 

@@ -21,6 +21,9 @@
     {% if alchemyLab %}
     <script type="module" src="{{ '/scripts/alchemy-lab.js' | url }}"></script>
     {% endif %}
+    {% if featFilter %}
+    <script type="module" src="{{ '/scripts/feat-filter.js' | url }}"></script>
+    {% endif %}
   </head>
   <body{% if bodyClass %} class="{{ bodyClass }}"{% endif %}>
     <nav class="top-menu">
@@ -29,6 +32,7 @@
       <a href="{{ '/Personalities/' | url }}">Личности</a>
       <a href="{{ '/Races/' | url }}">Расы</a>
       <a href="{{ '/Classes/' | url }}">Классы</a>
+      <a href="{{ '/Feats/' | url }}">Черты</a>
       <a href="{{ '/Creatures/' | url }}">Существа</a>
       <a href="{{ '/Maps/' | url }}">Карты</a>
       <a href="{{ '/Glossary/' | url }}">Глоссарий</a>

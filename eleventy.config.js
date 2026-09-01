@@ -40,33 +40,42 @@ module.exports = async function (eleventyConfig) {
   });
 
 
-  // Карточки черт плута (src/_data/rogueFeats.js). Страницы, где они
-  // используются, лежат на глубине два (/Classes/rogue/, /Personalities/X/),
-  // поэтому иконки и ссылки — относительные.
-  const rogueFeats = require("./src/_data/rogueFeats.js");
-  const featById = new Map(rogueFeats.feats.map((f) => [f.id, f]));
-  const groupById = new Map(rogueFeats.groups.map((g) => [g.id, g]));
-  const sphereById = new Map(rogueFeats.spheres.map((sp) => [sp.id, sp]));
-  const sideById = new Map(rogueFeats.sides.map((s) => [s.id, s]));
+  // Карточки черт (src/_data/feats.js). Черты общие для всех классов: поле
+  // classes у черты задаёт доступность (нет поля — доступна всем), по нему,
+  // группе и сфере фильтрует src/scripts/feat-filter.js. Каноническое место
+  // каждой черты — страница /Feats/, туда и ведут ссылки с других страниц.
+  const feats = require("./src/_data/feats.js");
+  const featById = new Map(feats.feats.map((f) => [f.id, f]));
+  const groupById = new Map(feats.groups.map((g) => [g.id, g]));
+  const sphereById = new Map(feats.spheres.map((sp) => [sp.id, sp]));
+  const classById = new Map(feats.classes.map((c) => [c.id, c]));
+  const sideById = new Map(feats.sides.map((s) => [s.id, s]));
+  const url = (p) => eleventyConfig.getFilter("url")(p);
 
   function featIcon(meta, extraClass = "") {
-    return `<img class="feat-card-icon${extraClass}" eleventy:ignore src="../../icons/${meta.icon}" alt="${meta.title}" title="${meta.title}" width="40" height="40">`;
+    return `<img class="feat-card-icon${extraClass}" eleventy:ignore src="${url("/icons/" + meta.icon)}" alt="${meta.title}" title="${meta.title}" width="40" height="40">`;
   }
 
   function featCardHtml(feat, { level = null, note = null, link = false } = {}) {
     const group = groupById.get(feat.group);
-    const sphere = sphereById.get(feat.sphere);
+    if (!group) throw new Error(`feat "${feat.id}": unknown group "${feat.group}"`);
+    const sphere = feat.sphere ? sphereById.get(feat.sphere) : null;
+    if (feat.sphere && !sphere) throw new Error(`feat "${feat.id}": unknown sphere "${feat.sphere}"`);
     const side = sideById.get(feat.side);
     if (feat.side && !side) throw new Error(`feat "${feat.id}": unknown side "${feat.side}"`);
+    for (const id of feat.classes ?? []) {
+      if (!classById.has(id)) throw new Error(`feat "${feat.id}": unknown class "${id}"`);
+    }
     const name = link
-      ? `<a href="../../Classes/rogue/#feat-${feat.id}">${feat.name}</a>`
+      ? `<a href="${url("/Feats/")}#feat-${feat.id}">${feat.name}</a>`
       : feat.name;
     return [
-      `<article class="feat-card${side ? ` feat-card--${side.id}` : ""}"${link ? "" : ` id="feat-${feat.id}"`}>`,
+      `<article class="feat-card${side ? ` feat-card--${side.id}` : ""}"${link ? "" : ` id="feat-${feat.id}"`}`,
+      ` data-group="${feat.group}" data-sphere="${feat.sphere ?? ""}" data-classes="${(feat.classes ?? ["all"]).join(" ")}">`,
       `<header class="feat-card-header">`,
       level == null ? "" : `<span class="feat-card-level" title="Уровень ${level}">${level}</span>`,
       `<h4 class="feat-card-name">${name}</h4>`,
-      featIcon(sphere), featIcon(group), side ? featIcon(side) : "",
+      sphere ? featIcon(sphere) : "", featIcon(group), side ? featIcon(side) : "",
       `</header>`,
       feat.req ? `<p class="feat-card-req">${feat.req}</p>` : "",
       `<p class="feat-card-desc">${feat.desc}</p>`,
@@ -75,35 +84,51 @@ module.exports = async function (eleventyConfig) {
     ].join("");
   }
 
-  // Все черты одной группы — для страницы класса
+  // Все черты одной группы — точечный вывод
   eleventyConfig.addShortcode("featCards", function (groupId) {
     if (!groupById.has(groupId)) throw new Error(`featCards: unknown group "${groupId}"`);
-    const cards = rogueFeats.feats
+    const cards = feats.feats
       .filter((f) => f.group === groupId)
       .map((f) => featCardHtml(f));
     return `<div class="feat-cards">${cards.join("")}</div>`;
   });
 
-  // Легенда иконок — для страницы класса
-  eleventyConfig.addShortcode("featLegend", function () {
-    const row = (items, caption) =>
-      `<p class="feat-legend-row"><strong>${caption}:</strong> ` +
-      items.map((m) => `<span class="feat-legend-item">${featIcon(m)} ${m.title}</span>`).join(" ") +
-      `</p>`;
-    return `<div class="feat-legend">${row(rogueFeats.groups, "Группы")}${row(rogueFeats.spheres, "Тип влияния")}${row(rogueFeats.sides, "Сторона шкалы")}</div>`;
+  // Полный список черт с фильтрами по группе, сфере и доступности.
+  // Аргумент — id класса: его чип включается сразу, страница класса открывается
+  // уже отфильтрованной, но фильтр можно снять и увидеть все черты. Карточки на
+  // странице класса идут без id: каноническое место черты — /Feats/.
+  eleventyConfig.addShortcode("featList", function (classId = "") {
+    const active = String(classId).trim();
+    if (active && !classById.has(active)) throw new Error(`featList: unknown class "${active}"`);
+    const chip = (meta, axis, on = false) =>
+      `<button type="button" class="feat-filter-chip" data-axis="${axis}" data-value="${meta.id}"` +
+      ` aria-pressed="${on}" title="${meta.title}">${featIcon(meta, " feat-filter-icon")}` +
+      `<span class="feat-filter-label">${meta.title}</span></button>`;
+    const row = (items, axis, caption, activeId = null) =>
+      `<div class="feat-filter-row"><span class="feat-filter-caption">${caption}</span>` +
+      items.map((m) => chip(m, axis, m.id === activeId)).join("") + `</div>`;
+    const panel = [
+      `<div class="feat-filter" role="toolbar" aria-label="Фильтр черт">`,
+      row(feats.groups, "group", "Группа"),
+      row(feats.spheres, "sphere", "Влияние"),
+      row(feats.classes, "classes", "Доступность", active),
+      `</div>`,
+    ].join("");
+    const cards = feats.feats.map((f) => featCardHtml(f, { link: active !== "" }));
+    return `${panel}<div class="feat-cards feat-cards--filtered">${cards.join("")}</div>`;
   });
 
-  // Рецептура (src/_data/rogueRecipes.js): эффекты, ингредиенты и основы.
+  // Алхимия (src/_data/alchemy.js): ступени, эффекты, ингредиенты и основы.
   // Доза собирается из ингредиентов; эффект попадает в неё, если есть хотя бы
   // у двух, а сила — число таких ингредиентов минус один, отсюда три строки
   // у карточки эффекта. Ступень ограничивает только число ингредиентов. Карточка ингредиента перечисляет его четыре эффекта
-  // со знаком: «−» вред, «+» польза.
-  const rogueRecipes = require("./src/_data/rogueRecipes.js");
-  const effectById = new Map(rogueRecipes.effects.map((e) => [e.id, e]));
-  const ingredientById = new Map(rogueRecipes.ingredients.map((i) => [i.id, i]));
-  const effectKindById = new Map(rogueRecipes.kinds.map((k) => [k.id, k]));
-  const recipeTierById = new Map(rogueRecipes.tiers.map((t) => [t.id, t]));
-  const regionById = new Map(rogueRecipes.regions.map((r) => [r.id, r]));
+  // со знаком: «−» вред, «+» польза. Каноническое место карточек — /Feats/#alchemy.
+  const alchemy = require("./src/_data/alchemy.js");
+  const effectById = new Map(alchemy.effects.map((e) => [e.id, e]));
+  const ingredientById = new Map(alchemy.ingredients.map((i) => [i.id, i]));
+  const effectKindById = new Map(alchemy.kinds.map((k) => [k.id, k]));
+  const tierById = new Map(alchemy.tiers.map((t) => [t.id, t]));
+  const regionById = new Map(alchemy.regions.map((r) => [r.id, r]));
 
   function effectCardHtml(effect) {
     const kind = effectKindById.get(effect.kind);
@@ -127,7 +152,7 @@ module.exports = async function (eleventyConfig) {
     const kind = effectKindById.get(effect.kind);
     const label = `<span class="effect-chip-sign">${kind.sign}</span>${effect.name}`;
     return link
-      ? `<a class="effect-chip effect-chip--${kind.id}" href="../../Classes/rogue/#effect-${effect.id}">${label}</a>`
+      ? `<a class="effect-chip effect-chip--${kind.id}" href="${url("/Feats/")}#effect-${effect.id}">${label}</a>`
       : `<a class="effect-chip effect-chip--${kind.id}" href="#effect-${effect.id}">${label}</a>`;
   }
 
@@ -135,7 +160,7 @@ module.exports = async function (eleventyConfig) {
     const region = regionById.get(ingredient.region);
     if (!region) throw new Error(`ingredient "${ingredient.id}": unknown region "${ingredient.region}"`);
     const name = link
-      ? `<a href="../../Classes/rogue/#ingredient-${ingredient.id}">${ingredient.name}</a>`
+      ? `<a href="${url("/Feats/")}#ingredient-${ingredient.id}">${ingredient.name}</a>`
       : ingredient.name;
     return [
       `<article class="feat-card recipe-card recipe-card--ingredient"${link ? "" : ` id="ingredient-${ingredient.id}"`}>`,
@@ -150,14 +175,14 @@ module.exports = async function (eleventyConfig) {
   // Эффекты одного рода: "harm" или "boon"
   eleventyConfig.addShortcode("effectCards", function (kindId) {
     if (!effectKindById.has(kindId)) throw new Error(`effectCards: unknown kind "${kindId}"`);
-    const cards = rogueRecipes.effects.filter((e) => e.kind === kindId).map(effectCardHtml);
+    const cards = alchemy.effects.filter((e) => e.kind === kindId).map(effectCardHtml);
     return `<div class="feat-cards recipe-cards">${cards.join("")}</div>`;
   });
 
   // Ингредиенты одного региона — для страницы класса
   eleventyConfig.addShortcode("ingredientCards", function (regionId) {
     if (!regionById.has(regionId)) throw new Error(`ingredientCards: unknown region "${regionId}"`);
-    const cards = rogueRecipes.ingredients.filter((i) => i.region === regionId).map((i) => ingredientCardHtml(i));
+    const cards = alchemy.ingredients.filter((i) => i.region === regionId).map((i) => ingredientCardHtml(i));
     return `<div class="feat-cards recipe-cards">${cards.join("")}</div>`;
   });
 
@@ -175,8 +200,8 @@ module.exports = async function (eleventyConfig) {
 
   // Основы — способ доставки
   eleventyConfig.addShortcode("baseCards", function () {
-    const cards = rogueRecipes.bases.map((b) => {
-      const tier = b.tier ? recipeTierById.get(b.tier) : null;
+    const cards = alchemy.bases.map((b) => {
+      const tier = b.tier ? tierById.get(b.tier) : null;
       const slots = b.slots === 0 ? "Места не занимает" : `Занимает мест: ${b.slots}`;
       return [
         `<article class="feat-card recipe-card recipe-card--base" id="base-${b.id}">`,
@@ -200,13 +225,13 @@ module.exports = async function (eleventyConfig) {
       const [key, value] = pair.split(":").map((x) => x.trim());
       if (key) opts[key] = value ?? "true";
     }
-    if (opts.tier && !recipeTierById.has(opts.tier)) throw new Error(`alchemyLab: unknown tier "${opts.tier}"`);
+    if (opts.tier && !tierById.has(opts.tier)) throw new Error(`alchemyLab: unknown tier "${opts.tier}"`);
     const payload = {
-      tiers: rogueRecipes.tiers,
-      regions: rogueRecipes.regions.map(({ id, title }) => ({ id, title })),
-      effects: rogueRecipes.effects,
-      ingredients: rogueRecipes.ingredients,
-      bases: rogueRecipes.bases.map(({ id, name, slots }) => ({ id, name, slots })),
+      tiers: alchemy.tiers,
+      regions: alchemy.regions.map(({ id, title }) => ({ id, title })),
+      effects: alchemy.effects,
+      ingredients: alchemy.ingredients,
+      bases: alchemy.bases.map(({ id, name, slots }) => ({ id, name, slots })),
       options: opts,
     };
     // Страница — markdown, и типограф правит кавычки даже внутри <script>,
