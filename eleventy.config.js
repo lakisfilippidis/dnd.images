@@ -69,6 +69,9 @@ module.exports = async function (eleventyConfig) {
     const name = link
       ? `<a href="${url("/Feats/")}#feat-${feat.id}">${feat.name}</a>`
       : feat.name;
+    // Ссылки внутри desc записаны коротко ("#feat-poisoner"): карточка рендерится и на
+    // страницах классов, поэтому якорь разворачивается в канонический — на /Feats/.
+    const desc = feat.desc.replace(/href="#/g, `href="${url("/Feats/")}#`);
     return [
       `<article class="feat-card${side ? ` feat-card--${side.id}` : ""}"${link ? "" : ` id="feat-${feat.id}"`}`,
       ` data-group="${feat.group}" data-sphere="${feat.sphere ?? ""}" data-classes="${(feat.classes ?? ["all"]).join(" ")}">`,
@@ -78,7 +81,7 @@ module.exports = async function (eleventyConfig) {
       sphere ? featIcon(sphere) : "", featIcon(group), side ? featIcon(side) : "",
       `</header>`,
       feat.req ? `<p class="feat-card-req">${feat.req}</p>` : "",
-      `<p class="feat-card-desc">${feat.desc}</p>`,
+      `<p class="feat-card-desc">${desc}</p>`,
       note ? `<p class="feat-card-note">${note}</p>` : "",
       `</article>`,
     ].join("");
@@ -186,6 +189,12 @@ module.exports = async function (eleventyConfig) {
     return `<div class="feat-cards recipe-cards">${cards.join("")}</div>`;
   });
 
+  // Трофеи для страницы класса: карточки со ссылками на /Feats/, без своих якорей
+  eleventyConfig.addShortcode("mutagenCards", function () {
+    const cards = alchemy.ingredients.filter((i) => i.region === "trophy").map((i) => ingredientCardHtml(i, { link: true }));
+    return `<div class="feat-cards recipe-cards">${cards.join("")}</div>`;
+  });
+
   // Известные персонажу ингредиенты: "id:пометка; id; ..."
   eleventyConfig.addShortcode("ingredientPicks", function (picks) {
     const cards = String(picks).split(";").map((x) => x.trim()).filter(Boolean).map((pick) => {
@@ -202,6 +211,7 @@ module.exports = async function (eleventyConfig) {
   eleventyConfig.addShortcode("baseCards", function () {
     const cards = alchemy.bases.map((b) => {
       const tier = b.tier ? tierById.get(b.tier) : null;
+      if (b.tier && !tier) throw new Error(`baseCards: base "${b.id}" — unknown tier "${b.tier}"`);
       const slots = b.slots === 0 ? "Места не занимает" : `Занимает мест: ${b.slots}`;
       return [
         `<article class="feat-card recipe-card recipe-card--base" id="base-${b.id}">`,
