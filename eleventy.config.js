@@ -225,6 +225,34 @@ module.exports = async function (eleventyConfig) {
     return `<div class="feat-cards recipe-cards">${cards.join("")}</div>`;
   });
 
+  // Трекер шкалы Тени и Куража: кнопка и диалог для src/scripts/scale-tracker.js.
+  // Аргумент — настройки "ключ:значение; ...": id (ключ хранения, по умолчанию
+  // адрес страницы), name (чьё имя показать), feats (id черт плута через запятую —
+  // трекер подскажет, что доступно на текущем делении).
+  eleventyConfig.addShortcode("scaleTracker", function (options = "") {
+    const opts = {};
+    for (const pair of String(options).split(";")) {
+      const [key, value] = pair.split(":").map((x) => x.trim());
+      if (key) opts[key] = value ?? "true";
+    }
+    const picked = (opts.feats ?? "").split(",").map((x) => x.trim()).filter(Boolean);
+    for (const id of picked) {
+      if (!featById.has(id)) throw new Error(`scaleTracker: unknown feat "${id}"`);
+    }
+    // Черты со стороной шкалы: трекер показывает их на своём делении
+    const sideFeats = feats.feats
+      .filter((f) => f.side && (picked.length === 0 || picked.includes(f.id)))
+      .map((f) => ({ id: f.id, name: f.name, side: f.side }));
+    const payload = { sides: feats.sides, feats: sideFeats, options: opts, href: url("/Feats/") };
+    const encoded = Buffer.from(JSON.stringify(payload), "utf8").toString("base64");
+    return [
+      `<p class="alchemy-lab-launch"><button type="button" class="scale-tracker-open">Открыть шкалу</button></p>`,
+      `<dialog class="alchemy-lab-dialog scale-tracker-dialog">`,
+      `<div class="scale-tracker" data-scale="${encoded}"><p class="alchemy-lab-noscript">Трекер шкалы работает при включённом JavaScript.</p></div>`,
+      `</dialog>`,
+    ].join("");
+  });
+
   // Конструктор дозы: кнопка и диалог с данными для src/scripts/alchemy-lab.js.
   // Аргумент — настройки "ключ:значение; ...": tier (ступень), int (модификатор
   // Интеллекта), still (перегонных кубов), retort (реторт), known:page — брать

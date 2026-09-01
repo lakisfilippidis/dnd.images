@@ -1594,3 +1594,154 @@ body.map-page {
 .feat-card[hidden] {
   display: none;
 }
+
+/* Трекер шкалы Тени и Куража: диалог и кнопки переиспользуют стили лаборатории */
+.scale-tracker {
+  padding: 14px;
+}
+
+.scale-tracker--ready .alchemy-lab-noscript {
+  display: none;
+}
+
+.scale-tracker-value {
+  margin: 0 0 10px;
+  font-family: var(--font-fantasy);
+  font-size: 2em;
+  text-align: center;
+  color: var(--color-text-heading);
+}
+
+.scale-tracker-value--shadow {
+  color: var(--color-text-dark);
+}
+
+.scale-tracker-value--panache {
+  color: var(--color-creature-heading);
+}
+
+.scale-tracker-marks {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.scale-tracker-mark {
+  width: 40px;
+  height: 40px;
+  font: inherit;
+  font-family: var(--font-fantasy);
+  font-size: 1.1em;
+  color: var(--color-text);
+  background: var(--color-bg-light);
+  border: 1px solid var(--color-border-table);
+  border-radius: var(--radius-item);
+  cursor: pointer;
+}
+
+.scale-tracker-mark--zero {
+  border-style: dashed;
+}
+
+.scale-tracker-mark:hover {
+  border-color: var(--color-border-table-dark);
+}
+
+.scale-tracker-mark.is-on {
+  color: var(--color-bg-white);
+  background: var(--color-text-heading);
+  border-color: var(--color-text-heading);
+}
+
+.scale-tracker-mark--shadow.is-on {
+  background: var(--color-text-dark);
+  border-color: var(--color-text-dark);
+}
+
+.scale-tracker-mark--panache.is-on {
+  background: var(--color-creature-heading);
+  border-color: var(--color-creature-heading);
+}
+
+.scale-tracker-threshold {
+  margin: 0 0 12px;
+  text-align: center;
+  color: var(--color-text-muted);
+}
+
+.scale-tracker-threshold.is-on {
+  color: var(--color-text);
+  background: rgb(from var(--color-text-heading) r g b / 0.08);
+  border-radius: var(--radius-item);
+  padding: 8px 10px;
+}
+
+.scale-tracker-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.scale-tracker-button {
+  padding: 8px 14px;
+  font: inherit;
+  color: var(--color-text);
+  background: var(--color-bg-light);
+  border: 1px solid var(--color-border-table);
+  border-radius: var(--radius-item);
+  cursor: pointer;
+}
+
+.scale-tracker-button:hover:not(:disabled) {
+  border-color: var(--color-border-table-dark);
+}
+
+.scale-tracker-button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.scale-tracker-button--spend {
+  background: var(--color-bg-white);
+}
+
+.scale-tracker-hint,
+.scale-tracker-feats {
+  margin: 0 0 10px;
+  font-size: 0.92em;
+  text-align: center;
+  color: var(--color-text-muted);
+}
+
+.scale-tracker-log {
+  margin: 10px 0 0;
+  padding: 10px 10px 10px 26px;
+  font-size: 0.92em;
+  color: var(--color-text-muted);
+  background: var(--color-bg-light);
+  border-radius: var(--radius-item);
+}
+
+.scale-tracker-foot {
+  margin: 12px 0 0;
+  text-align: center;
+}
+
+.scale-tracker-reset {
+  padding: 6px 12px;
+  font: inherit;
+  font-size: 0.92em;
+  color: var(--color-text-muted);
+  background: none;
+  border: 1px solid var(--color-border-table);
+  border-radius: var(--radius-item);
+  cursor: pointer;
+}
+
+.scale-tracker-reset:hover {
+  color: var(--color-text);
+  border-color: var(--color-border-table-dark);
+}

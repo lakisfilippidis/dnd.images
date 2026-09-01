@@ -1,4 +1,5 @@
 ---
+scaleTracker: true
 title: "Вардан Саркисян"
 class: "rogue"
 preview: ""
@@ -93,6 +94,11 @@ combat:
 - **Скрытая атака** *(4d6, раз в ход)*
 
 - **Хитрое действие** *(бонусное действие)*
+
+- **[Тень и Кураж](../../Classes/rogue/#scale)**  
+  Шкала от Тени 3 через 0 к Куражу 3: шаг к Тени, если тебя не видели, к Куражу — если действовал на виду. После длинного отдыха — 0.
+
+  {% scaleTracker "id:vardan; name:Вардан; feats:disguise,connections,lip-reader,training,false-identity,tail,forgery" %}
 
 - **Экспертиза:** Обман, Проницательность.
 

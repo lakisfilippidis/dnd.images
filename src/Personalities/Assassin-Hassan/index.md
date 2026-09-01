@@ -1,4 +1,5 @@
 ---
+scaleTracker: true
 title: "Хасан Молчащий"
 class: "rogue"
 preview: ""
@@ -93,6 +94,11 @@ combat:
 - **Скрытая атака** *(6d6, раз в ход)*
 
 - **Хитрое действие** *(бонусное действие)*
+
+- **[Тень и Кураж](../../Classes/rogue/#scale)**  
+  Шкала от Тени 3 через 0 к Куражу 3: шаг к Тени, если тебя не видели, к Куражу — если действовал на виду. После длинного отдыха — 0.
+
+  {% scaleTracker "id:hassan; name:Хасан; feats:assassinate,apothecary-kit,nimble,training,ambush,uncanny-dodge,evasion,silent-step,reliable-talent,stash" %}
 
 - **Экспертиза:** Скрытность, Внимание.
 

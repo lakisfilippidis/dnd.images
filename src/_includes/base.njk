@@ -24,6 +24,9 @@
     {% if featFilter %}
     <script type="module" src="{{ '/scripts/feat-filter.js' | url }}"></script>
     {% endif %}
+    {% if scaleTracker %}
+    <script type="module" src="{{ '/scripts/scale-tracker.js' | url }}"></script>
+    {% endif %}
   </head>
   <body{% if bodyClass %} class="{{ bodyClass }}"{% endif %}>
     <nav class="top-menu">
