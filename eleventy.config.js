@@ -100,6 +100,11 @@ module.exports = async function (eleventyConfig) {
   // Аргумент — id класса: его чип включается сразу, страница класса открывается
   // уже отфильтрованной, но фильтр можно снять и увидеть все черты. Карточки на
   // странице класса идут без id: каноническое место черты — /Feats/.
+  //
+  // Последний ряд — группировка: та же ось разбивает карточки на секции с
+  // заголовками. Это не фильтр, а раскладка, поэтому чипы ведут себя как радио:
+  // группировка идёт по одной оси, «Без группировки» возвращает плоский список.
+  // Заголовки секций пишет feat-filter.js по data-titles ниже.
   eleventyConfig.addShortcode("featList", function (classId = "") {
     const active = String(classId).trim();
     if (active && !classById.has(active)) throw new Error(`featList: unknown class "${active}"`);
@@ -110,15 +115,38 @@ module.exports = async function (eleventyConfig) {
     const row = (items, axis, caption, activeId = null) =>
       `<div class="feat-filter-row"><span class="feat-filter-caption">${caption}</span>` +
       items.map((m) => chip(m, axis, m.id === activeId)).join("") + `</div>`;
+    // Чип группировки без иконки: ось — это не значение, картинки у неё нет.
+    const groupByChip = (value, title, on = false) =>
+      `<button type="button" class="feat-filter-chip feat-filter-chip--radio" data-groupby="${value}"` +
+      ` aria-pressed="${on}" title="${title}"><span class="feat-filter-label">${title}</span></button>`;
+    const groupByRow = [
+      `<div class="feat-filter-row feat-filter-row--groupby">`,
+      `<span class="feat-filter-caption">Группировка</span>`,
+      groupByChip("", "Без группировки", true),
+      groupByChip("group", "По группе"),
+      groupByChip("sphere", "По влиянию"),
+      groupByChip("classes", "По доступности"),
+      `</div>`,
+    ].join("");
+    // Названия корзин для заголовков секций: id → заголовок по каждой оси.
+    const titles = JSON.stringify({
+      group: Object.fromEntries(feats.groups.map((m) => [m.id, m.title])),
+      sphere: {
+        ...Object.fromEntries(feats.spheres.map((m) => [m.id, m.title])),
+        "": "Без сферы",
+      },
+      classes: Object.fromEntries(feats.classes.map((m) => [m.id, m.title])),
+    });
     const panel = [
       `<div class="feat-filter" role="toolbar" aria-label="Фильтр черт">`,
       row(feats.groups, "group", "Группа"),
       row(feats.spheres, "sphere", "Влияние"),
       row(feats.classes, "classes", "Доступность", active),
+      groupByRow,
       `</div>`,
     ].join("");
     const cards = feats.feats.map((f) => featCardHtml(f, { link: active !== "" }));
-    return `${panel}<div class="feat-cards feat-cards--filtered">${cards.join("")}</div>`;
+    return `${panel}<div class="feat-cards feat-cards--filtered" data-titles='${titles}'>${cards.join("")}</div>`;
   });
 
   // Алхимия (src/_data/alchemy.js): ступени, эффекты, ингредиенты и основы.
