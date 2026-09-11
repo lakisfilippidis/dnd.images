@@ -82,4 +82,12 @@ combat:
 
 - **[Избранный враг (Favored Enemy) - Звери](../../Classes/ranger/#favorite-enemy)**
 
-- **[Стрельба (Archery)](../../Classes/ranger/#fighting-styles)**
+- **[Стрельба (Archery)](../../Feats/#feat-archery)**
+
+---
+
+## Черты
+
+Следопыт выбирает боевой стиль на 2-м уровне, а дальше берёт черты вместо повышения характеристик.
+
+{% featPicks "archery:2:Боевой стиль следопыта" %}

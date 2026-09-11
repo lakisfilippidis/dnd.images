@@ -78,9 +78,17 @@ combat:
 
 - **[Избранный враг (Favored Enemy) - Гуманоиды](../../Classes/ranger/#favorite-enemy)**
 
-- **[Стрельба (Archery)](../../Classes/ranger/#fighting-styles)**
+- **[Стрельба (Archery)](../../Feats/#feat-archery)**
 
 - **[Охотник (Hunter) 3 уровень](../../Classes/ranger/#archetypes)**
+
+---
+
+## Черты
+
+Следопыт выбирает боевой стиль на 2-м уровне, а дальше берёт черты вместо повышения характеристик.
+
+{% featPicks "archery:2:Боевой стиль следопыта" %}
 
 ## Животный спутник — ворон Кайр
 

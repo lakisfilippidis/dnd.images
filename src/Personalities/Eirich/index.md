@@ -95,11 +95,19 @@ combat:
 
 - **Дополнительная атака за ход**
 
-- **[Укрепленный (Fortified)](../../Classes/savage/#fighting-styles)**
+- **[Укрепленный (Fortified)](../../Feats/#feat-defense)**
 
-- **[Стойкий (Persistent)](../../Classes/savage/#fighting-styles)**
+- **[Стойкий (Persistent)](../../Feats/#feat-persistent)**
 
 - **[Налётчик (Raider) 3 уровень](../../Classes/savage/#archetypes)**
+
+---
+
+## Черты
+
+Дикарь выбирает боевой стиль на 1-м уровне, ещё по одному на 5-м и 11-м, а черты берёт вместо повышения характеристик.
+
+{% featPicks "defense:1:Боевой стиль дикаря, у него зовётся Укреплённый; persistent:5:Второй боевой стиль дикаря" %}
 
 ## Внешность
 

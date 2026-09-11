@@ -95,6 +95,14 @@ combat:
 
 - **[Избранный враг (Favored Enemy) - Монстры](../../Classes/ranger/#favorite-enemy)**
 
-- **[Снайпер (Sniper)](../../Classes/ranger/#fighting-styles)**
+- **[Снайпер (Sniper)](../../Feats/#feat-sniper)**
 
 - **[Охотник на чудовищ (Monster Slayer) 3 уровень](../../Classes/ranger/#archetypes)**
+
+---
+
+## Черты
+
+Следопыт выбирает боевой стиль на 2-м уровне, а дальше берёт черты вместо повышения характеристик.
+
+{% featPicks "sniper:2:Боевой стиль следопыта" %}

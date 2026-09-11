@@ -76,10 +76,18 @@ combat:
 
 - **Крепкий:** получает дополнительные +2 КЗ за каждый уровень
 
-- **[Бой с большим оружием (Great Weapon Fighting)](../../Classes/fighter/#fighting-styles)**
+- **[Бой с большим оружием (Great Weapon Fighting)](../../Feats/#feat-great-weapon)**
 
 - **[Второе дыхание](../../Classes/fighter/#second-wind)**
 
 - **[Экшен-сурж](../../Classes/fighter/#action-surge)**
 
 - **[Чемпион 3 уровень](../../Classes/fighter/#archetypes)**
+
+---
+
+## Черты
+
+Боец выбирает боевой стиль на 1-м уровне, а дальше берёт черты вместо повышения характеристик.
+
+{% featPicks "great-weapon:1:Боевой стиль бойца" %}

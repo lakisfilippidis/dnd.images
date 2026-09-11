@@ -83,7 +83,7 @@ combat:
 
 <h2 id="feats">Черты</h2>
 
-{% featPicks "giant:1" %}
+{% featPicks "giant:1; berserk:1:Боевой стиль дикаря" %}
 
 ---
 
@@ -93,7 +93,7 @@ combat:
 
 - **Дополнительная атака за ход**
 
-- **[Берсерк](../../Classes/savage/#fighting-styles)**
+- **[Берсерк](../../Feats/#feat-berserk)**
 
 - **[Берсерк (Berserk) 3 уровень](../../Classes/savage/#archetypes)**
 

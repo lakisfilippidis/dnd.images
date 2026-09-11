@@ -32,6 +32,8 @@ const groups = [
   { id: "alchemy", title: "Алхимия", icon: "flask.svg" },
   { id: "ear", title: "Ухо", icon: "ear.svg" },
   { id: "rapier", title: "Шпага", icon: "fencer.svg" },
+  { id: "gun", title: "Ствол", icon: "musket.svg" },
+  { id: "style", title: "Стиль", icon: "spear.svg" },
 ];
 
 // Тип влияния: на что черта работает в игре

@@ -74,8 +74,16 @@ combat:
 
 ## Особенности
 
-- **[Железная воля (Iron Will)](../../Classes/fighter/#fighting-styles)**
+- **[Железная воля (Iron Will)](../../Feats/#feat-iron-will)**
 
 - **[Второе дыхание](../../Classes/fighter/#second-wind)**
 
 - **[Экшен-сурж](../../Classes/fighter/#action-surge)**
+
+---
+
+## Черты
+
+Боец выбирает боевой стиль на 1-м уровне, а дальше берёт черты вместо повышения характеристик.
+
+{% featPicks "iron-will:1:Боевой стиль бойца" %}

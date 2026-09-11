@@ -87,12 +87,13 @@ module.exports = async function (eleventyConfig) {
     ].join("");
   }
 
-  // Все черты одной группы — точечный вывод
-  eleventyConfig.addShortcode("featCards", function (groupId) {
+  // Все черты одной группы — точечный вывод. Второй аргумент true — карточки без id,
+  // имя ведёт на /Feats/: так группа «Стиль» встраивается в страницы классов.
+  eleventyConfig.addShortcode("featCards", function (groupId, link = false) {
     if (!groupById.has(groupId)) throw new Error(`featCards: unknown group "${groupId}"`);
     const cards = feats.feats
       .filter((f) => f.group === groupId)
-      .map((f) => featCardHtml(f));
+      .map((f) => featCardHtml(f, { link: Boolean(link) }));
     return `<div class="feat-cards">${cards.join("")}</div>`;
   });
 
@@ -321,7 +322,9 @@ module.exports = async function (eleventyConfig) {
   // Сборка персонажа: "id:уровень; id:уровень:пометка; ..."
   eleventyConfig.addShortcode("featPicks", function (picks) {
     const cards = picks.split(";").map((entry) => {
-      const [id, level, note] = entry.trim().split(":").map((v) => v && v.trim());
+      // Делим не больше чем на три части: двоеточие внутри заметки — часть текста.
+      const [id, level, note] = entry.trim().split(/:(.*)/s).flatMap((v, i) => i === 1 ? v.split(/:(.*)/s) : [v])
+        .filter((v) => v !== "").map((v) => v && v.trim());
       const feat = featById.get(id);
       if (!feat) throw new Error(`featPicks: unknown feat "${id}"`);
       return featCardHtml(feat, { level, note, link: true });

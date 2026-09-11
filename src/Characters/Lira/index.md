@@ -75,4 +75,12 @@ combat:
 
 - **[Избранный враг (Favored Enemy) - Звери](../../Classes/ranger/#favorite-enemy)**
 
-- **[Засада (Ambush)](../../Classes/ranger/#fighting-styles)**
+- **[Из укрытия (Ambush)](../../Feats/#feat-from-cover)**
+
+---
+
+## Черты
+
+Следопыт выбирает боевой стиль на 2-м уровне, а дальше берёт черты вместо повышения характеристик.
+
+{% featPicks "from-cover:2:Боевой стиль следопыта, в старой таблице звался Засада" %}

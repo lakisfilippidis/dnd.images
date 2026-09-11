@@ -76,10 +76,18 @@ combat:
 
 ## Способности
 
-- **[Защита (Defense)](../../Classes/fighter/#fighting-styles)**
+- **[Защита (Defense)](../../Feats/#feat-defense)**
 
 - **[Второе дыхание](../../Classes/fighter/#second-wind)**
 
 - **[Экшен-сурж](../../Classes/fighter/#action-surge)**
 
 - **[Гвардеец (Guardsman) 3 уровень](../../Classes/fighter/#archetypes)**
+
+---
+
+## Черты
+
+Боец выбирает боевой стиль на 1-м уровне, а дальше берёт черты вместо повышения характеристик.
+
+{% featPicks "defense:1:Боевой стиль бойца" %}
