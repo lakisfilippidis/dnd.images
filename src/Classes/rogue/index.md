@@ -96,6 +96,7 @@ featFilter: true
             <li><a href="../../Personalities/Pocket-Fotis/">Фотис</a> — карманник, 2-й уровень</li>
             <li><a href="../../Personalities/Smuggler-Nikias/">Никиас</a> — контрабандист, 3-й уровень</li>
             <li><a href="../../Characters/Suren/">Сурен</a> — судовой аптекарь, 4-й уровень</li>
+            <li><a href="../../Personalities/Yorgos/">Йоргос</a> — подрывник, 4-й уровень</li>
             <li><a href="../../Personalities/Poisoner-Sherin/">Ширин</a> — отравительница, 5-й уровень</li>
             <li><a href="../../Personalities/Spy-Vardan/">Вардан</a> — шпион и заговорщик, 7-й уровень</li>
             <li><a href="../../Personalities/Duelist-Cosimo/">Козимо</a> — фехтовальщик, 9-й уровень</li>
