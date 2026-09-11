@@ -47,9 +47,18 @@ const spheres = [
 // Доступность: чем черта открывается. Черта без classes — общая, её может
 // взять персонаж любого класса; иначе перечислены классы, которым она своя,
 // либо narrative — такую черту не выбирают, её выдаёт мастер за отыгрыш.
+// Чип класса показывает всё, что этому классу доступно: его черты вместе с общими.
+// Иконки классов — те же, что в classTypes.json, кроме артиста: театральная маска
+// занята чипом «За отыгрыш», артисту досталась лира.
 const classes = [
   { id: "all", title: "Без класса", icon: "person.svg" },
-  { id: "rogue", title: "Доступно плуту", icon: "ninja.svg" },
+  { id: "artist", title: "Для артиста", icon: "lyre.svg" },
+  { id: "fighter", title: "Для бойца", icon: "sword2.svg" },
+  { id: "savage", title: "Для дикаря", icon: "battleaxe.svg" },
+  { id: "priest", title: "Для жреца", icon: "cross.svg" },
+  { id: "warlock", title: "Для колдуна", icon: "wizards-hat.svg" },
+  { id: "rogue", title: "Для плута", icon: "ninja.svg" },
+  { id: "ranger", title: "Для следопыта", icon: "bow.svg" },
   { id: "narrative", title: "За отыгрыш", icon: "theatre.svg" },
 ];
 
