@@ -1142,6 +1142,29 @@ body.map-page {
   color: var(--color-text-subtle);
 }
 
+/* Описание черты — полный markdown: абзац образа, дальше механика списком.
+   Крайние отступы гасим, чтобы карточка с одним абзацем выглядела как раньше. */
+.feat-card-desc > :first-child {
+  margin-top: 0;
+}
+
+.feat-card-desc > :last-child {
+  margin-bottom: 0;
+}
+
+.feat-card-desc p {
+  margin: 0.5em 0;
+}
+
+.feat-card-desc ul {
+  margin: 0.5em 0;
+  padding-left: 1.2em;
+}
+
+.feat-card-desc li + li {
+  margin-top: 0.25em;
+}
+
 .feat-card-note {
   margin: 0;
   padding-top: 6px;

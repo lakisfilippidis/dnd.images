@@ -81,7 +81,7 @@ module.exports = async function (eleventyConfig) {
       sphere ? featIcon(sphere) : "", featIcon(group), side ? featIcon(side) : "",
       `</header>`,
       feat.req ? `<p class="feat-card-req">${feat.req}</p>` : "",
-      `<p class="feat-card-desc">${desc}</p>`,
+      `<div class="feat-card-desc">${desc}</div>`,
       note ? `<p class="feat-card-note">${note}</p>` : "",
       `</article>`,
     ].join("");

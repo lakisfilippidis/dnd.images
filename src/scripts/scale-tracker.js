@@ -146,7 +146,7 @@ function initTracker(root) {
           ${own.map((f) => `<article class="scale-tracker-feat">
             <h4 class="scale-tracker-feat-name"><a href="${data.href}#feat-${f.id}">${f.name}</a></h4>
             ${f.req ? `<p class="scale-tracker-feat-req">${f.req}</p>` : ""}
-            <p class="scale-tracker-feat-desc">${f.desc}</p>
+            <div class="scale-tracker-feat-desc">${f.desc}</div>
           </article>`).join("")}
         </div>`
       : "";

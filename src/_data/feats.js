@@ -19,8 +19,10 @@ const fs = require("node:fs");
 const path = require("node:path");
 const MarkdownIt = require("markdown-it");
 
-// html: true — в описаниях изредка встречается сырой тег; renderInline не
-// заворачивает результат в <p>, а карточка и так рендерит его внутри своего.
+// html: true — в описаниях изредка встречается сырой тег. Полный render (а не
+// renderInline) нужен, чтобы черту можно было структурировать: первый абзац —
+// образ, дальше механика списком. Потребители заворачивают desc в <div>, а не
+// в <p>: блочная разметка внутри <p> невалидна.
 const md = new MarkdownIt({ html: true });
 
 const groups = [
@@ -105,7 +107,7 @@ const feats = files.map((file) => {
   }
   if (!body) throw new Error(`feats/${file}: пустое описание`);
 
-  const feat = { id, name: data.name, group: data.group, desc: md.renderInline(body) };
+  const feat = { id, name: data.name, group: data.group, desc: md.render(body).trim() };
   if (data.sphere) feat.sphere = data.sphere;
   if (data.classes) feat.classes = data.classes;
   if (data.side) feat.side = data.side;
