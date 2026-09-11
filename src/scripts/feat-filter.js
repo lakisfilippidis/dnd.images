@@ -48,8 +48,10 @@ document.querySelectorAll(".feat-filter").forEach((toolbar) => {
         if (selected[axis].length === 0) return true;
         const own = (card.dataset[axis] ?? "").split(" ").filter(Boolean);
         // Черта без класса общая: её показывает и чип «Общие», и чип класса —
-        // общие черты доступны всем, значит и тому классу, что выбран.
-        if (axis === "classes" && own.includes("all")) return true;
+        // общие черты доступны всем, значит и тому классу, что выбран. Но
+        // «За отыгрыш» — не класс, а способ получения: общие черты в него не
+        // подмешиваются, иначе чип показывал бы весь свободный выбор.
+        if (axis === "classes" && own.includes("all") && selected[axis].some((v) => v !== "narrative")) return true;
         return own.some((v) => selected[axis].includes(v));
       })
     );
