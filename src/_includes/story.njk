@@ -1,0 +1,13 @@
+---
+layout: base.njk
+---
+<h1>{{ title }}</h1>
+<p class="story-date"><time datetime="{{ date | isoDate }}">{{ date | ruDate }}</time></p>
+{% if illustrationFiles.length %}
+<div class="story-illustrations">
+  {% for file in illustrationFiles %}
+  <a href="{{ file }}" target="_blank"><img src="{{ file }}" alt="" loading="lazy"></a>
+  {% endfor %}
+</div>
+{% endif %}
+{{ content | safe }}

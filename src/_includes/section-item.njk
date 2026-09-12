@@ -11,6 +11,7 @@
     {% endif %}
     {% if typeMeta %}<img class="item-icon" eleventy:ignore src="{{ ('/icons/' + typeMeta.icon) | url }}" alt="{{ typeMeta.label }}" title="{{ typeMeta.label }}">{% endif %}
     <span class="home-section-item-title">{{ item.data.title }}</span>
+    {% if withDate and item.data.date %}<span class="home-section-item-date">{{ item.data.date | ruDate }}</span>{% endif %}
     {% if withPreview and item.data.combat %}
     <add-to-battle compact
       name="{{ item.data.creatureName | default(item.data.title) }}"

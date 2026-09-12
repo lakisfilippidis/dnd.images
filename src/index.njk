@@ -4,6 +4,11 @@ title: "Мир DnD — Главная"
 bodyClass: "home-page"
 typeFilter: true
 sections:
+  - title: "Истории"
+    url: "/Stories/"
+    tag: "stories"
+    withDate: true
+    withPreview: true
   - title: "Карты"
     url: "/Maps/"
     tag: "maps"
@@ -44,6 +49,7 @@ sections:
     <div class="home-section-list">
       {% set withPreview = section.withPreview %}
       {% set mapPreview = section.mapPreview %}
+      {% set withDate = section.withDate %}
       {% for item in collections[section.tag] %}
         {% include "section-item.njk" %}
       {% endfor %}

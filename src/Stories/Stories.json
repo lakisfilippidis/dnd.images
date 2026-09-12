@@ -1,0 +1,7 @@
+{
+  "layout": "story.njk",
+  "tags": "story",
+  "bodyClass": "class-page story-page",
+  "breadcrumbSection": "Истории",
+  "breadcrumbSectionUrl": "/Stories/"
+}

@@ -34,8 +34,15 @@ module.exports = async function (eleventyConfig) {
     previewImage: (data) => {
       if (!data.page?.inputPath) return "";
       const dir = path.dirname(data.page.inputPath);
-      const candidates = [data.preview, data.portrait, data.gallery?.[0]];
+      const candidates = [data.preview, data.portrait, data.gallery?.[0], data.illustrations?.[0]];
       return candidates.find((f) => typeof f === "string" && f !== "" && fs.existsSync(path.join(dir, f))) ?? "";
+    },
+    // Иллюстрации историй (src/Stories): в шаблон попадают только те файлы
+    // из illustrations:, которые реально лежат рядом с index.md.
+    illustrationFiles: (data) => {
+      if (!data.page?.inputPath || !Array.isArray(data.illustrations)) return [];
+      const dir = path.dirname(data.page.inputPath);
+      return data.illustrations.filter((f) => typeof f === "string" && fs.existsSync(path.join(dir, f)));
     },
   });
 
@@ -367,6 +374,16 @@ module.exports = async function (eleventyConfig) {
       .getFilteredByTag("map")
       .sort((a, b) => a.data.title.localeCompare(b.data.title, "ru"));
   });
+
+  eleventyConfig.addCollection("stories", function (collectionApi) {
+    return collectionApi
+      .getFilteredByTag("story")
+      .sort((a, b) => (b.data.date - a.data.date) || a.data.title.localeCompare(b.data.title, "ru"));
+  });
+
+  const ruDateFormat = new Intl.DateTimeFormat("ru-RU", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
+  eleventyConfig.addFilter("ruDate", (d) => ruDateFormat.format(new Date(d)).replace(/\s*г\.$/, ""));
+  eleventyConfig.addFilter("isoDate", (d) => new Date(d).toISOString().slice(0, 10));
 
   return {
     pathPrefix: "/dnd.images/",

@@ -433,6 +433,44 @@ body.home-page {
   white-space: nowrap;
 }
 
+.home-section-item-date {
+  grid-column: action;
+  margin-left: 12px;
+  font-size: 0.85em;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.story-date {
+  margin-top: -0.5em;
+  color: var(--color-text-muted);
+}
+
+body.story-page .content-wrapper {
+  max-width: 1024px;
+  margin-inline: auto;
+  box-sizing: border-box;
+}
+
+body.story-page .content-wrapper a {
+  color: inherit;
+}
+
+.story-illustrations {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+  gap: 16px;
+  margin-block: 1em 1.5em;
+}
+
+.story-illustrations img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-item);
+  box-shadow: var(--shadow-content);
+}
+
 .home-section-preview {
   grid-column: preview;
   margin-right: 12px;
