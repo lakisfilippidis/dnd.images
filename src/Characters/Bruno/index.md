@@ -74,8 +74,6 @@ combat:
 
 ## Особенности
 
-- **[Крепкий](../../Feats/#feat-tough)**
-
 - **[Второе дыхание](../../Classes/fighter/#second-wind)**
 
 - **[Экшен-сурж](../../Classes/fighter/#action-surge)**
