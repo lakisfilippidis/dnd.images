@@ -118,7 +118,9 @@ module.exports = async function (eleventyConfig) {
   // задаются списком, feat-filter.js читает оси из data-axis чипов.
   // rows: [{ axis, caption, items, active?, empty? }] — empty подписывает
   // корзину карточек без значения по этой оси при группировке.
-  function filterToolbar({ label, rows, groupBy }) {
+  // groupBy: [{ axis, title }], defaultGroupBy — ось, нажатая при загрузке
+  // ("" — плоский список); feat-filter.js применяет её сразу.
+  function filterToolbar({ label, rows, groupBy, defaultGroupBy = "" }) {
     const chip = (meta, axis, on = false) =>
       `<button type="button" class="feat-filter-chip" data-axis="${axis}" data-value="${meta.id}"` +
       ` aria-pressed="${on}" title="${meta.title}">${featIcon(meta, " feat-filter-icon")}` +
@@ -133,8 +135,8 @@ module.exports = async function (eleventyConfig) {
     const groupByRow = [
       `<div class="feat-filter-row feat-filter-row--groupby">`,
       `<span class="feat-filter-caption">Группировка</span>`,
-      groupByChip("", "Без группировки", true),
-      groupBy.map(({ axis, title }) => groupByChip(axis, title)).join(""),
+      groupByChip("", "Без группировки", defaultGroupBy === ""),
+      groupBy.map(({ axis, title }) => groupByChip(axis, title, axis === defaultGroupBy)).join(""),
       `</div>`,
     ].join("");
     // Названия корзин для заголовков секций: id → заголовок по каждой оси.
@@ -166,6 +168,7 @@ module.exports = async function (eleventyConfig) {
         { axis: "sphere", title: "По влиянию" },
         { axis: "classes", title: "По доступности" },
       ],
+      defaultGroupBy: "sphere",
     });
     const cards = feats.feats.map((f) => featCardHtml(f, { link: active !== "" }));
     return `${panel}<div class="feat-cards feat-cards--filtered" data-titles='${titles}'>${cards.join("")}</div>`;
@@ -341,6 +344,7 @@ module.exports = async function (eleventyConfig) {
         { axis: "tier", title: "По владению" },
         { axis: "type", title: "По урону" },
       ],
+      defaultGroupBy: "group",
     });
     const cards = equipment.weapons.map((w) => weaponCardHtml(w));
     return `<div class="equip-list">${panel}<div class="feat-cards equip-cards feat-cards--filtered" data-titles='${titles}'>${cards.join("")}</div></div>`;
@@ -357,6 +361,7 @@ module.exports = async function (eleventyConfig) {
         { axis: "slot", title: "По месту" },
         { axis: "weight", title: "По весу" },
       ],
+      defaultGroupBy: "weight",
     });
     const cards = equipment.armor.map((a) => armorCardHtml(a));
     return `<div class="equip-list">${panel}<div class="feat-cards equip-cards feat-cards--filtered" data-titles='${titles}'>${cards.join("")}</div></div>`;
