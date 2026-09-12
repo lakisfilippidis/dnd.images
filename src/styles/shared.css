@@ -588,7 +588,13 @@ body.race-page {
 }
 
 .combat-block {
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  grid-auto-flow: row dense;
+  background: var(--color-bg-white);
+}
+
+.combat-block .stat {
+  box-shadow: 0 0 0 1px var(--color-border-light);
 }
 
 .combat-block button.stat {
@@ -599,10 +605,8 @@ body.race-page {
 
 .combat-block .stat {
   display: grid;
-  grid-template:
-    "icon name"
-    "icon value" / max-content max-content;
-  column-gap: 0;
+  grid-template: "icon value" / max-content max-content;
+  column-gap: 6px;
   place-items: center;
   padding: 8px 10px;
 }
@@ -618,18 +622,12 @@ body.race-page {
   place-self: center end;
 }
 
-.combat-block .stat-name {
-  grid-area: name;
-  place-self: center start;
-}
-
 .combat-block .stat-mod {
   grid-area: value;
   place-self: center start;
 }
 
-.stat-block .stat-name,
-.combat-block .stat-name {
+.stat-block .stat-name {
   font-size: 0.7rem;
   color: var(--color-text-muted);
   text-align: center;

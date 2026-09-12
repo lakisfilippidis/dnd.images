@@ -1,18 +1,15 @@
 {% if combat %}
-{% set combatIcons = { "КБ": "plate-armour", "КЗ": "heart", "Инициатива": "lightning", "Скорость": "valenki" } %}
-{% set combatLabels = { "Инициатива": "Иниц." } %}
+{% set combatIcons = { "КБ": "plate-armour", "КЗ": "heart", "Инициатива": "lightning", "Скорость": "valenki", "Верхом": "horse" } %}
 <div class="combat-block">
   {% for name, item in combat %}
   {% if item.note %}
-  <button type="button" class="stat" popovertarget="combat-pop-{{ loop.index }}">
-    <img class="stat-icon" eleventy:ignore src="{{ ('/icons/' + combatIcons[name] + '.svg') | url }}" alt="">
-    <span class="stat-name">{{ combatLabels[name] or name }}</span>
+  <button type="button" class="stat" title="{{ name }}" popovertarget="combat-pop-{{ loop.index }}">
+    <img class="stat-icon" eleventy:ignore src="{{ ('/icons/' + combatIcons[name] + '.svg') | url }}" alt="{{ name }}">
     <span class="stat-mod">{{ item.value }}</span>
   </button>
   {% else %}
-  <div class="stat">
-    <img class="stat-icon" eleventy:ignore src="{{ ('/icons/' + combatIcons[name] + '.svg') | url }}" alt="">
-    <span class="stat-name">{{ combatLabels[name] or name }}</span>
+  <div class="stat" title="{{ name }}">
+    <img class="stat-icon" eleventy:ignore src="{{ ('/icons/' + combatIcons[name] + '.svg') | url }}" alt="{{ name }}">
     <span class="stat-mod">{{ item.value }}</span>
   </div>
   {% endif %}
