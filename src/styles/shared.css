@@ -1295,6 +1295,67 @@ body.map-page {
   color: var(--color-text-muted);
 }
 
+/* Снаряжение: карточки оружия и доспехов — тот же скин feat-card, сверху
+   строка цифр (меткость, урон, КБ) и цветная левая рамка по весу доспеха. */
+.equip-cards {
+  --equip-light: var(--color-text-muted);
+  --equip-medium: var(--color-text-heading);
+  --equip-heavy: var(--color-text-dark);
+  --equip-shield: var(--color-error);
+}
+
+.equip-card--light {
+  border-left: 3px solid rgb(from var(--equip-light) r g b / 0.5);
+}
+
+.equip-card--medium {
+  border-left: 3px solid rgb(from var(--equip-medium) r g b / 0.6);
+}
+
+.equip-card--heavy {
+  border-left: 3px solid var(--equip-heavy);
+}
+
+.equip-card--shield {
+  border-left: 3px solid rgb(from var(--equip-shield) r g b / 0.6);
+}
+
+.equip-card-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3em 1em;
+  margin: 0;
+  font-size: 0.95em;
+  color: var(--color-text);
+}
+
+.equip-stat {
+  white-space: nowrap;
+}
+
+.equip-stat-label {
+  font-size: 0.8em;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+}
+
+.equip-card .equip-props {
+  margin: 0;
+}
+
+/* Итог КБ под доспехами персонажа: формула в одну строку. */
+.equip-ac-total {
+  margin: 0.4em 0 1em;
+  font-size: 0.95em;
+  color: var(--color-text-subtle);
+}
+
+.equip-ac-total strong {
+  font-size: 1.15em;
+  color: var(--color-text-heading);
+}
+
 .alchemy-lab-launch {
   margin: 1em 0;
 }

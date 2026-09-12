@@ -71,14 +71,16 @@ const FEATS_DIR = path.join(__dirname, "feats");
 
 // Простой разбор front matter: значения здесь — скаляры и короткие списки,
 // поэтому отдельная зависимость не нужна. Списки пишутся как [a, b].
+// Тем же парсером (и тем же md) пользуется реестр снаряжения — equipment.js.
+// file — подпись для ошибок ("feats/01-training.md").
 function parseFrontMatter(raw, file) {
-  const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n([\s\S]*)$/);
-  if (!match) throw new Error(`feats/${file}: нет front matter между --- и ---`);
+  const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/);
+  if (!match) throw new Error(`${file}: нет front matter между --- и ---`);
   const data = {};
   for (const line of match[1].split(/\r?\n/)) {
     if (line.trim() === "") continue;
     const colon = line.indexOf(":");
-    if (colon < 1) throw new Error(`feats/${file}: непонятная строка front matter "${line}"`);
+    if (colon < 1) throw new Error(`${file}: непонятная строка front matter "${line}"`);
     const key = line.slice(0, colon).trim();
     const value = line.slice(colon + 1).trim();
     data[key] = /^\[.*\]$/.test(value)
@@ -101,7 +103,7 @@ const files = fs
 const seen = new Set();
 const feats = files.map((file) => {
   const raw = fs.readFileSync(path.join(FEATS_DIR, file), "utf8");
-  const { data, body } = parseFrontMatter(raw, file);
+  const { data, body } = parseFrontMatter(raw, `feats/${file}`);
   // id — имя файла без числового префикса: переименовал файл, переехала и черта,
   // так что рассинхронизации между id и именем файла быть не может.
   const id = file.replace(/^\d+-/, "").replace(/\.md$/, "");
@@ -139,4 +141,4 @@ for (const feat of feats) {
   }
 }
 
-module.exports = { groups, spheres, classes, sides, feats };
+module.exports = { groups, spheres, classes, sides, feats, parseFrontMatter, md };

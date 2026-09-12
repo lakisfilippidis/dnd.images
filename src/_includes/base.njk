@@ -21,6 +21,7 @@
     {% if alchemyLab %}
     <script type="module" src="{{ '/scripts/alchemy-lab.js' | url }}"></script>
     {% endif %}
+    {# featFilter — фильтр карточек черт и снаряжения (featList, weaponList, armorList) #}
     {% if featFilter %}
     <script type="module" src="{{ '/scripts/feat-filter.js' | url }}"></script>
     {% endif %}
@@ -36,6 +37,7 @@
       <a href="{{ '/Races/' | url }}">Расы</a>
       <a href="{{ '/Classes/' | url }}">Классы</a>
       <a href="{{ '/Feats/' | url }}">Черты</a>
+      <a href="{{ '/Equipment/' | url }}">Снаряжение</a>
       <a href="{{ '/Creatures/' | url }}">Существа</a>
       <a href="{{ '/Maps/' | url }}">Карты</a>
       <a href="{{ '/Stories/' | url }}">Истории</a>
