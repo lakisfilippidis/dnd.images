@@ -1,13 +1,46 @@
 // Алхимия: ступени, эффекты, ингредиенты и основы. Система общая для всех
 // классов — доступ к ней открывают черты алхимии (src/_data/feats.js).
-// Рендер — шорткоды effectCards / ingredientCards / ingredientPicks / baseCards в eleventy.config.js.
+// Рендер — шорткоды effectCards / ingredientCards / baseCards / recipeCards / alchemyLab в eleventy.config.js.
 //
 // Доза собирается из ингредиентов (их число — ёмкость по ступени). В дозу попадает
 // каждый эффект, который есть хотя бы у двух ингредиентов; сила эффекта — число
 // таких ингредиентов минус один (stacks[0..2]). У ингредиента четыре эффекта:
 // вредные (harm) и полезные (boon) вперемешку, как в Морровинде. Каждый эффект
 // встречается минимум у двух ингредиентов, иначе его нельзя сварить.
+//
+// Травы не отслеживаются поштучно: персонаж держит пачки по краям («Травы из Рума ×5»),
+// и одна пачка — это один ингредиент любой травы этого края. Края с item: true
+// (трофеи, порох) не собираются и считаются поштучно по имени ингредиента.
+
+const MAX_STACKS = 3;
+
+// Что сварится из набора ингредиентов (id могут повторяться — каждая порция
+// считается отдельно). Та же функция продублирована в src/scripts/alchemy-lab.js
+// (браузер не грузит CommonJS) — копии должны совпадать.
+function brew(ingredientIds, ingredientById, effectById) {
+  const count = new Map();
+  for (const id of ingredientIds) {
+    const ingredient = ingredientById.get(id);
+    if (!ingredient) throw new Error(`brew: unknown ingredient "${id}"`);
+    for (const e of ingredient.effects) count.set(e, (count.get(e) ?? 0) + 1);
+  }
+  const rows = [];
+  for (const [effectId, n] of count) {
+    if (n < 2) continue;
+    const effect = effectById.get(effectId);
+    rows.push({
+      effect,
+      count: n,
+      stacks: Math.min(n - 1, MAX_STACKS),
+      extra: effect.kind === "harm" && effect.id !== "damage" ? Math.max(0, n - 4) : 0,
+    });
+  }
+  rows.sort((a, b) => (a.effect.kind === b.effect.kind ? b.count - a.count : a.effect.kind === "harm" ? -1 : 1));
+  return rows;
+}
+
 module.exports = {
+  brew,
   kinds: [
     { id: "harm", title: "Вред", icon: "snake.svg", sign: "−" },
     { id: "boon", title: "Польза", icon: "flask.svg", sign: "+" },
@@ -21,15 +54,27 @@ module.exports = {
     { id: "virtuoso", title: "Виртуоз", feats: 4, capacity: 6, bonus: 5 },
     { id: "legend", title: "Легенда", feats: 5, capacity: 7, bonus: 6 },
   ],
-  // Где растёт: подсказка мастеру, что можно узнать в новой местности
+  // Сбор трав: час в крае и проверка Природы. Выход в «дозах ступени» —
+  // пачек = ceil(doses × capacity ступени); строка выбирается по min ≤ результат.
+  gather: [
+    { min: 1, doses: 0 },
+    { min: 6, doses: 0.5 },
+    { min: 11, doses: 1 },
+    { min: 16, doses: 2 },
+    { min: 21, doses: 4 },
+    { min: 26, doses: 8 },
+  ],
+  // Края: где растёт и как считается. pack (по умолчанию) — пачки трав края,
+  // item: true — поштучно по имени (не собирается: трофеи снимают с туши, порох покупают).
   regions: [
-    { id: "everywhere", title: "Повсюду", hint: "Растёт на любой обочине; их знает каждый аптекарь." },
+    { id: "everywhere", title: "Повсюду", hint: "Растёт на любой обочине; собирается в любом краю вместо местных трав." },
     { id: "gurdia", title: "Гурдийские горы", hint: "Высокогорье, осыпи и снежники Гурдии." },
     { id: "coast", title: "Побережье и Мани", hint: "Скалы, отмели и рыбацкие рынки южного моря." },
     { id: "rum", title: "Рум", hint: "Сады, базары и лавки алхимиков шахства." },
     { id: "lirenia", title: "Лирения", hint: "Болота и живые изгороди лиренийских равнин." },
     { id: "north", title: "Север", hint: "Тундра, ельники и курганы северных земель." },
-    { id: "trophy", title: "Трофеи", hint: "Железы, кровь, хрящи и шкуры убитых чудовищ: берутся с туши, а не собираются. Трофей добывает Анатом." },
+    { id: "powder", title: "Порох", item: true, hint: "Не растёт — покупается у купцов, снимается с кораблей, находится в арсеналах. Считается поштучно." },
+    { id: "trophy", title: "Трофеи", item: true, hint: "Железы, кровь, хрящи и шкуры убитых чудовищ: берутся с туши, а не собираются. Трофей добывает Анатом." },
   ],
   effects: [
     // Вред
@@ -100,18 +145,19 @@ module.exports = {
     { id: "cinnabar", name: "Киноварь", region: "rum", effects: ["recoil", "tremor", "dex", "int"] },
     { id: "lead-dust", name: "Свинцовая пыль", region: "rum", effects: ["leaden", "numb", "armor", "bloodrot"] },
     { id: "rose-oil", name: "Розовое масло", region: "rum", effects: ["cha", "charm", "heal", "truth"] },
-    { id: "black-powder", name: "Чёрный порох", region: "rum", effects: ["blast", "burn", "damage", "recoil"] },
-    { id: "naphtha", name: "Нафта", region: "rum", effects: ["burn", "blast", "blind", "nausea"] },
     // Лирения
     { id: "nightingale-berry", name: "Соловьиная ягода", region: "lirenia", effects: ["cha", "truth", "charm", "wis"] },
     { id: "bog-moss", name: "Болотный мох", region: "lirenia", effects: ["slow", "leaden", "purge", "nausea"] },
     { id: "weeping-herb", name: "Плакун-трава", region: "lirenia", effects: ["false-death", "bloodrot", "heal", "con"] },
     // Север
     { id: "wolfberry", name: "Волчья ягода", region: "north", effects: ["damage", "recoil", "str", "courage"] },
-    { id: "brimstone", name: "Сера", region: "north", effects: ["burn", "blast", "purge", "mute"] },
     { id: "black-lotus", name: "Чёрный лотос", region: "north", effects: ["death", "oblivion", "leaden", "int"] },
     { id: "barrow-root", name: "Курганный корень", region: "north", effects: ["death", "leash", "numb", "armor"] },
     { id: "lethe-flower", name: "Лета-цвет", region: "north", effects: ["oblivion", "leash", "trance", "wis"] },
+    // Порох — не растёт, покупается; считается поштучно
+    { id: "black-powder", name: "Чёрный порох", region: "powder", effects: ["blast", "burn", "damage", "recoil"] },
+    { id: "naphtha", name: "Нафта", region: "powder", effects: ["burn", "blast", "blind", "nausea"] },
+    { id: "brimstone", name: "Сера", region: "powder", effects: ["burn", "blast", "purge", "mute"] },
     // Трофеи — с туши убитого чудовища; из них варят мутагены
     { id: "troll-heart", name: "Сердце тролля", region: "trophy", effects: ["regen", "con", "str", "bloodrot"] },
     { id: "werewolf-blood", name: "Кровь оборотня", region: "trophy", effects: ["scent", "str", "beastmark", "frenzy"] },

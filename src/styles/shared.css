@@ -1390,6 +1390,36 @@ body.map-page {
   background: rgb(0 0 0 / 0.45);
 }
 
+/* Конструктор дозы — на весь экран: сумка, травы, рецепты и дозы не помещаются в окошко */
+.alchemy-lab-dialog--full {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  border: none;
+  border-radius: 0;
+  overflow: auto;
+  box-shadow: none;
+}
+
+.alchemy-lab-dialog--full .alchemy-lab {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 18px 20px 32px;
+}
+
+.alchemy-lab-dialog--full .alchemy-lab-head {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 8px 0;
+  margin: -18px 0 10px;
+  background: var(--color-bg-white);
+}
+
 .alchemy-lab {
   padding: 14px;
 }
@@ -1645,6 +1675,328 @@ body.map-page {
 
 .alchemy-lab-effect-text {
   margin: 4px 0 0;
+  font-size: 0.9em;
+  color: var(--color-text-subtle);
+}
+
+/* Сумка персонажа: пачки по краям, поштучные ингредиенты, сбор трав */
+.alchemy-lab-section-title {
+  margin: 14px 0 6px;
+  font-family: var(--font-fantasy);
+  font-size: 1.2em;
+  color: var(--color-text-heading);
+}
+
+.alchemy-lab-bag {
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  background: var(--color-bg-light);
+  border-radius: var(--radius-item);
+}
+
+.alchemy-lab-bag .alchemy-lab-section-title {
+  margin-top: 0;
+}
+
+.alchemy-lab-bag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+}
+
+.alchemy-lab-bag-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 4px 3px 10px;
+  background: var(--color-bg-white);
+  border: 1px solid var(--color-border-table);
+  border-radius: 999px;
+}
+
+.alchemy-lab-bag-row.is-empty {
+  color: var(--color-text-muted);
+}
+
+.alchemy-lab-bag-row--item {
+  border-style: dashed;
+}
+
+.alchemy-lab-bag-name {
+  font-family: var(--font-fantasy);
+  font-size: 1.05em;
+}
+
+.alchemy-lab-count {
+  min-width: 1.4em;
+  text-align: center;
+}
+
+.alchemy-lab-count-button {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  font: inherit;
+  line-height: 1;
+  color: var(--color-text-subtle);
+  background: var(--color-bg-light);
+  border: 1px solid var(--color-border-table-dark);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.alchemy-lab-count-button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.alchemy-lab-gather,
+.alchemy-lab-add-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 8px 14px;
+  margin-top: 10px;
+}
+
+.alchemy-lab-gather-title {
+  align-self: center;
+  font-family: var(--font-fantasy);
+  font-size: 1.05em;
+}
+
+.alchemy-lab-gather-hint,
+.alchemy-lab-actions-hint {
+  align-self: center;
+  font-size: 0.88em;
+  color: var(--color-text-muted);
+}
+
+.alchemy-lab-button {
+  padding: 6px 14px;
+  font: inherit;
+  font-size: 0.92em;
+  color: var(--color-text);
+  background: var(--color-bg-white);
+  border: 1px solid var(--color-border-table-dark);
+  border-radius: var(--radius-item);
+  cursor: pointer;
+}
+
+.alchemy-lab-button--primary {
+  font-family: var(--font-fantasy);
+  font-size: 1.05em;
+  color: var(--color-bg-white);
+  background: var(--color-text-heading);
+  border-color: var(--color-text-heading);
+}
+
+.alchemy-lab-button--quiet {
+  color: var(--color-text-muted);
+  border-color: var(--color-border-table);
+}
+
+.alchemy-lab-button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.alchemy-lab-region-count {
+  margin-left: 6px;
+  font-weight: normal;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--color-text-muted);
+}
+
+/* Действия над собранной дозой */
+.alchemy-lab-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 10px;
+  margin-top: 10px;
+}
+
+.alchemy-lab-name {
+  min-width: 12em;
+  padding: 6px 8px;
+  font: inherit;
+  color: var(--color-text);
+  border: 1px solid var(--color-border-table-dark);
+  border-radius: var(--radius-code);
+  background: var(--color-bg-white);
+}
+
+.alchemy-lab-name--dose {
+  min-width: 0;
+  width: 14em;
+  padding: 3px 6px;
+  font-family: var(--font-fantasy);
+  font-size: 1.05em;
+  border-color: transparent;
+  background: transparent;
+}
+
+.alchemy-lab-name--dose:hover,
+.alchemy-lab-name--dose:focus {
+  border-color: var(--color-border-table-dark);
+  background: var(--color-bg-white);
+}
+
+/* Рецепты и готовые дозы */
+.alchemy-lab-card {
+  padding: 8px 10px;
+  margin-bottom: 8px;
+  background: var(--color-bg-light);
+  border-left: 3px solid var(--color-border-table-dark);
+  border-radius: 0 var(--radius-item) var(--radius-item) 0;
+}
+
+.alchemy-lab-card--dose {
+  border-left-color: var(--color-text-heading);
+}
+
+.alchemy-lab-card-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+  margin: 0;
+}
+
+.alchemy-lab-card-name {
+  font-family: var(--font-fantasy);
+  font-size: 1.1em;
+}
+
+.alchemy-lab-card-meta {
+  font-size: 0.85em;
+  color: var(--color-text-muted);
+}
+
+.alchemy-lab-card-effects {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 10px;
+  margin: 4px 0;
+  font-size: 0.88em;
+}
+
+.alchemy-lab-mini.is-removed {
+  text-decoration: line-through;
+  opacity: 0.55;
+}
+
+.alchemy-lab-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+  margin: 6px 0 0;
+}
+
+.alchemy-lab-log {
+  margin: 14px 0 0;
+  padding: 10px 10px 10px 26px;
+  font-size: 0.92em;
+  color: var(--color-text-muted);
+  background: var(--color-bg-light);
+  border-radius: var(--radius-item);
+}
+
+.alchemy-lab-foot {
+  margin: 12px 0 0;
+  text-align: center;
+}
+
+.alchemy-lab-reset {
+  padding: 6px 12px;
+  font: inherit;
+  font-size: 0.92em;
+  color: var(--color-text-muted);
+  background: none;
+  border: 1px solid var(--color-border-table);
+  border-radius: var(--radius-item);
+  cursor: pointer;
+}
+
+.alchemy-lab-reset:hover {
+  color: var(--color-text);
+  border-color: var(--color-border-table-dark);
+}
+
+/* Перенос сумки между устройствами */
+.alchemy-lab-transfer {
+  margin-top: 16px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--color-border-light);
+}
+
+.alchemy-lab-transfer-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+  margin: 0 0 6px;
+}
+
+.alchemy-lab-transfer-text {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 6px 8px;
+  font-family: var(--font-sans-full);
+  font-size: 0.82em;
+  color: var(--color-text-subtle);
+  background: var(--color-bg-light);
+  border: 1px solid var(--color-border-table);
+  border-radius: var(--radius-code);
+  resize: vertical;
+}
+
+/* Карточки рецептов на странице персонажа (шорткод recipeCards) */
+.recipe-card--recipe {
+  border-left: 3px solid var(--color-text-heading);
+}
+
+.recipe-effects {
+  margin: 6px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.recipe-effect {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 6px;
+  margin: 0 0 4px;
+  font-size: 0.92em;
+}
+
+.recipe-effect--harm .effect-chip-sign {
+  color: var(--recipe-harm);
+}
+
+.recipe-effect--boon .effect-chip-sign {
+  color: var(--recipe-boon);
+}
+
+.recipe-effect.is-removed {
+  opacity: 0.55;
+}
+
+.recipe-effect.is-removed strong {
+  text-decoration: line-through;
+}
+
+.recipe-effect-meta {
+  font-size: 0.88em;
+  color: var(--color-text-muted);
+}
+
+.recipe-effect-text {
+  flex-basis: 100%;
   font-size: 0.9em;
   color: var(--color-text-subtle);
 }

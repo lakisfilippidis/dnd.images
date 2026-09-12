@@ -517,16 +517,93 @@ module.exports = async function (eleventyConfig) {
     return `<div class="feat-cards recipe-cards">${cards.join("")}</div>`;
   });
 
-  // Известные персонажу ингредиенты: "id:пометка; id; ..."
-  eleventyConfig.addShortcode("ingredientPicks", function (picks) {
-    const cards = String(picks).split(";").map((x) => x.trim()).filter(Boolean).map((pick) => {
-      const [id, ...noteParts] = pick.split(":").map((x) => x.trim());
+  // Блок alchemy: во front matter страницы персонажа — настройки конструктора,
+  // стартовая сумка и рецепты. Проверяется при сборке, чтобы страница не ссылалась
+  // на несуществующие травы и не обещала рецепт, который не влезает в дозу.
+  //   alchemy:
+  //     id: suren            # ключ localStorage dnd-alchemy-<id>
+  //     tier: master         # ступень; int/still/retort — модификатор Интеллекта, кубов, реторт
+  //     packs: { everywhere: 8, gurdia: 6 }   # пачки по краям (регионы без item)
+  //     items: { black-powder: 3 }            # поштучные ингредиенты (регионы с item)
+  //     recipes:
+  //       - { name: Крепкий, base: blade, ingredients: [burning-root, burning-root, ...], remove: [heal], note: ... }
+  function pageAlchemy(ctx, where) {
+    const a = pageData(ctx, "alchemy");
+    if (!a) return null;
+    const tier = tierById.get(a.tier ?? alchemy.tiers[0].id);
+    if (!tier) throw new Error(`${where}: unknown tier "${a.tier}"`);
+    for (const id of Object.keys(a.packs ?? {})) {
+      const region = regionById.get(id);
+      if (!region || region.item) throw new Error(`${where}: packs — "${id}" is not a herb region`);
+    }
+    for (const id of Object.keys(a.items ?? {})) {
       const ingredient = ingredientById.get(id);
-      if (!ingredient) throw new Error(`ingredientPicks: unknown ingredient "${id}"`);
-      return { card: ingredientCardHtml(ingredient, { note: noteParts.join(":") || null, link: true }), id };
+      if (!ingredient || !regionById.get(ingredient.region)?.item) throw new Error(`${where}: items — "${id}" is not a trophy or powder ingredient`);
+    }
+    const still = Number(a.still ?? 0);
+    const retort = Number(a.retort ?? 0);
+    const recipes = (a.recipes ?? []).map((r) => {
+      if (!r.name) throw new Error(`${where}: recipe without a name`);
+      const base = alchemy.bases.find((b) => b.id === (r.base ?? "blade"));
+      if (!base) throw new Error(`${where}: recipe "${r.name}" — unknown base "${r.base}"`);
+      const ingredients = r.ingredients ?? [];
+      if (ingredients.length + base.slots > tier.capacity) throw new Error(`${where}: recipe "${r.name}" — ${ingredients.length} ingredients + base ${base.slots} exceed ${tier.title} capacity ${tier.capacity}`);
+      const rows = alchemy.brew(ingredients, ingredientById, effectById);
+      const remove = r.remove ?? [];
+      let boons = 0;
+      let harms = 0;
+      for (const id of remove) {
+        const row = rows.find((x) => x.effect.id === id);
+        if (!row) throw new Error(`${where}: recipe "${r.name}" — effect "${id}" is not in the brew`);
+        if (row.effect.kind === "boon") boons++;
+        else harms++;
+      }
+      if (boons > still) throw new Error(`${where}: recipe "${r.name}" removes ${boons} boons, still allows ${still}`);
+      if (harms > retort) throw new Error(`${where}: recipe "${r.name}" removes ${harms} harms, retort allows ${retort}`);
+      return { name: String(r.name), base: base.id, ingredients, remove, note: r.note ?? null, rows };
     });
-    const ids = cards.map((c) => c.id).join(",");
-    return `<div class="feat-cards recipe-cards" data-known-ingredients="${ids}">${cards.map((c) => c.card).join("")}</div>`;
+    return {
+      id: a.id ?? null,
+      tier,
+      int: Number(a.int ?? 0),
+      still,
+      retort,
+      packs: a.packs ?? {},
+      items: a.items ?? {},
+      recipes,
+    };
+  }
+
+  // Рецепты персонажа статикой: состав, что сварится, что убрано, Сл
+  eleventyConfig.addShortcode("recipeCards", function () {
+    const page = this.page?.inputPath ?? "";
+    const a = pageAlchemy(this.ctx, `recipeCards (${page})`);
+    if (!a) throw new Error(`recipeCards (${page}): page has no alchemy front matter`);
+    const dc = 8 + a.tier.bonus + a.int;
+    const cards = a.recipes.map((r) => {
+      const base = alchemy.bases.find((b) => b.id === r.base);
+      const portions = new Map();
+      for (const id of r.ingredients) portions.set(id, (portions.get(id) ?? 0) + 1);
+      const composition = [...portions].map(([id, n]) => {
+        const ingredient = ingredientById.get(id);
+        return `<a href="${url("/Feats/")}#ingredient-${id}">${ingredient.name}</a>${n > 1 ? ` ×${n}` : ""}`;
+      }).join(", ");
+      const effects = r.rows.map((row) => {
+        const kind = effectKindById.get(row.effect.kind);
+        const removed = r.remove.includes(row.effect.id);
+        const save = row.effect.kind === "harm" ? `, ${row.effect.save} Сл ${dc + row.extra}` : "";
+        return `<li class="recipe-effect recipe-effect--${kind.id}${removed ? " is-removed" : ""}"><span class="effect-chip-sign">${kind.sign}</span><strong>${row.effect.name}</strong> <span class="recipe-effect-meta">${row.stacks} ${row.stacks === 1 ? "доля" : "доли"}${save}${removed ? ` — убирает ${row.effect.kind === "boon" ? "куб" : "реторта"}` : ""}</span>${removed ? "" : `<span class="recipe-effect-text">${row.effect.stacks[row.stacks - 1]}</span>`}</li>`;
+      }).join("");
+      return [
+        `<article class="feat-card recipe-card recipe-card--recipe">`,
+        `<header class="feat-card-header"><h4 class="feat-card-name">«${r.name}»</h4></header>`,
+        `<p class="feat-card-req">${base.slots ? `Основа <a href="${url("/Feats/")}#base-${base.id}">${base.name}</a>, ` : ""}${composition}</p>`,
+        `<ul class="recipe-effects">${effects}</ul>`,
+        r.note ? `<p class="feat-card-note">${r.note}</p>` : "",
+        `</article>`,
+      ].join("");
+    });
+    return `<div class="feat-cards recipe-cards">${cards.join("")}</div>`;
   });
 
   // Основы — способ доставки
@@ -583,30 +660,27 @@ module.exports = async function (eleventyConfig) {
   });
 
   // Конструктор дозы: кнопка и диалог с данными для src/scripts/alchemy-lab.js.
-  // Аргумент — настройки "ключ:значение; ...": tier (ступень), int (модификатор
-  // Интеллекта), still (перегонных кубов), retort (реторт), known:page — брать
-  // список известных трав из ingredientPicks на той же странице.
-  eleventyConfig.addShortcode("alchemyLab", function (options = "") {
-    const opts = {};
-    for (const pair of String(options).split(";")) {
-      const [key, value] = pair.split(":").map((x) => x.trim());
-      if (key) opts[key] = value ?? "true";
-    }
-    if (opts.tier && !tierById.has(opts.tier)) throw new Error(`alchemyLab: unknown tier "${opts.tier}"`);
+  // Настройки берутся из блока alchemy во front matter страницы (см. pageAlchemy);
+  // без него (страница Черт) конструктор открывается без сумки, со всеми травами.
+  eleventyConfig.addShortcode("alchemyLab", function () {
+    const page = this.page?.inputPath ?? "";
+    const a = pageAlchemy(this.ctx, `alchemyLab (${page})`);
     const payload = {
       tiers: alchemy.tiers,
-      regions: alchemy.regions.map(({ id, title }) => ({ id, title })),
+      regions: alchemy.regions.map(({ id, title, item }) => ({ id, title, item: Boolean(item) })),
       effects: alchemy.effects,
       ingredients: alchemy.ingredients,
       bases: alchemy.bases.map(({ id, name, slots }) => ({ id, name, slots })),
-      options: opts,
+      gather: alchemy.gather,
+      options: a ? { id: a.id, tier: a.tier.id, int: a.int, still: a.still, retort: a.retort } : {},
+      start: a ? { packs: a.packs, items: a.items, recipes: a.recipes.map(({ name, base, ingredients, remove }) => ({ name, base, ingredients, remove })) } : null,
     };
     // Страница — markdown, и типограф правит кавычки даже внутри <script>,
     // поэтому данные едут в base64 и распаковываются скриптом.
     const encoded = Buffer.from(JSON.stringify(payload), "utf8").toString("base64");
     return [
       `<p class="alchemy-lab-launch"><button type="button" class="alchemy-lab-open">Сварить дозу</button></p>`,
-      `<dialog class="alchemy-lab-dialog">`,
+      `<dialog class="alchemy-lab-dialog alchemy-lab-dialog--full">`,
       `<div class="alchemy-lab" data-lab="${encoded}"><p class="alchemy-lab-noscript">Конструктор дозы работает при включённом JavaScript.</p></div>`,
       `</dialog>`,
     ].join("");
