@@ -29,6 +29,7 @@ npm run build    # builds to _site/ (gitignored); data validation runs here, wat
 - `scaleTracker` and `alchemyLab` persist in localStorage under `dnd-scale-<id>` / `dnd-alchemy-<id>`: always pass a distinct `id:` on character pages.
 - Every character, personality and creature gets a 320×320 head crop: `swift tools/headcrop.swift <portrait> <dir>/head.jpg`. The home page and «В бой» use the computed `previewImage`.
 - Icons come from Sergey Chikin's free set (`https://sergeychikin.ru/365/<category>/<name>.svg`), black ones only, rendered at 40px or larger.
+- Link previews (Open Graph tags in `base.njk`) need absolute URLs: the domain lives in `src/_data/site.json`, update it if the Pages host changes. A page can override the auto-extracted text with `description:` in front matter.
 - Styling is one file, `src/styles/shared.css`; colors, fonts and shadows are `:root` variables.
 
 ## External pieces

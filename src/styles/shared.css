@@ -463,6 +463,10 @@ body.story-page .content-wrapper a {
   margin-block: 1em 1.5em;
 }
 
+.story-illustrations figure {
+  margin: 0;
+}
+
 .story-illustrations img {
   display: block;
   width: 100%;

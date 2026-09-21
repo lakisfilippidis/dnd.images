@@ -44,6 +44,50 @@ module.exports = async function (eleventyConfig) {
       const dir = path.dirname(data.page.inputPath);
       return data.illustrations.filter((f) => typeof f === "string" && fs.existsSync(path.join(dir, f)));
     },
+    // Картинка для превью ссылки (og:image в base.njk). В отличие от
+    // previewImage сначала идут большие картинки: head.jpg 320×320 в
+    // карточке мессенджера выглядит мелко.
+    ogImage: (data) => {
+      if (!data.page?.inputPath) return "";
+      const dir = path.dirname(data.page.inputPath);
+      const candidates = [data.illustrations?.[0], data.portrait, data.gallery?.[0], data.preview];
+      return candidates.find((f) => typeof f === "string" && f !== "" && fs.existsSync(path.join(dir, f))) ?? "";
+    },
+    // Описание для превью ссылки: description: из front matter, иначе первые
+    // текстовые абзацы markdown-страницы без разметки, до 200 знаков. Абзацы
+    // идут подряд с первого текстового: в историях они часто в одну фразу.
+    // У персонажей и существ наверху лист характеристик, поэтому текст
+    // берётся из описательного раздела, если он есть.
+    ogDescription: (data) => {
+      if (data.description) return data.description;
+      const inputPath = data.page?.inputPath;
+      if (!inputPath?.endsWith(".md")) return "";
+      let body = fs.readFileSync(inputPath, "utf8").replace(/^---\n[\s\S]*?\n---\n/, "");
+      const section = ["Краткая биография", "Биография", "История", "Описание", "Поведение", "Внешность"]
+        .map((title) => body.match(new RegExp(`^#{2,3} ${title}[^\\n]*\\n`, "m")))
+        .find(Boolean);
+      if (section) body = body.slice(section.index + section[0].length);
+      // не текст: заголовки, списки, html, шорткоды, а внутри описательного
+      // раздела ещё и строки «**Поле:** значение». Без раздела они остаются:
+      // у персонажа без биографии описанием служит «Основная информация».
+      const isText = (p) => /^[\p{L}\d«"(\[*_]/u.test(p) && !/^[-*] /.test(p) && !(section && /^\*\*[^*]+:\*\*/.test(p));
+      const paragraphs = body.split(/\n\s*\n/).map((p) => p.trim());
+      const first = paragraphs.findIndex(isText);
+      if (first === -1) return "";
+      let text = "";
+      for (const paragraph of paragraphs.slice(first)) {
+        if (!isText(paragraph) || text.length >= 120) break;
+        const plain = paragraph
+          .replace(/\{%[\s\S]*?%\}|<[^>]+>/g, "")
+          .replace(/!?\[([^\]]*)\]\([^)]*\)/g, "$1")
+          .replace(/[*_`]/g, "")
+          .replace(/\s+/g, " ")
+          .trim();
+        // поля листа не кончаются точкой, без «;» они сливаются в одну строку
+        text = text ? `${text}${/[.!?…:]$/.test(text) ? "" : ";"} ${plain}` : plain;
+      }
+      return text.length > 200 ? text.slice(0, 200).replace(/\s+\S*$/, "") + "…" : text;
+    },
   });
 
 
