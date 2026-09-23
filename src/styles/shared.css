@@ -474,6 +474,15 @@ body.story-page .content-wrapper a {
   color: var(--color-text-muted);
 }
 
+.story-share a {
+  cursor: copy;
+}
+
+.story-share-status {
+  margin-left: 0.75em;
+  font-size: 0.85em;
+}
+
 .story-illustrations img {
   display: block;
   width: 100%;

@@ -21,6 +21,7 @@ layout: base.njk
   {% set pageUrl = site.url + (page.url | url) %}
   {% set ivUrl = "https://t.me/iv?url=" + (pageUrl | urlencode) + "&rhash=" + site.ivRhash %}
   <footer class="story-share">
-    <a href="https://t.me/share/url?url={{ ivUrl | urlencode }}" target="_blank" rel="noopener">{{ pageUrl }}</a>
+    <a href="https://t.me/share/url?url={{ ivUrl | urlencode }}" data-copy-title="{{ title }}" target="_blank" rel="noopener">{{ pageUrl }}</a>
+    <span class="story-share-status" aria-live="polite"></span>
   </footer>
 </article>

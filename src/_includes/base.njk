@@ -26,6 +26,9 @@
     {# battle-config.js грузит док dice-roller и по наличию элементов — add-to-battle / roll-dice #}
     <script type="module" src="{{ '/scripts/battle-config.js' | url }}"></script>
     <script type="module" src="{{ '/scripts/tg-login.js' | url }}"></script>
+    {% if tags == 'story' %}
+    <script type="module" src="{{ '/scripts/share-copy.js' | url }}"></script>
+    {% endif %}
     {% if bodyClass == "map-page" %}
     <script type="module" src="{{ '/scripts/map-canvas.js' | url }}"></script>
     {% endif %}
