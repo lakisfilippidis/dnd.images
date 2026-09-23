@@ -14,14 +14,14 @@ layout: base.njk
   </div>
   {% endif %}
   {{ content | safe }}
-  {# Ссылка выглядит как обычный адрес страницы, но ведёт на t.me/share
-     с адресом её Instant View-версии: шаблон IV не в общем пуле, поэтому
-     нужна ссылка t.me/iv с rhash шаблона (site.json). Кодируется дважды:
-     адрес внутри iv-ссылки и вся iv-ссылка внутри share. #}
+  {# Ссылка ведёт на t.me/share с адресом Instant View-версии страницы:
+     шаблон IV не в общем пуле, поэтому нужна ссылка t.me/iv с rhash шаблона
+     (site.json). Кодируется дважды: адрес внутри iv-ссылки и вся iv-ссылка
+     внутри share. Клик копирует адрес, см. share-copy.js. #}
   {% set pageUrl = site.url + (page.url | url) %}
   {% set ivUrl = "https://t.me/iv?url=" + (pageUrl | urlencode) + "&rhash=" + site.ivRhash %}
   <footer class="story-share">
-    <a href="https://t.me/share/url?url={{ ivUrl | urlencode }}" data-copy-title="{{ title }}" target="_blank" rel="noopener">{{ pageUrl }}</a>
+    <a href="https://t.me/share/url?url={{ ivUrl | urlencode }}" class="story-share-link" target="_blank" rel="noopener">Поделиться в тг</a>
     <span class="story-share-status" aria-live="polite"></span>
   </footer>
 </article>
