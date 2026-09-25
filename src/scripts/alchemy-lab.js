@@ -123,6 +123,11 @@ function tierGapOf(rows, removedIds, tierId, tiers) {
   return gap;
 }
 
+// Та же функция, что alchemy.brewMinutes в src/_data/alchemy.js — копии должны совпадать
+function brewMinutesOf(dc) {
+  return Math.min(60, Math.max(5, 5 * (dc - 10)));
+}
+
 // Та же функция, что alchemy.brewDc в src/_data/alchemy.js — копии должны совпадать
 function brewDcOf(rows, removedIds, gap = 0) {
   const removed = new Set(removedIds);
@@ -831,7 +836,7 @@ function initLab(root) {
       }).join("");
     }
 
-    result.innerHTML = `<p class="alchemy-lab-summary">В дозе занято <strong>${used}</strong> из <strong>${total}</strong> мест${baseSlots() ? ` (основа — ${baseSlots()})` : ""}. Сл спасброска от ядов: <strong>${dc()}</strong>.${rows.length ? ` Сл варки: <strong>${doseDc(rows, state.removed)}</strong> — проверка набора алхимика +${tier().bonus} за ступень.` : ""}${isArea() ? " На площади каждый эффект на долю слабее; Урон, Взрыв и Горение — не слабее одной доли." : ""}${areaOnlyLost().length ? ` ${areaOnlyLost().join(" и ")} срабатывают только в метательных основах — здесь выпадают.` : ""}</p>${body}`;
+    result.innerHTML = `<p class="alchemy-lab-summary">В дозе занято <strong>${used}</strong> из <strong>${total}</strong> мест${baseSlots() ? ` (основа — ${baseSlots()})` : ""}. Сл спасброска от ядов: <strong>${dc()}</strong>.${rows.length ? ` Сл варки: <strong>${doseDc(rows, state.removed)}</strong>, варится ${brewMinutesOf(doseDc(rows, state.removed))} мин — проверка набора алхимика +${tier().bonus} за ступень.` : ""}${isArea() ? " На площади каждый эффект на долю слабее; Урон, Взрыв и Горение — не слабее одной доли." : ""}${areaOnlyLost().length ? ` ${areaOnlyLost().join(" и ")} срабатывают только в метательных основах — здесь выпадают.` : ""}</p>${body}`;
   }
 
   function renderActions(rows) {
@@ -858,7 +863,7 @@ function initLab(root) {
       const problem = recipeProblem(r);
       const blocked = problem ?? (checkResult() === null ? "сначала впиши проверку набора" : null);
       return `<div class="alchemy-lab-card">
-        <p class="alchemy-lab-card-head"><strong class="alchemy-lab-card-name">«${escapeHtml(r.name)}»</strong><span class="alchemy-lab-card-meta">${base && base.slots ? `${base.name} · ` : ""}${ingredientsLine(r.ingredients)} · Сл варки ${doseDc(rows, removed)}</span></p>
+        <p class="alchemy-lab-card-head"><strong class="alchemy-lab-card-name">«${escapeHtml(r.name)}»</strong><span class="alchemy-lab-card-meta">${base && base.slots ? `${base.name} · ` : ""}${ingredientsLine(r.ingredients)} · Сл варки ${doseDc(rows, removed)}, ${brewMinutesOf(doseDc(rows, removed))} мин</span></p>
         <p class="alchemy-lab-card-effects">${rows.map((row) => effectLine(row, removed.has(row.effect.id), dc())).join("")}</p>
         <p class="alchemy-lab-card-actions">
           <button type="button" class="alchemy-lab-button alchemy-lab-button--primary" data-recipe="${index}" data-act="brew"${blocked ? ` disabled title="${escapeHtml(blocked)}"` : ""}>Сварить</button>

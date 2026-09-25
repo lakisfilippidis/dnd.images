@@ -643,7 +643,7 @@ module.exports = async function (eleventyConfig) {
       return [
         `<article class="feat-card recipe-card recipe-card--recipe">`,
         `<header class="feat-card-header"><h4 class="feat-card-name">«${r.name}»</h4></header>`,
-        `<p class="feat-card-req">${base.slots ? `Основа <a href="${url("/Feats/")}#base-${base.id}">${base.name}</a>, ` : ""}${composition}; <a href="${url("/Feats/")}#brewing">Сл варки</a> ${r.brewDc}</p>`,
+        `<p class="feat-card-req">${base.slots ? `Основа <a href="${url("/Feats/")}#base-${base.id}">${base.name}</a>, ` : ""}${composition}; <a href="${url("/Feats/")}#brewing">Сл варки</a> ${r.brewDc}, ${alchemy.brewMinutes(r.brewDc)} мин</p>`,
         `<ul class="recipe-effects">${effects}</ul>`,
         r.note ? `<p class="feat-card-note">${r.note}</p>` : "",
         `</article>`,
