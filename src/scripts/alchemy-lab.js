@@ -84,7 +84,7 @@ function fromStart(start) {
 }
 
 // Та же функция, что alchemy.brew в src/_data/alchemy.js — копии должны совпадать
-function brewRows(ingredientIds, ingredientById, effectById) {
+function brewRows(ingredientIds, ingredientById, effectById, area = false) {
   const count = new Map();
   for (const id of ingredientIds) {
     const ingredient = ingredientById.get(id);
@@ -95,10 +95,13 @@ function brewRows(ingredientIds, ingredientById, effectById) {
   for (const [effectId, n] of count) {
     if (n < 2) continue;
     const effect = effectById.get(effectId);
+    let stacks = Math.min(n - 1, MAX_STACKS);
+    if (area) stacks = effect.areaFloor ? Math.max(1, stacks - 1) : stacks - 1;
+    if (stacks < 1) continue;
     rows.push({
       effect,
       count: n,
-      stacks: Math.min(n - 1, MAX_STACKS),
+      stacks,
       extra: effect.kind === "harm" && effect.id !== "damage" ? Math.max(0, n - 4) : 0,
     });
   }
@@ -443,6 +446,11 @@ function initLab(root) {
     return baseById.get(baseId)?.slots ?? 0;
   }
 
+  // бомба, зажигательная и дым бьют по площади — эффекты там на долю слабее
+  function isArea(baseId = state.base) {
+    return baseById.get(baseId)?.area ?? false;
+  }
+
   function capacity() {
     return Math.max(0, tier().capacity - baseSlots());
   }
@@ -596,7 +604,7 @@ function initLab(root) {
 
   function brewDose(name) {
     const ids = selectedIds();
-    const rows = brewRows(ids, ingredientById, effectById);
+    const rows = brewRows(ids, ingredientById, effectById, isArea());
     if (ids.length < 2 || rows.length === 0 || shortage(ids).length) return;
     const dose = makeDose(name || autoName(rows, state.removed), state.base, rows, new Set(state.removed), ids);
     spend(ids);
@@ -609,7 +617,7 @@ function initLab(root) {
 
   function saveRecipe(name) {
     const ids = selectedIds();
-    const rows = brewRows(ids, ingredientById, effectById);
+    const rows = brewRows(ids, ingredientById, effectById, isArea());
     if (ids.length < 2 || rows.length === 0) return;
     const recipe = {
       name: name || autoName(rows, state.removed),
@@ -625,7 +633,7 @@ function initLab(root) {
   // Рецепт влезает в дозу при текущей ступени со своей основой, а куба и реторты
   // хватает на то, что он убирает
   function recipeProblem(recipe) {
-    const rows = brewRows(recipe.ingredients, ingredientById, effectById);
+    const rows = brewRows(recipe.ingredients, ingredientById, effectById, isArea(recipe.base));
     if (recipe.ingredients.length + baseSlots(recipe.base) > tier().capacity) return "не влезает в дозу этой ступени";
     const removedBoons = recipe.remove.filter((id) => effectById.get(id)?.kind === "boon").length;
     const removedHarms = recipe.remove.length - removedBoons;
@@ -639,7 +647,7 @@ function initLab(root) {
 
   function brewRecipe(recipe) {
     if (recipeProblem(recipe)) return;
-    const rows = brewRows(recipe.ingredients, ingredientById, effectById);
+    const rows = brewRows(recipe.ingredients, ingredientById, effectById, isArea(recipe.base));
     const dose = makeDose(recipe.name, recipe.base, rows, new Set(recipe.remove), [...recipe.ingredients]);
     spend(recipe.ingredients);
     state.bag.doses.unshift(dose);
@@ -719,7 +727,7 @@ function initLab(root) {
     if (selectedCount() < 2) {
       body = `<p class="alchemy-lab-empty">Выбери хотя бы два ингредиента.</p>`;
     } else if (rows.length === 0) {
-      body = `<p class="alchemy-lab-empty">Общих эффектов нет — ингредиенты пропали.</p>`;
+      body = `<p class="alchemy-lab-empty">${isArea() ? "На площади ничего не осталось: общих эффектов нет или им не хватило долей." : "Общих эффектов нет — ингредиенты пропали."}</p>`;
     } else {
       body = rows.map((r) => {
         const removed = state.removed.has(r.effect.id);
@@ -739,7 +747,7 @@ function initLab(root) {
       }).join("");
     }
 
-    result.innerHTML = `<p class="alchemy-lab-summary">В дозе занято <strong>${used}</strong> из <strong>${total}</strong> мест${baseSlots() ? ` (основа — ${baseSlots()})` : ""}. Сл спасброска от ядов: <strong>${dc()}</strong>.</p>${body}`;
+    result.innerHTML = `<p class="alchemy-lab-summary">В дозе занято <strong>${used}</strong> из <strong>${total}</strong> мест${baseSlots() ? ` (основа — ${baseSlots()})` : ""}. Сл спасброска от ядов: <strong>${dc()}</strong>.${isArea() ? " На площади каждый эффект на долю слабее; Урон, Взрыв и Горение — не слабее одной доли." : ""}</p>${body}`;
   }
 
   function renderActions(rows) {
@@ -757,7 +765,7 @@ function initLab(root) {
       return;
     }
     recipesBox.innerHTML = `<p class="alchemy-lab-section-title">Рецепты</p>${state.bag.recipes.map((r, index) => {
-      const rows = brewRows(r.ingredients, ingredientById, effectById);
+      const rows = brewRows(r.ingredients, ingredientById, effectById, isArea(r.base));
       const removed = new Set(r.remove);
       const base = baseById.get(r.base);
       const problem = recipeProblem(r);
@@ -800,7 +808,7 @@ function initLab(root) {
 
   function render() {
     const cap = capacity();
-    const rows = brewRows(selectedIds(), ingredientById, effectById);
+    const rows = brewRows(selectedIds(), ingredientById, effectById, isArea());
     const activeIds = new Set(rows.map((r) => r.effect.id));
     for (const id of [...state.removed]) if (!activeIds.has(id)) state.removed.delete(id);
 

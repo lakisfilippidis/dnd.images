@@ -592,7 +592,7 @@ module.exports = async function (eleventyConfig) {
       if (!base) throw new Error(`${where}: recipe "${r.name}" — unknown base "${r.base}"`);
       const ingredients = r.ingredients ?? [];
       if (ingredients.length + base.slots > tier.capacity) throw new Error(`${where}: recipe "${r.name}" — ${ingredients.length} ingredients + base ${base.slots} exceed ${tier.title} capacity ${tier.capacity}`);
-      const rows = alchemy.brew(ingredients, ingredientById, effectById);
+      const rows = alchemy.brew(ingredients, ingredientById, effectById, Boolean(base.area));
       const remove = r.remove ?? [];
       let boons = 0;
       let harms = 0;
@@ -714,7 +714,7 @@ module.exports = async function (eleventyConfig) {
       regions: alchemy.regions.map(({ id, title, item }) => ({ id, title, item: Boolean(item) })),
       effects: alchemy.effects,
       ingredients: alchemy.ingredients,
-      bases: alchemy.bases.map(({ id, name, slots }) => ({ id, name, slots })),
+      bases: alchemy.bases.map(({ id, name, slots, area }) => ({ id, name, slots, area: Boolean(area) })),
       gather: alchemy.gather,
       options: a ? { id: a.id, tier: a.tier.id, int: a.int, still: a.still, retort: a.retort } : {},
       start: a ? { packs: a.packs, items: a.items, recipes: a.recipes.map(({ name, base, ingredients, remove }) => ({ name, base, ingredients, remove })) } : null,
