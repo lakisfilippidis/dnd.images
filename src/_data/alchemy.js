@@ -45,14 +45,16 @@ module.exports = {
     { id: "harm", title: "Вред", icon: "snake.svg", sign: "−" },
     { id: "boon", title: "Польза", icon: "flask.svg", sign: "+" },
   ],
-  // Ступень алхимика — число взятых черт алхимии: одна черта = одна ступень.
-  // feats — сколько черт нужно, capacity — ингредиентов в дозе, bonus — в Сл.
+  // Ступень алхимика — число взятых черт алхимии, но не выше, чем позволяет уровень:
+  // одна черта = одна ступень, лишние черты ждут, пока персонаж дорастёт.
+  // feats — сколько черт нужно, level — с какого уровня персонажа,
+  // capacity — ингредиентов в дозе, bonus — в Сл.
   tiers: [
-    { id: "apprentice", title: "Ученик", feats: 1, capacity: 3, bonus: 2 },
-    { id: "journeyman", title: "Подмастерье", feats: 2, capacity: 4, bonus: 3 },
-    { id: "master", title: "Мастер", feats: 3, capacity: 5, bonus: 4 },
-    { id: "virtuoso", title: "Виртуоз", feats: 4, capacity: 6, bonus: 5 },
-    { id: "legend", title: "Легенда", feats: 5, capacity: 7, bonus: 6 },
+    { id: "apprentice", title: "Ученик", feats: 1, level: 1, capacity: 3, bonus: 2 },
+    { id: "journeyman", title: "Подмастерье", feats: 2, level: 3, capacity: 4, bonus: 3 },
+    { id: "master", title: "Мастер", feats: 3, level: 5, capacity: 5, bonus: 4 },
+    { id: "virtuoso", title: "Виртуоз", feats: 4, level: 9, capacity: 6, bonus: 5 },
+    { id: "legend", title: "Легенда", feats: 5, level: 13, capacity: 7, bonus: 6 },
   ],
   // Сбор трав: час в крае и проверка Природы. Выход в «дозах ступени» —
   // пачек = ceil(doses × capacity ступени); строка выбирается по min ≤ результат.

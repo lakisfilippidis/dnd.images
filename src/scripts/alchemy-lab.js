@@ -149,7 +149,7 @@ function initLab(root) {
   controls.className = "alchemy-lab-controls";
   controls.innerHTML = `
     <label class="alchemy-lab-field">Ступень
-      <select data-field="tier">${data.tiers.map((t) => `<option value="${t.id}">${t.title} — ${t.feats} ${t.feats === 1 ? "черта" : "черт" + (t.feats < 5 ? "ы" : "")}, ${t.capacity} в дозе</option>`).join("")}</select>
+      <select data-field="tier">${data.tiers.map((t) => `<option value="${t.id}">${t.title} — ${t.feats} ${t.feats === 1 ? "черта" : "черт" + (t.feats < 5 ? "ы" : "")}, с ${t.level}-го ур., ${t.capacity} в дозе</option>`).join("")}</select>
     </label>
     <label class="alchemy-lab-field">Основа
       <select data-field="base">${data.bases.map((b) => `<option value="${b.id}">${b.name}${b.slots ? ` (−${b.slots})` : ""}</option>`).join("")}</select>
