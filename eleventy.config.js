@@ -505,7 +505,9 @@ module.exports = async function (eleventyConfig) {
     const rows = effect.stacks.map((text, i) =>
       `<p class="recipe-stack"><span class="recipe-stack-label">${i + 1} ${i === 0 ? "доля" : "доли"}</span> ${text}</p>`
     ).join("");
-    const meta = [kind.title, effect.save ? `спасбросок ${effect.save}` : null].filter(Boolean).join(", ");
+    const tier = effect.tier ? tierById.get(effect.tier) : null;
+    if (effect.tier && !tier) throw new Error(`effectCards: effect "${effect.id}" — unknown tier "${effect.tier}"`);
+    const meta = [kind.title, effect.save ? `спасбросок ${effect.save}` : null, tier ? `порог — ${tier.title}, ниже +5 к <a href="#brewing">Сл варки</a> за ступень` : null].filter(Boolean).join(", ");
     return [
       `<article class="feat-card recipe-card recipe-card--${kind.id}" id="effect-${effect.id}">`,
       `<header class="feat-card-header"><h4 class="feat-card-name">${effect.name}</h4>${featIcon(kind)}</header>`,
@@ -604,7 +606,7 @@ module.exports = async function (eleventyConfig) {
       }
       if (boons > still) throw new Error(`${where}: recipe "${r.name}" removes ${boons} boons, still allows ${still}`);
       if (harms > retort) throw new Error(`${where}: recipe "${r.name}" removes ${harms} harms, retort allows ${retort}`);
-      return { name: String(r.name), base: base.id, ingredients, remove, note: r.note ?? null, rows, brewDc: alchemy.brewDc(rows, remove) };
+      return { name: String(r.name), base: base.id, ingredients, remove, note: r.note ?? null, rows, brewDc: alchemy.brewDc(rows, remove, alchemy.tierGap(rows, remove, tier.id, alchemy.tiers)) };
     });
     return {
       id: a.id ?? null,

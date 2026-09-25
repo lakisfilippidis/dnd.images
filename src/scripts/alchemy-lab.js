@@ -109,6 +109,19 @@ function brewRows(ingredientIds, ingredientById, effectById, area = false) {
   return rows;
 }
 
+// Та же функция, что alchemy.tierGap в src/_data/alchemy.js — копии должны совпадать
+function tierGapOf(rows, removedIds, tierId, tiers) {
+  const removed = new Set(removedIds);
+  const index = (id) => tiers.findIndex((t) => t.id === id);
+  const own = index(tierId);
+  let gap = 0;
+  for (const row of rows) {
+    if (removed.has(row.effect.id) || !row.effect.tier) continue;
+    gap = Math.max(gap, index(row.effect.tier) - own);
+  }
+  return gap;
+}
+
 // Та же функция, что alchemy.brewDc в src/_data/alchemy.js — копии должны совпадать
 function brewDcOf(rows, removedIds, gap = 0) {
   const removed = new Set(removedIds);
@@ -616,6 +629,18 @@ function initLab(root) {
     };
   }
 
+  // Сл варки с надбавкой за эффекты выше текущей ступени
+  function doseDc(rows, removed) {
+    return brewDcOf(rows, removed, tierGapOf(rows, removed, state.tier, data.tiers));
+  }
+
+  // На сколько ступеней эффект выше текущей; 0 — в пределах ступени
+  function overTier(effect) {
+    if (!effect.tier) return 0;
+    const index = (id) => data.tiers.findIndex((t) => t.id === id);
+    return Math.max(0, index(effect.tier) - index(state.tier));
+  }
+
   // Результат проверки набора алхимика из поля; null — не вписан
   function checkResult() {
     const raw = actions?.querySelector("[data-check]").value.trim() ?? "";
@@ -631,7 +656,7 @@ function initLab(root) {
     const check = checkResult();
     if (check === null) return null;
     const total = check + tier().bonus;
-    const target = brewDcOf(rows, removed);
+    const target = doseDc(rows, removed);
     spend(ids);
     actions.querySelector("[data-check]").value = "";
     if (total >= target) {
@@ -782,7 +807,8 @@ function initLab(root) {
         const canRemove = r.effect.kind === "boon"
           ? removed || stillUsed < state.still
           : removed || retortUsed < state.retort;
-        const label = `${r.stacks} ${dolesWord(r.stacks)}${r.extra ? `, +${r.extra} к Сл` : ""}`;
+        const over = removed ? 0 : overTier(r.effect);
+        const label = `${r.stacks} ${dolesWord(r.stacks)}${r.extra ? `, +${r.extra} к Сл` : ""}${over ? ` · порог ${tierById.get(r.effect.tier).title}, +${5 * over} к Сл варки` : ""}`;
         const save = r.effect.kind === "harm" ? ` · спасбросок ${r.effect.save}, Сл ${dc() + r.extra}` : "";
         const text = `<p class="alchemy-lab-effect-text">${r.effect.stacks[r.stacks - 1]}</p>`;
         const button = canRemove
@@ -795,7 +821,7 @@ function initLab(root) {
       }).join("");
     }
 
-    result.innerHTML = `<p class="alchemy-lab-summary">В дозе занято <strong>${used}</strong> из <strong>${total}</strong> мест${baseSlots() ? ` (основа — ${baseSlots()})` : ""}. Сл спасброска от ядов: <strong>${dc()}</strong>.${rows.length ? ` Сл варки: <strong>${brewDcOf(rows, state.removed)}</strong> — проверка набора алхимика +${tier().bonus} за ступень.` : ""}${isArea() ? " На площади каждый эффект на долю слабее; Урон, Взрыв и Горение — не слабее одной доли." : ""}</p>${body}`;
+    result.innerHTML = `<p class="alchemy-lab-summary">В дозе занято <strong>${used}</strong> из <strong>${total}</strong> мест${baseSlots() ? ` (основа — ${baseSlots()})` : ""}. Сл спасброска от ядов: <strong>${dc()}</strong>.${rows.length ? ` Сл варки: <strong>${doseDc(rows, state.removed)}</strong> — проверка набора алхимика +${tier().bonus} за ступень.` : ""}${isArea() ? " На площади каждый эффект на долю слабее; Урон, Взрыв и Горение — не слабее одной доли." : ""}</p>${body}`;
   }
 
   function renderActions(rows) {
@@ -822,7 +848,7 @@ function initLab(root) {
       const problem = recipeProblem(r);
       const blocked = problem ?? (checkResult() === null ? "сначала впиши проверку набора" : null);
       return `<div class="alchemy-lab-card">
-        <p class="alchemy-lab-card-head"><strong class="alchemy-lab-card-name">«${escapeHtml(r.name)}»</strong><span class="alchemy-lab-card-meta">${base && base.slots ? `${base.name} · ` : ""}${ingredientsLine(r.ingredients)} · Сл варки ${brewDcOf(rows, removed)}</span></p>
+        <p class="alchemy-lab-card-head"><strong class="alchemy-lab-card-name">«${escapeHtml(r.name)}»</strong><span class="alchemy-lab-card-meta">${base && base.slots ? `${base.name} · ` : ""}${ingredientsLine(r.ingredients)} · Сл варки ${doseDc(rows, removed)}</span></p>
         <p class="alchemy-lab-card-effects">${rows.map((row) => effectLine(row, removed.has(row.effect.id), dc())).join("")}</p>
         <p class="alchemy-lab-card-actions">
           <button type="button" class="alchemy-lab-button alchemy-lab-button--primary" data-recipe="${index}" data-act="brew"${blocked ? ` disabled title="${escapeHtml(blocked)}"` : ""}>Сварить</button>
