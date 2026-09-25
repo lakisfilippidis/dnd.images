@@ -95,6 +95,7 @@ function brewRows(ingredientIds, ingredientById, effectById, area = false) {
   for (const [effectId, n] of count) {
     if (n < 2) continue;
     const effect = effectById.get(effectId);
+    if (!area && effect.areaOnly) continue;
     let stacks = Math.min(n - 1, MAX_STACKS);
     if (area) stacks = effect.areaFloor ? Math.max(1, stacks - 1) : stacks - 1;
     if (stacks < 1) continue;
@@ -641,6 +642,15 @@ function initLab(root) {
     return Math.max(0, index(effect.tier) - index(state.tier));
   }
 
+  // Общие эффекты набора, что срабатывают только на площади (Взрыв, Горение) —
+  // на неметательной основе они выпадают, конструктор об этом предупреждает
+  function areaOnlyLost() {
+    if (isArea()) return [];
+    const count = new Map();
+    for (const id of selectedIds()) for (const e of ingredientById.get(id).effects) count.set(e, (count.get(e) ?? 0) + 1);
+    return [...count].filter(([id, n]) => n >= 2 && effectById.get(id).areaOnly).map(([id]) => effectById.get(id).name);
+  }
+
   // Результат проверки набора алхимика из поля; null — не вписан
   function checkResult() {
     const raw = actions?.querySelector("[data-check]").value.trim() ?? "";
@@ -821,7 +831,7 @@ function initLab(root) {
       }).join("");
     }
 
-    result.innerHTML = `<p class="alchemy-lab-summary">В дозе занято <strong>${used}</strong> из <strong>${total}</strong> мест${baseSlots() ? ` (основа — ${baseSlots()})` : ""}. Сл спасброска от ядов: <strong>${dc()}</strong>.${rows.length ? ` Сл варки: <strong>${doseDc(rows, state.removed)}</strong> — проверка набора алхимика +${tier().bonus} за ступень.` : ""}${isArea() ? " На площади каждый эффект на долю слабее; Урон, Взрыв и Горение — не слабее одной доли." : ""}</p>${body}`;
+    result.innerHTML = `<p class="alchemy-lab-summary">В дозе занято <strong>${used}</strong> из <strong>${total}</strong> мест${baseSlots() ? ` (основа — ${baseSlots()})` : ""}. Сл спасброска от ядов: <strong>${dc()}</strong>.${rows.length ? ` Сл варки: <strong>${doseDc(rows, state.removed)}</strong> — проверка набора алхимика +${tier().bonus} за ступень.` : ""}${isArea() ? " На площади каждый эффект на долю слабее; Урон, Взрыв и Горение — не слабее одной доли." : ""}${areaOnlyLost().length ? ` ${areaOnlyLost().join(" и ")} срабатывают только в метательных основах — здесь выпадают.` : ""}</p>${body}`;
   }
 
   function renderActions(rows) {
