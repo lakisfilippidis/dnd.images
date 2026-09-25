@@ -12,11 +12,17 @@
 // долю слабее и при нуле долей пропадает; эффекты с areaFloor: true (Урон, Взрыв,
 // Горение) не опускаются ниже одной доли.
 //
+// Варка — проверка набора алхимика + бонус ступени против Сл варки (brewDc):
+// 10 + доли оставшихся эффектов + 2 за каждый убранный кубом или ретортой.
+// Провал — ингредиенты потрачены, дозы нет; провал на MISHAP_MARGIN и больше —
+// авария: вредные эффекты дозы достаются самому алхимику.
+//
 // Травы не отслеживаются поштучно: персонаж держит пачки по краям («Травы из Рума ×5»),
 // и одна пачка — это один ингредиент любой травы этого края. Края с item: true
 // (трофеи, порох) не собираются и считаются поштучно по имени ингредиента.
 
 const MAX_STACKS = 3;
+const MISHAP_MARGIN = 5;
 
 // Что сварится из набора ингредиентов (id могут повторяться — каждая порция
 // считается отдельно), area — основа бьёт по площади. Та же функция продублирована
@@ -46,8 +52,20 @@ function brew(ingredientIds, ingredientById, effectById, area = false) {
   return rows;
 }
 
+// Сл варки дозы: rows — результат brew, removedIds — что убрано кубом и ретортой,
+// gap — на сколько ступеней состав выше ступени алхимика. Копия — brewDcOf
+// в src/scripts/alchemy-lab.js.
+function brewDc(rows, removedIds, gap = 0) {
+  const removed = new Set(removedIds);
+  let dc = 10 + 5 * gap;
+  for (const row of rows) dc += removed.has(row.effect.id) ? 2 : row.stacks;
+  return dc;
+}
+
 module.exports = {
   brew,
+  brewDc,
+  MISHAP_MARGIN,
   kinds: [
     { id: "harm", title: "Вред", icon: "snake.svg", sign: "−" },
     { id: "boon", title: "Польза", icon: "flask.svg", sign: "+" },

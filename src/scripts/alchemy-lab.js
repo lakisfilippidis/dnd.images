@@ -109,6 +109,14 @@ function brewRows(ingredientIds, ingredientById, effectById, area = false) {
   return rows;
 }
 
+// Та же функция, что alchemy.brewDc в src/_data/alchemy.js — копии должны совпадать
+function brewDcOf(rows, removedIds, gap = 0) {
+  const removed = new Set(removedIds);
+  let dc = 10 + 5 * gap;
+  for (const row of rows) dc += removed.has(row.effect.id) ? 2 : row.stacks;
+  return dc;
+}
+
 function escapeHtml(text) {
   return String(text).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
 }
@@ -281,6 +289,9 @@ function initLab(root) {
     actions.className = "alchemy-lab-actions";
     actions.innerHTML = `
       <input type="text" class="alchemy-lab-name" data-field="doseName" placeholder="Название" maxlength="60">
+      <label class="alchemy-lab-field">Проверка набора
+        <input type="number" data-check min="1" max="40" step="1" placeholder="14">
+      </label>
       <button type="button" class="alchemy-lab-button alchemy-lab-button--primary" data-act="brew">Сварить</button>
       <button type="button" class="alchemy-lab-button" data-act="save-recipe">Записать рецепт</button>
       <span class="alchemy-lab-actions-hint" data-act-hint></span>
@@ -296,6 +307,9 @@ function initLab(root) {
         saveRecipe(nameInput.value.trim());
         nameInput.value = "";
       }
+    });
+    actions.addEventListener("input", (event) => {
+      if (event.target.matches("[data-check]")) render();
     });
     root.append(actions);
 
@@ -602,16 +616,53 @@ function initLab(root) {
     };
   }
 
+  // Результат проверки набора алхимика из поля; null — не вписан
+  function checkResult() {
+    const raw = actions?.querySelector("[data-check]").value.trim() ?? "";
+    const n = Number(raw);
+    return raw !== "" && Number.isInteger(n) ? n : null;
+  }
+
+  // Варка — проверка: вписанный результат набора алхимика + бонус ступени против
+  // Сл варки. Ингредиенты уходят в любом случае; провал на data.mishap и больше —
+  // авария, вредное из дозы достаётся самому алхимику. Возвращает null без проверки,
+  // иначе — удалось ли.
+  function attempt(ids, rows, removed, name, baseId) {
+    const check = checkResult();
+    if (check === null) return null;
+    const total = check + tier().bonus;
+    const target = brewDcOf(rows, removed);
+    spend(ids);
+    actions.querySelector("[data-check]").value = "";
+    if (total >= target) {
+      const dose = makeDose(name, baseId, rows, new Set(removed), ids);
+      state.bag.doses.unshift(dose);
+      note(`Сварена «${dose.name}»: ${total} против Сл ${target}`);
+      return true;
+    }
+    if (target - total < data.mishap) {
+      note(`Не вышло «${name}»: ${total} против Сл ${target}, ингредиенты пропали`);
+      return false;
+    }
+    const harms = rows.filter((r) => r.effect.kind === "harm" && !removed.has(r.effect.id));
+    const fire = harms.some((r) => r.effect.id === "blast" || r.effect.id === "burn");
+    const what = harms.length
+      ? `${fire ? "смесь вспыхнула в руках, " : ""}на тебе ${harms.map((r) => `${r.effect.name} ${r.stacks}`).join(", ")}, спасбросок Сл ${dc()}`
+      : "вредного в составе нет — обошлось";
+    note(`Авария с «${name}»: ${total} против Сл ${target} — ${what}`);
+    return false;
+  }
+
   function brewDose(name) {
     const ids = selectedIds();
     const rows = brewRows(ids, ingredientById, effectById, isArea());
     if (ids.length < 2 || rows.length === 0 || shortage(ids).length) return;
-    const dose = makeDose(name || autoName(rows, state.removed), state.base, rows, new Set(state.removed), ids);
-    spend(ids);
-    state.bag.doses.unshift(dose);
-    note(`Сварена «${dose.name}»`);
-    state.selected.clear();
-    state.removed.clear();
+    const ok = attempt(ids, rows, state.removed, name || autoName(rows, state.removed), state.base);
+    if (ok === null) return;
+    if (ok) {
+      state.selected.clear();
+      state.removed.clear();
+    }
     commit();
   }
 
@@ -648,10 +699,7 @@ function initLab(root) {
   function brewRecipe(recipe) {
     if (recipeProblem(recipe)) return;
     const rows = brewRows(recipe.ingredients, ingredientById, effectById, isArea(recipe.base));
-    const dose = makeDose(recipe.name, recipe.base, rows, new Set(recipe.remove), [...recipe.ingredients]);
-    spend(recipe.ingredients);
-    state.bag.doses.unshift(dose);
-    note(`Сварена «${dose.name}»`);
+    if (attempt([...recipe.ingredients], rows, new Set(recipe.remove), recipe.name, recipe.base) === null) return;
     commit();
   }
 
@@ -747,16 +795,19 @@ function initLab(root) {
       }).join("");
     }
 
-    result.innerHTML = `<p class="alchemy-lab-summary">В дозе занято <strong>${used}</strong> из <strong>${total}</strong> мест${baseSlots() ? ` (основа — ${baseSlots()})` : ""}. Сл спасброска от ядов: <strong>${dc()}</strong>.${isArea() ? " На площади каждый эффект на долю слабее; Урон, Взрыв и Горение — не слабее одной доли." : ""}</p>${body}`;
+    result.innerHTML = `<p class="alchemy-lab-summary">В дозе занято <strong>${used}</strong> из <strong>${total}</strong> мест${baseSlots() ? ` (основа — ${baseSlots()})` : ""}. Сл спасброска от ядов: <strong>${dc()}</strong>.${rows.length ? ` Сл варки: <strong>${brewDcOf(rows, state.removed)}</strong> — проверка набора алхимика +${tier().bonus} за ступень.` : ""}${isArea() ? " На площади каждый эффект на долю слабее; Урон, Взрыв и Горение — не слабее одной доли." : ""}</p>${body}`;
   }
 
   function renderActions(rows) {
     const ids = selectedIds();
     const missing = shortage(ids);
     const ready = ids.length >= 2 && rows.length > 0;
-    actions.querySelector("[data-act=brew]").disabled = !ready || missing.length > 0;
+    const unchecked = checkResult() === null;
+    actions.querySelector("[data-act=brew]").disabled = !ready || missing.length > 0 || unchecked;
     actions.querySelector("[data-act=save-recipe]").disabled = !ready;
-    actions.querySelector("[data-act-hint]").textContent = ready && missing.length ? `Не хватает — ${missing.join(", ")}` : "";
+    actions.querySelector("[data-act-hint]").textContent = ready && missing.length
+      ? `Не хватает — ${missing.join(", ")}`
+      : ready && unchecked ? "Брось проверку набора алхимика и впиши результат" : "";
   }
 
   function renderRecipes() {
@@ -769,11 +820,12 @@ function initLab(root) {
       const removed = new Set(r.remove);
       const base = baseById.get(r.base);
       const problem = recipeProblem(r);
+      const blocked = problem ?? (checkResult() === null ? "сначала впиши проверку набора" : null);
       return `<div class="alchemy-lab-card">
-        <p class="alchemy-lab-card-head"><strong class="alchemy-lab-card-name">«${escapeHtml(r.name)}»</strong><span class="alchemy-lab-card-meta">${base && base.slots ? `${base.name} · ` : ""}${ingredientsLine(r.ingredients)}</span></p>
+        <p class="alchemy-lab-card-head"><strong class="alchemy-lab-card-name">«${escapeHtml(r.name)}»</strong><span class="alchemy-lab-card-meta">${base && base.slots ? `${base.name} · ` : ""}${ingredientsLine(r.ingredients)} · Сл варки ${brewDcOf(rows, removed)}</span></p>
         <p class="alchemy-lab-card-effects">${rows.map((row) => effectLine(row, removed.has(row.effect.id), dc())).join("")}</p>
         <p class="alchemy-lab-card-actions">
-          <button type="button" class="alchemy-lab-button alchemy-lab-button--primary" data-recipe="${index}" data-act="brew"${problem ? ` disabled title="${escapeHtml(problem)}"` : ""}>Сварить</button>
+          <button type="button" class="alchemy-lab-button alchemy-lab-button--primary" data-recipe="${index}" data-act="brew"${blocked ? ` disabled title="${escapeHtml(blocked)}"` : ""}>Сварить</button>
           <button type="button" class="alchemy-lab-button" data-recipe="${index}" data-act="load">В конструктор</button>
           <button type="button" class="alchemy-lab-button alchemy-lab-button--quiet" data-recipe="${index}" data-act="delete">Вычеркнуть</button>
           ${problem ? `<span class="alchemy-lab-actions-hint">${escapeHtml(problem)}</span>` : ""}

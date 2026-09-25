@@ -604,7 +604,7 @@ module.exports = async function (eleventyConfig) {
       }
       if (boons > still) throw new Error(`${where}: recipe "${r.name}" removes ${boons} boons, still allows ${still}`);
       if (harms > retort) throw new Error(`${where}: recipe "${r.name}" removes ${harms} harms, retort allows ${retort}`);
-      return { name: String(r.name), base: base.id, ingredients, remove, note: r.note ?? null, rows };
+      return { name: String(r.name), base: base.id, ingredients, remove, note: r.note ?? null, rows, brewDc: alchemy.brewDc(rows, remove) };
     });
     return {
       id: a.id ?? null,
@@ -641,7 +641,7 @@ module.exports = async function (eleventyConfig) {
       return [
         `<article class="feat-card recipe-card recipe-card--recipe">`,
         `<header class="feat-card-header"><h4 class="feat-card-name">«${r.name}»</h4></header>`,
-        `<p class="feat-card-req">${base.slots ? `Основа <a href="${url("/Feats/")}#base-${base.id}">${base.name}</a>, ` : ""}${composition}</p>`,
+        `<p class="feat-card-req">${base.slots ? `Основа <a href="${url("/Feats/")}#base-${base.id}">${base.name}</a>, ` : ""}${composition}; <a href="${url("/Feats/")}#brewing">Сл варки</a> ${r.brewDc}</p>`,
         `<ul class="recipe-effects">${effects}</ul>`,
         r.note ? `<p class="feat-card-note">${r.note}</p>` : "",
         `</article>`,
@@ -716,6 +716,7 @@ module.exports = async function (eleventyConfig) {
       ingredients: alchemy.ingredients,
       bases: alchemy.bases.map(({ id, name, slots, area }) => ({ id, name, slots, area: Boolean(area) })),
       gather: alchemy.gather,
+      mishap: alchemy.MISHAP_MARGIN,
       options: a ? { id: a.id, tier: a.tier.id, int: a.int, still: a.still, retort: a.retort } : {},
       start: a ? { packs: a.packs, items: a.items, recipes: a.recipes.map(({ name, base, ingredients, remove }) => ({ name, base, ingredients, remove })) } : null,
     };
