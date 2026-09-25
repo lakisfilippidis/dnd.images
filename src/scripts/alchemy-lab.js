@@ -665,7 +665,8 @@ function initLab(root) {
 
   // Варка — проверка: вписанный результат набора алхимика + бонус ступени против
   // Сл варки. Ингредиенты уходят в любом случае; провал на data.mishap и больше —
-  // авария, вредное из дозы достаётся самому алхимику. Возвращает null без проверки,
+  // авария: один случайный эффект из оставшихся в дозе действует на самого алхимика,
+  // как выпитый. Возвращает null без проверки,
   // иначе — удалось ли.
   function attempt(ids, rows, removed, name, baseId) {
     const check = checkResult();
@@ -684,12 +685,11 @@ function initLab(root) {
       note(`Не вышло «${name}»: ${total} против Сл ${target}, ингредиенты пропали`);
       return false;
     }
-    const harms = rows.filter((r) => r.effect.kind === "harm" && !removed.has(r.effect.id));
-    const fire = harms.some((r) => r.effect.id === "blast" || r.effect.id === "burn");
-    const what = harms.length
-      ? `${fire ? "смесь вспыхнула в руках, " : ""}на тебе ${harms.map((r) => `${r.effect.name} ${r.stacks}`).join(", ")}, спасбросок Сл ${dc()}`
-      : "вредного в составе нет — обошлось";
-    note(`Авария с «${name}»: ${total} против Сл ${target} — ${what}`);
+    const kept = rows.filter((r) => !removed.has(r.effect.id));
+    const what = kept.length === 1
+      ? `на тебе ${kept[0].effect.name} ${kept[0].stacks}, как выпитый`
+      : `брось d${kept.length} — на тебе как выпитый: ${kept.map((r, i) => `${i + 1} ${r.effect.name} ${r.stacks}`).join(", ")}`;
+    note(`Авария с «${name}»: ${total} против Сл ${target}, ингредиенты пропали — ${what}`);
     return false;
   }
 
