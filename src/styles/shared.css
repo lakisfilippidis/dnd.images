@@ -20,6 +20,8 @@
   --color-error: #a00;
   --color-creature-heading: #4a2c2c;
   --color-creature-section: #5a3d3d;
+  --recipe-harm: #4a6b2a;
+  --recipe-boon: #2a5a6b;
   --font-fantasy: 'Neucha', serif;
   --font-sans: 'Segoe UI', sans-serif;
   --font-sans-full: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
@@ -1222,8 +1224,6 @@ body.map-page {
 }
 
 .recipe-cards {
-  --recipe-harm: #4a6b2a;
-  --recipe-boon: #2a5a6b;
   --recipe-base: var(--color-text-muted);
 }
 
@@ -1604,11 +1604,11 @@ body.map-page {
 }
 
 .alchemy-lab-mini--harm {
-  color: var(--recipe-harm, #4a6b2a);
+  color: var(--recipe-harm);
 }
 
 .alchemy-lab-mini--boon {
-  color: var(--recipe-boon, #2a5a6b);
+  color: var(--recipe-boon);
 }
 
 .alchemy-lab-result {
@@ -1631,15 +1631,14 @@ body.map-page {
 }
 
 .alchemy-lab-effect--harm {
-  border-left-color: rgb(from var(--recipe-harm, #4a6b2a) r g b / 0.6);
+  border-left-color: rgb(from var(--recipe-harm) r g b / 0.6);
 }
 
 .alchemy-lab-effect--boon {
-  border-left-color: rgb(from var(--recipe-boon, #2a5a6b) r g b / 0.6);
+  border-left-color: rgb(from var(--recipe-boon) r g b / 0.6);
 }
 
-.alchemy-lab-effect.is-removed,
-.alchemy-lab-effect.is-locked {
+.alchemy-lab-effect.is-removed {
   opacity: 0.5;
 }
 
@@ -1660,11 +1659,11 @@ body.map-page {
 }
 
 .alchemy-lab-effect--harm .alchemy-lab-effect-sign {
-  color: var(--recipe-harm, #4a6b2a);
+  color: var(--recipe-harm);
 }
 
 .alchemy-lab-effect--boon .alchemy-lab-effect-sign {
-  color: var(--recipe-boon, #2a5a6b);
+  color: var(--recipe-boon);
 }
 
 .alchemy-lab-effect-meta {

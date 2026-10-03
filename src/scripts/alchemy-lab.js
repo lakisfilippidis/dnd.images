@@ -5,15 +5,31 @@
 // Алхимии: эффект попадает в дозу, если есть хотя бы у двух ингредиентов,
 // сила — их число минус один (не больше трёх долей); ступень задаёт число
 // ингредиентов (capacity) и бонус в Сл (bonus), обе величины приходят из
-// tiers в данных.
+// tiers в данных. На площади (основа с area) каждый эффект на долю слабее.
+//
+// Варка — проверка: вписанный результат набора алхимика + бонус ступени против
+// Сл варки; эффект выше ступени (tier у эффекта) поднимает её, провал на
+// data.mishap и больше — авария. Конструктор считает Сл и время варки и пишет
+// исход в журнал. Числа и расчёт — копия src/_data/alchemy.js (см. ниже).
 //
 // На странице персонажа (options.id задан) у конструктора есть сумка: пачки трав
 // по краям (одна пачка — один ингредиент любой травы края), поштучные трофеи и
 // порох, сваренные дозы и рецепты. Сумка живёт в localStorage под ключом
 // dnd-alchemy-<id>; стартовое содержимое приходит в data.start из front matter.
+// Травы добавляет сбор по проверке Природы (лестница data.gather), сумку можно
+// перенести на другое устройство экспортом и импортом JSON.
 // Без options.id (страница Черт) конструктор эфемерный — все травы, ничего не хранится.
 
+// Числа правил — те же, что в src/_data/alchemy.js; копии должны совпадать,
+// за этим следит test/alchemy-parity.test.cjs
 const MAX_STACKS = 3;
+const BREW_DC_BASE = 10;
+const TIER_GAP_DC = 5;
+const REMOVED_DC = 2;
+const MINUTES_PER_DC = 5;
+const MAX_BREW_MINUTES = 60;
+const SAVE_DC_BASE = 8;
+
 const LOG_LIMIT = 8;
 
 function dolesWord(n) {
@@ -83,8 +99,9 @@ function fromStart(start) {
   };
 }
 
-// Та же функция, что alchemy.brew в src/_data/alchemy.js — копии должны совпадать
-function brewRows(ingredientIds, ingredientById, effectById) {
+// Та же функция, что alchemy.brew в src/_data/alchemy.js — копии должны совпадать.
+// Разница одна: неизвестный id здесь пропускается, а сборка на нём падает.
+function brewRows(ingredientIds, ingredientById, effectById, area = false) {
   const count = new Map();
   for (const id of ingredientIds) {
     const ingredient = ingredientById.get(id);
@@ -95,15 +112,46 @@ function brewRows(ingredientIds, ingredientById, effectById) {
   for (const [effectId, n] of count) {
     if (n < 2) continue;
     const effect = effectById.get(effectId);
+    if (!area && effect.areaOnly) continue;
+    let stacks = n - 1;
+    if (area) stacks = effect.areaFloor ? Math.max(1, stacks - 1) : stacks - 1;
+    if (stacks < 1) continue;
+    stacks = Math.min(stacks, MAX_STACKS);
     rows.push({
       effect,
       count: n,
-      stacks: Math.min(n - 1, MAX_STACKS),
-      extra: effect.kind === "harm" && effect.id !== "damage" ? Math.max(0, n - 4) : 0,
+      stacks,
+      extra: effect.kind === "harm" && effect.id !== "damage" ? Math.max(0, n - (MAX_STACKS + 1)) : 0,
     });
   }
   rows.sort((a, b) => (a.effect.kind === b.effect.kind ? b.count - a.count : a.effect.kind === "harm" ? -1 : 1));
   return rows;
+}
+
+// Та же функция, что alchemy.tierGap в src/_data/alchemy.js — копии должны совпадать
+function tierGapOf(rows, removedIds, tierId, tiers) {
+  const removed = new Set(removedIds);
+  const index = (id) => tiers.findIndex((t) => t.id === id);
+  const own = index(tierId);
+  let gap = 0;
+  for (const row of rows) {
+    if (removed.has(row.effect.id) || !row.effect.tier) continue;
+    gap = Math.max(gap, index(row.effect.tier) - own);
+  }
+  return gap;
+}
+
+// Та же функция, что alchemy.brewMinutes в src/_data/alchemy.js — копии должны совпадать
+function brewMinutesOf(dc) {
+  return Math.min(MAX_BREW_MINUTES, Math.max(MINUTES_PER_DC, MINUTES_PER_DC * (dc - BREW_DC_BASE)));
+}
+
+// Та же функция, что alchemy.brewDc в src/_data/alchemy.js — копии должны совпадать
+function brewDcOf(rows, removedIds, gap = 0) {
+  const removed = new Set(removedIds);
+  let dc = BREW_DC_BASE + TIER_GAP_DC * gap;
+  for (const row of rows) dc += removed.has(row.effect.id) ? REMOVED_DC : row.stacks;
+  return dc;
 }
 
 function escapeHtml(text) {
@@ -133,7 +181,7 @@ function initLab(root) {
     scope: bagId ? "bag" : "all",
     selected: new Map(), // id ингредиента → число порций
     removed: new Set(),
-    bag: bagId ? (load(bagId) ?? fromStart(data.start)) : null,
+    bag: bagId ? knownOnly(load(bagId) ?? fromStart(data.start)) : null,
   };
 
   root.innerHTML = "";
@@ -149,7 +197,7 @@ function initLab(root) {
   controls.className = "alchemy-lab-controls";
   controls.innerHTML = `
     <label class="alchemy-lab-field">Ступень
-      <select data-field="tier">${data.tiers.map((t) => `<option value="${t.id}">${t.title} — ${t.feats} ${t.feats === 1 ? "черта" : "черт" + (t.feats < 5 ? "ы" : "")}, ${t.capacity} в дозе</option>`).join("")}</select>
+      <select data-field="tier">${data.tiers.map((t) => `<option value="${t.id}">${t.title} — ${t.feats} ${t.feats === 1 ? "черта" : "черт" + (t.feats < 5 ? "ы" : "")}, с ${t.level}-го ур., ${t.capacity} в дозе</option>`).join("")}</select>
     </label>
     <label class="alchemy-lab-field">Основа
       <select data-field="base">${data.bases.map((b) => `<option value="${b.id}">${b.name}${b.slots ? ` (−${b.slots})` : ""}</option>`).join("")}</select>
@@ -278,6 +326,9 @@ function initLab(root) {
     actions.className = "alchemy-lab-actions";
     actions.innerHTML = `
       <input type="text" class="alchemy-lab-name" data-field="doseName" placeholder="Название" maxlength="60">
+      <label class="alchemy-lab-field">Проверка набора
+        <input type="number" data-check min="1" max="40" step="1" placeholder="14">
+      </label>
       <button type="button" class="alchemy-lab-button alchemy-lab-button--primary" data-act="brew">Сварить</button>
       <button type="button" class="alchemy-lab-button" data-act="save-recipe">Записать рецепт</button>
       <span class="alchemy-lab-actions-hint" data-act-hint></span>
@@ -293,6 +344,9 @@ function initLab(root) {
         saveRecipe(nameInput.value.trim());
         nameInput.value = "";
       }
+    });
+    actions.addEventListener("input", (event) => {
+      if (event.target.matches("[data-check]")) render();
     });
     root.append(actions);
 
@@ -443,12 +497,17 @@ function initLab(root) {
     return baseById.get(baseId)?.slots ?? 0;
   }
 
+  // метательные основы бьют по площади — эффекты там на долю слабее
+  function isArea(baseId = state.base) {
+    return baseById.get(baseId)?.area ?? false;
+  }
+
   function capacity() {
     return Math.max(0, tier().capacity - baseSlots());
   }
 
   function dc() {
-    return 8 + tier().bonus + state.intMod;
+    return SAVE_DC_BASE + tier().bonus + state.intMod;
   }
 
   function selectedCount() {
@@ -488,18 +547,24 @@ function initLab(root) {
     return JSON.stringify({ id: bagId, exported: new Date().toISOString(), ...state.bag }, null, 2);
   }
 
-  // Импорт заменяет сумку целиком; неизвестные этому реестру травы и края выпадают
-  function importBag(text) {
-    let bag;
-    try {
-      bag = normalizeBag(JSON.parse(text));
-    } catch {
-      return false;
-    }
+  // Сумка из хранилища или из импорта могла быть записана при другом реестре:
+  // травы, края, рецепты и дозы с id, которых в нём больше нет, выпадают
+  function knownOnly(bag) {
     for (const id of Object.keys(bag.packs)) if (!regionById.has(id) || regionById.get(id).item) delete bag.packs[id];
     for (const id of Object.keys(bag.items)) if (!ingredientById.has(id) || !regionById.get(ingredientById.get(id).region)?.item) delete bag.items[id];
     bag.recipes = bag.recipes.filter((r) => r.ingredients.every((id) => ingredientById.has(id)) && baseById.has(r.base));
     bag.doses = bag.doses.filter((d) => d.effects.every((e) => e && effectById.has(e.id)));
+    return bag;
+  }
+
+  // Импорт заменяет сумку целиком
+  function importBag(text) {
+    let bag;
+    try {
+      bag = knownOnly(normalizeBag(JSON.parse(text)));
+    } catch {
+      return false;
+    }
     state.bag = bag;
     note("Сумка загружена из импорта");
     commit();
@@ -518,7 +583,7 @@ function initLab(root) {
     const hint = gatherForm.querySelector("[data-gather=hint]");
     const result = Number(gatherForm.querySelector("[data-gather=result]").value);
     if (!Number.isInteger(result) || result < 1) {
-      hint.textContent = `Час в крае; доза ${tier().title.toLowerCase()}а — ${tier().capacity}`;
+      hint.textContent = `Час в краю; на ступени «${tier().title}» в дозе ${tier().capacity}`;
       return;
     }
     const got = gatherYield(result);
@@ -585,7 +650,6 @@ function initLab(root) {
 
   function makeDose(name, baseId, rows, removed, ids) {
     return {
-      id: `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`,
       name,
       base: baseId,
       dc: dc(),
@@ -594,22 +658,82 @@ function initLab(root) {
     };
   }
 
+  // Сл варки с надбавкой за эффекты выше текущей ступени
+  function doseDc(rows, removed) {
+    return brewDcOf(rows, removed, tierGapOf(rows, removed, state.tier, data.tiers));
+  }
+
+  // На сколько ступеней эффект выше текущей; 0 — в пределах ступени
+  function overTier(effect) {
+    if (!effect.tier) return 0;
+    const index = (id) => data.tiers.findIndex((t) => t.id === id);
+    return Math.max(0, index(effect.tier) - index(state.tier));
+  }
+
+  // Общие эффекты набора, что срабатывают только на площади (Взрыв, Горение) —
+  // на неметательной основе они выпадают, конструктор об этом предупреждает
+  function areaOnlyLost() {
+    if (isArea()) return [];
+    const count = new Map();
+    for (const id of selectedIds()) for (const e of ingredientById.get(id).effects) count.set(e, (count.get(e) ?? 0) + 1);
+    return [...count].filter(([id, n]) => n >= 2 && effectById.get(id).areaOnly).map(([id]) => effectById.get(id).name);
+  }
+
+  // Результат проверки набора алхимика из поля; null — не вписан
+  function checkResult() {
+    const raw = actions?.querySelector("[data-check]").value.trim() ?? "";
+    const n = Number(raw);
+    return raw !== "" && Number.isInteger(n) ? n : null;
+  }
+
+  // Варка — проверка: вписанный результат набора алхимика + бонус ступени против
+  // Сл варки. Ингредиенты уходят в любом случае; провал на data.mishap и больше —
+  // авария: один случайный эффект из оставшихся в дозе действует на самого алхимика,
+  // как выпитый; убрано всё — обходится. Возвращает null без проверки, иначе —
+  // удалось ли.
+  function attempt(ids, rows, removed, name, baseId) {
+    const check = checkResult();
+    if (check === null) return null;
+    const total = check + tier().bonus;
+    const target = doseDc(rows, removed);
+    spend(ids);
+    actions.querySelector("[data-check]").value = "";
+    if (total >= target) {
+      const dose = makeDose(name, baseId, rows, new Set(removed), ids);
+      state.bag.doses.unshift(dose);
+      note(`Сварена «${dose.name}»: ${total} против Сл ${target}`);
+      return true;
+    }
+    if (target - total < data.mishap) {
+      note(`Не вышло «${name}»: ${total} против Сл ${target}, ингредиенты пропали`);
+      return false;
+    }
+    const kept = rows.filter((r) => !removed.has(r.effect.id));
+    const what = kept.length === 0
+      ? "в дозе ничего не оставалось, обошлось"
+      : kept.length === 1
+        ? `на тебе ${kept[0].effect.name} ${kept[0].stacks}, как выпитый`
+        : `брось d${kept.length} — на тебе как выпитый: ${kept.map((r, i) => `${i + 1} ${r.effect.name} ${r.stacks}`).join(", ")}`;
+    note(`Авария с «${name}»: ${total} против Сл ${target}, ингредиенты пропали — ${what}`);
+    return false;
+  }
+
   function brewDose(name) {
     const ids = selectedIds();
-    const rows = brewRows(ids, ingredientById, effectById);
+    const rows = brewRows(ids, ingredientById, effectById, isArea());
     if (ids.length < 2 || rows.length === 0 || shortage(ids).length) return;
-    const dose = makeDose(name || autoName(rows, state.removed), state.base, rows, new Set(state.removed), ids);
-    spend(ids);
-    state.bag.doses.unshift(dose);
-    note(`Сварена «${dose.name}»`);
-    state.selected.clear();
-    state.removed.clear();
+    const ok = attempt(ids, rows, state.removed, name || autoName(rows, state.removed), state.base);
+    if (ok === null) return;
+    if (ok) {
+      state.selected.clear();
+      state.removed.clear();
+    }
     commit();
   }
 
   function saveRecipe(name) {
     const ids = selectedIds();
-    const rows = brewRows(ids, ingredientById, effectById);
+    const rows = brewRows(ids, ingredientById, effectById, isArea());
     if (ids.length < 2 || rows.length === 0) return;
     const recipe = {
       name: name || autoName(rows, state.removed),
@@ -625,7 +749,7 @@ function initLab(root) {
   // Рецепт влезает в дозу при текущей ступени со своей основой, а куба и реторты
   // хватает на то, что он убирает
   function recipeProblem(recipe) {
-    const rows = brewRows(recipe.ingredients, ingredientById, effectById);
+    const rows = brewRows(recipe.ingredients, ingredientById, effectById, isArea(recipe.base));
     if (recipe.ingredients.length + baseSlots(recipe.base) > tier().capacity) return "не влезает в дозу этой ступени";
     const removedBoons = recipe.remove.filter((id) => effectById.get(id)?.kind === "boon").length;
     const removedHarms = recipe.remove.length - removedBoons;
@@ -639,11 +763,8 @@ function initLab(root) {
 
   function brewRecipe(recipe) {
     if (recipeProblem(recipe)) return;
-    const rows = brewRows(recipe.ingredients, ingredientById, effectById);
-    const dose = makeDose(recipe.name, recipe.base, rows, new Set(recipe.remove), [...recipe.ingredients]);
-    spend(recipe.ingredients);
-    state.bag.doses.unshift(dose);
-    note(`Сварена «${dose.name}»`);
+    const rows = brewRows(recipe.ingredients, ingredientById, effectById, isArea(recipe.base));
+    if (attempt([...recipe.ingredients], rows, new Set(recipe.remove), recipe.name, recipe.base) === null) return;
     commit();
   }
 
@@ -659,11 +780,11 @@ function initLab(root) {
     picker.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
-  function effectLine(row, removed, doseDc) {
+  function effectLine(row, removed, saveDc) {
     const effect = effectById.get(row.effect?.id ?? row.id);
     const stacks = row.stacks;
     const extra = row.extra ?? 0;
-    const save = effect.kind === "harm" ? ` · ${effect.save}, Сл ${doseDc + extra}` : "";
+    const save = effect.kind === "harm" ? ` · ${effect.save}, Сл ${saveDc + extra}` : "";
     return `<span class="alchemy-lab-mini alchemy-lab-mini--${effect.kind}${removed ? " is-removed" : ""}">${effect.kind === "harm" ? "−" : "+"}${effect.name} ${stacks}${save}</span>`;
   }
 
@@ -719,14 +840,15 @@ function initLab(root) {
     if (selectedCount() < 2) {
       body = `<p class="alchemy-lab-empty">Выбери хотя бы два ингредиента.</p>`;
     } else if (rows.length === 0) {
-      body = `<p class="alchemy-lab-empty">Общих эффектов нет — ингредиенты пропали.</p>`;
+      body = `<p class="alchemy-lab-empty">${isArea() ? "На площади ничего не осталось: общих эффектов нет или им не хватило долей." : "Общих эффектов нет — ингредиенты пропали."}</p>`;
     } else {
       body = rows.map((r) => {
         const removed = state.removed.has(r.effect.id);
         const canRemove = r.effect.kind === "boon"
           ? removed || stillUsed < state.still
           : removed || retortUsed < state.retort;
-        const label = `${r.stacks} ${dolesWord(r.stacks)}${r.extra ? `, +${r.extra} к Сл` : ""}`;
+        const over = removed ? 0 : overTier(r.effect);
+        const label = `${r.stacks} ${dolesWord(r.stacks)}${r.extra ? `, +${r.extra} к Сл` : ""}${over ? ` · порог ${tierById.get(r.effect.tier).title}` : ""}`;
         const save = r.effect.kind === "harm" ? ` · спасбросок ${r.effect.save}, Сл ${dc() + r.extra}` : "";
         const text = `<p class="alchemy-lab-effect-text">${r.effect.stacks[r.stacks - 1]}</p>`;
         const button = canRemove
@@ -739,16 +861,21 @@ function initLab(root) {
       }).join("");
     }
 
-    result.innerHTML = `<p class="alchemy-lab-summary">В дозе занято <strong>${used}</strong> из <strong>${total}</strong> мест${baseSlots() ? ` (основа — ${baseSlots()})` : ""}. Сл спасброска от ядов: <strong>${dc()}</strong>.</p>${body}`;
+    // Надбавка за порог — одна на дозу, по самому тяжёлому из оставшихся эффектов
+    const gap = tierGapOf(rows, state.removed, state.tier, data.tiers);
+    result.innerHTML = `<p class="alchemy-lab-summary">В дозе занято <strong>${used}</strong> из <strong>${total}</strong> мест${baseSlots() ? ` (основа — ${baseSlots()})` : ""}. Сл спасброска от ядов: <strong>${dc()}</strong>.${rows.length ? ` Сл варки: <strong>${doseDc(rows, state.removed)}</strong>${gap ? ` (из них +${TIER_GAP_DC * gap} за порог ступени)` : ""}, варится ${brewMinutesOf(doseDc(rows, state.removed))} мин — проверка набора алхимика +${tier().bonus} за ступень.` : ""}${isArea() ? " На площади каждый эффект на долю слабее; Урон, Взрыв и Горение — не слабее одной доли." : ""}${areaOnlyLost().length ? ` ${areaOnlyLost().join(" и ")} срабатывают только в метательных основах — здесь выпадают.` : ""}</p>${body}`;
   }
 
   function renderActions(rows) {
     const ids = selectedIds();
     const missing = shortage(ids);
     const ready = ids.length >= 2 && rows.length > 0;
-    actions.querySelector("[data-act=brew]").disabled = !ready || missing.length > 0;
+    const unchecked = checkResult() === null;
+    actions.querySelector("[data-act=brew]").disabled = !ready || missing.length > 0 || unchecked;
     actions.querySelector("[data-act=save-recipe]").disabled = !ready;
-    actions.querySelector("[data-act-hint]").textContent = ready && missing.length ? `Не хватает — ${missing.join(", ")}` : "";
+    actions.querySelector("[data-act-hint]").textContent = ready && missing.length
+      ? `Не хватает — ${missing.join(", ")}`
+      : ready && unchecked ? "Брось проверку набора алхимика и впиши результат" : "";
   }
 
   function renderRecipes() {
@@ -757,15 +884,16 @@ function initLab(root) {
       return;
     }
     recipesBox.innerHTML = `<p class="alchemy-lab-section-title">Рецепты</p>${state.bag.recipes.map((r, index) => {
-      const rows = brewRows(r.ingredients, ingredientById, effectById);
+      const rows = brewRows(r.ingredients, ingredientById, effectById, isArea(r.base));
       const removed = new Set(r.remove);
       const base = baseById.get(r.base);
       const problem = recipeProblem(r);
+      const blocked = problem ?? (checkResult() === null ? "сначала впиши проверку набора" : null);
       return `<div class="alchemy-lab-card">
-        <p class="alchemy-lab-card-head"><strong class="alchemy-lab-card-name">«${escapeHtml(r.name)}»</strong><span class="alchemy-lab-card-meta">${base && base.slots ? `${base.name} · ` : ""}${ingredientsLine(r.ingredients)}</span></p>
+        <p class="alchemy-lab-card-head"><strong class="alchemy-lab-card-name">«${escapeHtml(r.name)}»</strong><span class="alchemy-lab-card-meta">${base?.slots ? `${base.name} · ` : ""}${ingredientsLine(r.ingredients)} · Сл варки ${doseDc(rows, removed)}, ${brewMinutesOf(doseDc(rows, removed))} мин</span></p>
         <p class="alchemy-lab-card-effects">${rows.map((row) => effectLine(row, removed.has(row.effect.id), dc())).join("")}</p>
         <p class="alchemy-lab-card-actions">
-          <button type="button" class="alchemy-lab-button alchemy-lab-button--primary" data-recipe="${index}" data-act="brew"${problem ? ` disabled title="${escapeHtml(problem)}"` : ""}>Сварить</button>
+          <button type="button" class="alchemy-lab-button alchemy-lab-button--primary" data-recipe="${index}" data-act="brew"${blocked ? ` disabled title="${escapeHtml(blocked)}"` : ""}>Сварить</button>
           <button type="button" class="alchemy-lab-button" data-recipe="${index}" data-act="load">В конструктор</button>
           <button type="button" class="alchemy-lab-button alchemy-lab-button--quiet" data-recipe="${index}" data-act="delete">Вычеркнуть</button>
           ${problem ? `<span class="alchemy-lab-actions-hint">${escapeHtml(problem)}</span>` : ""}
@@ -783,7 +911,7 @@ function initLab(root) {
     dosesBox.innerHTML = `<p class="alchemy-lab-section-title">Готовые дозы <span class="alchemy-lab-region-count">${n}</span></p>${state.bag.doses.map((d, index) => {
       const base = baseById.get(d.base);
       return `<div class="alchemy-lab-card alchemy-lab-card--dose">
-        <p class="alchemy-lab-card-head"><input type="text" class="alchemy-lab-name alchemy-lab-name--dose" data-dose-name="${index}" value="${escapeHtml(d.name)}" maxlength="60" aria-label="Название дозы"><span class="alchemy-lab-card-meta">${base ? base.name : d.base} · Сл ${d.dc} · ${ingredientsLine(d.ingredients ?? [])}</span></p>
+        <p class="alchemy-lab-card-head"><input type="text" class="alchemy-lab-name alchemy-lab-name--dose" data-dose-name="${index}" value="${escapeHtml(d.name)}" maxlength="60" aria-label="Название дозы"><span class="alchemy-lab-card-meta">${base?.name ?? d.base} · Сл ${d.dc} · ${ingredientsLine(d.ingredients ?? [])}</span></p>
         <p class="alchemy-lab-card-effects">${d.effects.map((e) => effectLine(e, e.removed, d.dc)).join("")}</p>
         <p class="alchemy-lab-card-actions">
           <button type="button" class="alchemy-lab-button alchemy-lab-button--primary" data-dose="${index}" data-act="use">Использовать</button>
@@ -800,7 +928,7 @@ function initLab(root) {
 
   function render() {
     const cap = capacity();
-    const rows = brewRows(selectedIds(), ingredientById, effectById);
+    const rows = brewRows(selectedIds(), ingredientById, effectById, isArea());
     const activeIds = new Set(rows.map((r) => r.effect.id));
     for (const id of [...state.removed]) if (!activeIds.has(id)) state.removed.delete(id);
 
