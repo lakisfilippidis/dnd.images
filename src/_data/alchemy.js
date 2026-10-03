@@ -1,6 +1,7 @@
 // Алхимия: ступени, эффекты, ингредиенты и основы. Система общая для всех
 // классов — доступ к ней открывают черты алхимии (src/_data/feats.js).
-// Рендер — шорткоды effectCards / ingredientCards / baseCards / recipeCards / alchemyLab в eleventy.config.js.
+// Рендер — шорткоды effectCards / ingredientCards / mutagenCards / baseCards / recipeCards / alchemyLab
+// в eleventy.config.js.
 //
 // Доза собирается из ингредиентов (их число — ёмкость по ступени). В дозу попадает
 // каждый эффект, который есть хотя бы у двух ингредиентов; сила эффекта — число
@@ -8,17 +9,18 @@
 // вредные (harm) и полезные (boon) вперемешку, как в Морровинде. Каждый эффект
 // встречается минимум у двух ингредиентов, иначе его нельзя сварить.
 //
-// На площади (основы с area: true — бомба, зажигательная, дым) каждый эффект на
-// долю слабее и при нуле долей пропадает; эффекты с areaFloor: true (Урон, Взрыв,
-// Горение) не опускаются ниже одной доли. Эффекты с areaOnly: true (Взрыв, Горение)
+// На площади (основы с area: true — бомба, зажигательная, дым, стрела) каждый эффект на
+// долю слабее и при нуле долей пропадает; потолок в три доли считается уже после
+// вычета. Эффекты с areaFloor: true (Урон, Взрыв, Горение) не опускаются ниже одной доли. Эффекты с areaOnly: true (Взрыв, Горение)
 // срабатывают только на площади — на клинке, в еде и прочих основах выпадают из дозы.
 //
 // Варка — проверка набора алхимика + бонус ступени против Сл варки (brewDc):
 // 10 + доли оставшихся эффектов + 2 за каждый убранный кубом или ретортой.
 // Провал — ингредиенты потрачены, дозы нет; провал на MISHAP_MARGIN и больше —
 // авария: один случайный эффект из оставшихся в дозе действует на самого алхимика,
-// как выпитый. Варят заранее, не в бою:
-// время — brewMinutes, 5 минут за каждую единицу Сл сверх 10, не больше часа.
+// как выпитый; если куб и реторта убрали всё — обходится без последствий.
+// Варят заранее, не в бою: время — brewMinutes, 5 минут за каждую единицу Сл
+// сверх 10, не больше часа.
 // tier у эффекта — порог: с этой ступени он варится без надбавки, ниже — +5 к Сл
 // варки за каждую недостающую ступень (tierGap). Попытка разрешена всегда.
 //
@@ -26,12 +28,24 @@
 // и одна пачка — это один ингредиент любой травы этого края. Края с item: true
 // (трофеи, порох) не собираются и считаются поштучно по имени ингредиента.
 
-const MAX_STACKS = 3;
-const MISHAP_MARGIN = 5;
+// Числа правил. Те же константы и четыре функции ниже продублированы в
+// src/scripts/alchemy-lab.js (браузер не грузит CommonJS) — копии должны совпадать,
+// за этим следит test/alchemy-parity.test.cjs. Текст правил на /Feats/#alchemy
+// называет эти числа от руки.
+const MAX_STACKS = 3; // долей у эффекта
+const EFFECTS_PER_INGREDIENT = 4;
+const MISHAP_MARGIN = 5; // провал на столько и больше — авария
+const BREW_DC_BASE = 10; // Сл варки без единого эффекта
+const TIER_GAP_DC = 5; // к Сл варки за каждую недостающую ступень
+const REMOVED_DC = 2; // к Сл варки за эффект, убранный кубом или ретортой
+const MINUTES_PER_DC = 5; // минут варки за единицу Сл сверх BREW_DC_BASE
+const MAX_BREW_MINUTES = 60;
+const SAVE_DC_BASE = 8; // Сл спасброска: + бонус ступени + модификатор Интеллекта
 
 // Что сварится из набора ингредиентов (id могут повторяться — каждая порция
-// считается отдельно), area — основа бьёт по площади. Та же функция продублирована
-// в src/scripts/alchemy-lab.js (браузер не грузит CommonJS) — копии должны совпадать.
+// считается отдельно), area — основа бьёт по площади. Копия — brewRows
+// в src/scripts/alchemy-lab.js; разница одна: на неизвестном id сборка падает,
+// а браузер его пропускает.
 function brew(ingredientIds, ingredientById, effectById, area = false) {
   const count = new Map();
   for (const id of ingredientIds) {
@@ -44,14 +58,15 @@ function brew(ingredientIds, ingredientById, effectById, area = false) {
     if (n < 2) continue;
     const effect = effectById.get(effectId);
     if (!area && effect.areaOnly) continue;
-    let stacks = Math.min(n - 1, MAX_STACKS);
+    let stacks = n - 1;
     if (area) stacks = effect.areaFloor ? Math.max(1, stacks - 1) : stacks - 1;
     if (stacks < 1) continue;
+    stacks = Math.min(stacks, MAX_STACKS);
     rows.push({
       effect,
       count: n,
       stacks,
-      extra: effect.kind === "harm" && effect.id !== "damage" ? Math.max(0, n - 4) : 0,
+      extra: effect.kind === "harm" && effect.id !== "damage" ? Math.max(0, n - (MAX_STACKS + 1)) : 0,
     });
   }
   rows.sort((a, b) => (a.effect.kind === b.effect.kind ? b.count - a.count : a.effect.kind === "harm" ? -1 : 1));
@@ -77,22 +92,24 @@ function tierGap(rows, removedIds, tierId, tiers) {
 // в src/scripts/alchemy-lab.js.
 function brewDc(rows, removedIds, gap = 0) {
   const removed = new Set(removedIds);
-  let dc = 10 + 5 * gap;
-  for (const row of rows) dc += removed.has(row.effect.id) ? 2 : row.stacks;
+  let dc = BREW_DC_BASE + TIER_GAP_DC * gap;
+  for (const row of rows) dc += removed.has(row.effect.id) ? REMOVED_DC : row.stacks;
   return dc;
 }
 
 // Сколько минут варится доза с этой Сл варки. Копия — brewMinutesOf в src/scripts/alchemy-lab.js.
 function brewMinutes(dc) {
-  return Math.min(60, Math.max(5, 5 * (dc - 10)));
+  return Math.min(MAX_BREW_MINUTES, Math.max(MINUTES_PER_DC, MINUTES_PER_DC * (dc - BREW_DC_BASE)));
 }
 
-module.exports = {
+const alchemy = {
   brew,
   brewMinutes,
   brewDc,
   tierGap,
   MISHAP_MARGIN,
+  TIER_GAP_DC,
+  SAVE_DC_BASE,
   kinds: [
     { id: "harm", title: "Вред", icon: "snake.svg", sign: "−" },
     { id: "boon", title: "Польза", icon: "flask.svg", sign: "+" },
@@ -100,7 +117,8 @@ module.exports = {
   // Ступень алхимика — число взятых черт алхимии, но не выше, чем позволяет уровень:
   // одна черта = одна ступень, лишние черты ждут, пока персонаж дорастёт.
   // feats — сколько черт нужно, level — с какого уровня персонажа,
-  // capacity — ингредиентов в дозе, bonus — в Сл.
+  // capacity — ингредиентов в дозе, bonus — в Сл спасброска, к проверке варки
+  // и он же — число доз за длинный отдых.
   tiers: [
     { id: "apprentice", title: "Ученик", feats: 1, level: 1, capacity: 3, bonus: 2 },
     { id: "journeyman", title: "Подмастерье", feats: 2, level: 3, capacity: 4, bonus: 3 },
@@ -108,7 +126,7 @@ module.exports = {
     { id: "virtuoso", title: "Виртуоз", feats: 4, level: 9, capacity: 6, bonus: 5 },
     { id: "legend", title: "Легенда", feats: 5, level: 13, capacity: 7, bonus: 6 },
   ],
-  // Сбор трав: час в крае и проверка Природы. Выход в «дозах ступени» —
+  // Сбор трав: час в краю и проверка Природы. Выход в «дозах ступени» —
   // пачек = ceil(doses × capacity ступени); строка выбирается по min ≤ результат.
   gather: [
     { min: 1, doses: 0 },
@@ -171,11 +189,11 @@ module.exports = {
     { id: "wis", name: "Мудрость", kind: "boon", stacks: ["Час Мудрость считается равной 15.", "17.", "19."] },
     { id: "cha", name: "Харизма", kind: "boon", stacks: ["Час Харизма считается равной 15.", "17.", "19."] },
     { id: "armor", name: "Защита", kind: "boon", stacks: ["10 временных хитов на минуту.", "20 временных хитов.", "20 временных хитов и минуту сопротивление дробящему, колющему и рубящему урону."] },
-    { id: "regen", name: "Регенерация", kind: "boon", stacks: ["В начале своего хода восстанавливаешь 1 хит, если в прошлом ходу не получал урона.", "Восстанавливаешь 5 хитов; урон в прошлом ходу её не отменяет.", "Восстанавливаешь хитов по модификатору Телосложения (минимум 1) и отращиваешь потерянное за долгий отдых."] },
+    { id: "regen", name: "Регенерация", kind: "boon", stacks: ["В начале своего хода восстанавливаешь 1 хит, если в прошлом ходу не получал урона.", "Восстанавливаешь 5 хитов; урон в прошлом ходу её не отменяет.", "Восстанавливаешь хитов по модификатору Телосложения (минимум 1) и отращиваешь потерянное за длинный отдых."] },
     { id: "venomous", name: "Ядовитая кровь", kind: "boon", stacks: ["Сопротивление урону ядом.", "Кроме того, тот, кто ранит тебя в ближнем бою, получает урон ядом по твоему модификатору Телосложения (минимум 1).", "Кроме того, твоя слюна ядовита: намазать оружие или плюнуть — бонусное действие, 2d6 ядом при попадании."] },
     { id: "hide", name: "Шкура", kind: "boon", stacks: ["Кожа грубеет: +1 к КБ.", "+1 к КБ и сопротивление колющему урону.", "+2 к КБ, сопротивление колющему и дробящему урону, включая урон от падения."] },
     { id: "scent", name: "Чутьё", kind: "boon", stacks: ["Ты чуешь существ за 30 футов, даже не видя их, и различаешь знакомый запах.", "Преимущество на Выживание для выслеживания по запаху; чуешь кровь и страх за 60 футов.", "Кроме того, преимущество на броски атаки против существ, у которых меньше половины хитов: ты чуешь рану."] },
-    { id: "sleepless", name: "Бессонница", kind: "boon", stacks: ["Сон тебе не нужен: вместо него два часа неподвижной медитации, и это считается долгим отдыхом.", "Кроме того, ты невосприимчив к эффекту Сон и не бываешь застигнут врасплох во время отдыха.", "Кроме того, темнота тебе не помеха: видишь в темноте на 60 футов."] },
+    { id: "sleepless", name: "Бессонница", kind: "boon", stacks: ["Сон тебе не нужен: вместо него два часа неподвижной медитации, и это считается длинным отдыхом.", "Кроме того, ты невосприимчив к эффекту Сон и не бываешь застигнут врасплох во время отдыха.", "Кроме того, темнота тебе не помеха: видишь в темноте на 60 футов."] },
   ],
   ingredients: [
     // Повсюду
@@ -238,3 +256,54 @@ module.exports = {
     { id: "mutagen", name: "Мутаген", tier: "master", slots: 2, desc: "Варится только из трофея и только Анатомом. Тот, кто выпьет, получает полезные эффекты дозы навсегда, но и каждый вредный остаётся при нём как расплата — от неё нет спасброска и её не снять лечением. Сколько мутаций носить, решает черта Прививка." },
   ],
 };
+
+// Проверка реестра при загрузке: опечатка в id роняет сборку здесь, с именем
+// записи, а не всплывает на первой карточке или в конструкторе.
+function ids(list, what) {
+  const seen = new Set();
+  for (const { id } of list) {
+    if (seen.has(id)) throw new Error(`alchemy: duplicate ${what} "${id}"`);
+    seen.add(id);
+  }
+  return seen;
+}
+
+const kindIds = ids(alchemy.kinds, "kind");
+const tierIds = ids(alchemy.tiers, "tier");
+const regionIds = ids(alchemy.regions, "region");
+const effectIds = ids(alchemy.effects, "effect");
+ids(alchemy.ingredients, "ingredient");
+ids(alchemy.bases, "base");
+
+for (const effect of alchemy.effects) {
+  if (!kindIds.has(effect.kind)) throw new Error(`alchemy: effect "${effect.id}" — unknown kind "${effect.kind}"`);
+  if (effect.stacks.length !== MAX_STACKS) throw new Error(`alchemy: effect "${effect.id}" — ${effect.stacks.length} stacks, need ${MAX_STACKS}`);
+  if (effect.kind === "harm" && !effect.save) throw new Error(`alchemy: effect "${effect.id}" — harm without save`);
+  if (effect.tier && !tierIds.has(effect.tier)) throw new Error(`alchemy: effect "${effect.id}" — unknown tier "${effect.tier}"`);
+}
+
+const carriers = new Map();
+for (const ingredient of alchemy.ingredients) {
+  if (!regionIds.has(ingredient.region)) throw new Error(`alchemy: ingredient "${ingredient.id}" — unknown region "${ingredient.region}"`);
+  if (new Set(ingredient.effects).size !== EFFECTS_PER_INGREDIENT || ingredient.effects.length !== EFFECTS_PER_INGREDIENT) {
+    throw new Error(`alchemy: ingredient "${ingredient.id}" — need ${EFFECTS_PER_INGREDIENT} distinct effects`);
+  }
+  for (const id of ingredient.effects) {
+    if (!effectIds.has(id)) throw new Error(`alchemy: ingredient "${ingredient.id}" — unknown effect "${id}"`);
+    carriers.set(id, (carriers.get(id) ?? 0) + 1);
+  }
+}
+for (const effect of alchemy.effects) {
+  if ((carriers.get(effect.id) ?? 0) < 2) throw new Error(`alchemy: effect "${effect.id}" — fewer than two ingredients carry it`);
+}
+
+for (const base of alchemy.bases) {
+  if (base.tier && !tierIds.has(base.tier)) throw new Error(`alchemy: base "${base.id}" — unknown tier "${base.tier}"`);
+}
+
+// gatherYield в конструкторе берёт последнюю строку с min ≤ результат
+for (let i = 1; i < alchemy.gather.length; i++) {
+  if (alchemy.gather[i].min <= alchemy.gather[i - 1].min) throw new Error(`alchemy: gather rows must go by ascending min`);
+}
+
+module.exports = alchemy;

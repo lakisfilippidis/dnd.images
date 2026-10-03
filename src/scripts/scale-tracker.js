@@ -7,14 +7,22 @@
 // Состояние живёт в localStorage под ключом dnd-scale-<id>: у каждого персонажа
 // свой, чтобы шкала Сурена не путалась со шкалой Ширин. Хранится только позиция
 // и журнал — всё остальное считается из данных.
+//
+// Числа шкалы (MAX, THRESHOLD) и тексты порогов повторяют раздел «Тень и Кураж»
+// на странице плута (src/Classes/rogue/index.md) — меняются вместе с ним.
 
 const MAX = 3; // Тень 3 ... 0 ... Кураж 3
+const THRESHOLD = 2; // деление, с которого работает порог стороны
 const LOG_LIMIT = 8;
 
 // position: −3..0..+3, отрицательное — Тень, положительное — Кураж
 function label(pos) {
   if (pos === 0) return "0";
   return `${pos < 0 ? "Тень" : "Кураж"} ${Math.abs(pos)}`;
+}
+
+function escapeHtml(text) {
+  return String(text).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
 }
 
 function storageKey(id) {
@@ -28,7 +36,7 @@ function load(id) {
     const data = JSON.parse(raw);
     const pos = Number(data.position);
     if (!Number.isInteger(pos) || Math.abs(pos) > MAX) return null;
-    return { position: pos, log: Array.isArray(data.log) ? data.log.slice(0, LOG_LIMIT) : [] };
+    return { position: pos, log: Array.isArray(data.log) ? data.log.filter((l) => typeof l === "string").slice(0, LOG_LIMIT) : [] };
   } catch {
     return null; // приватное окно, закрытые куки, испорченный JSON — начинаем с нуля
   }
@@ -49,9 +57,15 @@ function initTracker(root) {
   const id = options.id ?? location.pathname;
   const sideTitle = Object.fromEntries(data.sides.map((s) => [s.id, s.title]));
 
+  // Две черты меняют саму шкалу, а не дают трату: с Засадой порог Тени работает
+  // уже с Тени 1, с Громким именем длинный отдых сбрасывает шкалу в Кураж 1
+  const owned = new Set(data.owned ?? []);
+  const shadowThreshold = owned.has("ambush") ? 1 : THRESHOLD;
+  const restPosition = owned.has("big-name") ? 1 : 0;
+
   const saved = load(id);
   const state = {
-    position: saved?.position ?? 0,
+    position: saved?.position ?? restPosition,
     log: saved?.log ?? [],
   };
 
@@ -60,7 +74,7 @@ function initTracker(root) {
 
   const head = document.createElement("div");
   head.className = "alchemy-lab-head";
-  head.innerHTML = `<p class="alchemy-lab-title">Тень и Кураж${options.name ? ` — ${options.name}` : ""}</p><button type="button" class="alchemy-lab-close" aria-label="Закрыть">Закрыть</button>`;
+  head.innerHTML = `<p class="alchemy-lab-title">Тень и Кураж${options.name ? ` — ${escapeHtml(options.name)}` : ""}</p><button type="button" class="alchemy-lab-close" aria-label="Закрыть">Закрыть</button>`;
   root.append(head);
   head.querySelector(".alchemy-lab-close").addEventListener("click", () => root.closest("dialog")?.close());
 
@@ -95,7 +109,7 @@ function initTracker(root) {
   }
 
   function reset() {
-    state.position = 0;
+    state.position = restPosition;
     state.log = [];
     save(id, state);
     render();
@@ -121,7 +135,10 @@ function initTracker(root) {
   function render() {
     const pos = state.position;
     const side = pos < 0 ? "shadow" : pos > 0 ? "panache" : null;
-    const atThreshold = Math.abs(pos) >= 2;
+    const atThreshold = side === "shadow" ? -pos >= shadowThreshold : pos >= THRESHOLD;
+    const toThreshold = pos !== 0
+      ? "1 шаг"
+      : shadowThreshold === THRESHOLD ? "два шага в любую сторону" : "шаг к Тени или два к Куражу";
 
     // Деления от Тени 3 до Куража 3
     const marks = [];
@@ -132,10 +149,10 @@ function initTracker(root) {
     }
 
     const threshold = !atThreshold
-      ? `<p class="scale-tracker-threshold">До порога ${pos === 0 ? "два шага в любую сторону" : `${2 - Math.abs(pos)} шаг`}.</p>`
+      ? `<p class="scale-tracker-threshold">До порога ${toThreshold}.</p>`
       : side === "shadow"
-        ? `<p class="scale-tracker-threshold is-on"><strong>Тень 2.</strong> Скрытая атака без условий по цели, которая тебя не видит.</p>`
-        : `<p class="scale-tracker-threshold is-on"><strong>Кураж 2.</strong> Скрытая атака без условий по цели в 5 футах, которая тебя видит, если рядом с тобой нет других существ.</p>`;
+        ? `<p class="scale-tracker-threshold is-on"><strong>Тень ${shadowThreshold}.</strong> Скрытая атака без условий по цели, которая тебя не видит.</p>`
+        : `<p class="scale-tracker-threshold is-on"><strong>Кураж ${THRESHOLD}.</strong> Скрытая атака без условий по цели в 5 футах, которая тебя видит, если рядом с тобой нет других существ.</p>`;
 
     // Черты стороны, на которой сейчас шкала: показываем целиком — что именно
     // работает и на что тратить шаг, без ухода на страницу черт
@@ -168,8 +185,8 @@ function initTracker(root) {
         <button type="button" class="scale-tracker-button scale-tracker-button--spend" data-act="riposte"${canRiposte ? "" : " disabled"} title="Реакцией атаковать промахнувшегося по тебе в 5 футах">Контрудар (шаг Куража)</button>
       </div>
       ${featList}
-      ${state.log.length ? `<ul class="scale-tracker-log">${state.log.map((l) => `<li>${l}</li>`).join("")}</ul>` : ""}
-      <p class="scale-tracker-foot"><button type="button" class="scale-tracker-reset" data-act="reset">Длинный отдых — сбросить в 0</button></p>
+      ${state.log.length ? `<ul class="scale-tracker-log">${state.log.map((l) => `<li>${escapeHtml(l)}</li>`).join("")}</ul>` : ""}
+      <p class="scale-tracker-foot"><button type="button" class="scale-tracker-reset" data-act="reset">Длинный отдых — сбросить в ${label(restPosition)}</button></p>
     `;
   }
 

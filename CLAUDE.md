@@ -5,12 +5,13 @@ Static D&D world wiki (Russian) on Eleventy, deployed to GitHub Pages on push to
 ```bash
 npm run serve    # dev server with hot reload
 npm run build    # builds to _site/ (gitignored); data validation runs here, watch for throws and console.warn
+npm test         # node --test: the alchemy copies in the registry and the client script agree
 ```
 
 ## Where to look
 
 - **`eleventy.config.js`** is the entry point: collections (one per section, sorted with `localeCompare(..., "ru")`), passthrough copies, the `/dnd.images/` pathPrefix, and every shortcode. Each shortcode has a comment above it with its argument syntax; the build throws on unknown ids and warns on inconsistencies.
-- **Data registries** in `src/_data/` are self-documented in their header comments: `feats.js` (feats, one markdown file per feat in `feats/NN-id.md`), `equipment.js` (weapons and armor, same pattern under `equipment/weapons/` and `equipment/armor/`), `alchemy.js` (tiers, effects, ingredients, bases, `brew()`). Add an item by adding a file; the numeric prefix is the order, the filename is the id, the front matter fields are described in the module header.
+- **Data registries** in `src/_data/` are self-documented in their header comments: `feats.js` (feats, one markdown file per feat in `feats/NN-id.md`), `equipment.js` (weapons and armor, same pattern under `equipment/weapons/` and `equipment/armor/`), `alchemy.js` (tiers, regions, effects, ingredients, bases, the gather ladder and the brewing maths; a single module with inline arrays, validated on load). For feats and equipment, add an item by adding a file; the numeric prefix is the order, the filename is the id, the front matter fields are described in the module header.
 - **Layouts** in `src/_includes/`: `base.njk` wraps everything (nav, breadcrumbs, auto-TOC from h2/h3, battle toolbar); section layouts chain to it. `stat-block.njk` and `combat-block.njk` render `stats:` and `combat:` front matter, see any `src/Characters/*/index.md` for the format.
 - **Client scripts** in `src/scripts/`: each starts with a comment on what it does and where its data comes from. `battle-config.js` is the only eager loader of the dice-roller widgets; `feat-filter.js`, `alchemy-lab.js`, `scale-tracker.js`, `tg-login.js` load when a page sets the matching front matter flag (`featFilter`, `alchemyLab`, `scaleTracker`).
 - **Rules pages**: `src/Rules/` (core rules), `src/Feats/` (feat list and alchemy rules), `src/Equipment/` (weapons, armor, proficiency rules), `src/Classes/<class>/` (class tables, how the class gains feats). Canonical anchors: `/Feats/#feat-<id>`, `/Equipment/#weapon-<id>`, `/Equipment/#armor-<id>`.
@@ -25,8 +26,9 @@ npm run build    # builds to _site/ (gitignored); data validation runs here, wat
 - In `.njk` pass internal URLs through `| url`; content pages use relative links. Shortcode output already goes through `url`, so cards render at any page depth. Feat and item bodies use only in-page `#` anchors.
 - `combat.КБ.value` stays hand-written even though `armorPicks` computes the same total: «В бой» reads it. Keep its `note` equal to the formula; the build warns when they diverge.
 - Proficiency (`владение N` in `weaponPicks`) is per weapon and does not scale with level. Non-weapon bullets (ammo, grenades) stay as plain markdown after the shortcode.
-- `brew()` in `src/_data/alchemy.js` is duplicated as `brewRows` in `src/scripts/alchemy-lab.js` because the browser cannot load CommonJS. Change both.
-- `scaleTracker` and `alchemyLab` persist in localStorage under `dnd-scale-<id>` / `dnd-alchemy-<id>`: always pass a distinct `id:` on character pages.
+- The brewing maths in `src/_data/alchemy.js` is duplicated in `src/scripts/alchemy-lab.js` because the browser cannot load CommonJS: `brew`/`brewRows`, `tierGap`/`tierGapOf`, `brewDc`/`brewDcOf`, `brewMinutes`/`brewMinutesOf` and the constants above them. Change both; `npm test` fails when they diverge.
+- The `alchemy:` front matter block shares its key with the global `src/_data/alchemy.js`, so the data cascade merges the two; `pageAlchemy` tells a page block from the bare registry by its own keys. Do not add a registry export named like a block key (`id`, `tier`, `int`, `still`, `retort`, `packs`, `items`, `recipes`).
+- `scaleTracker` and `alchemyLab` persist in localStorage under `dnd-scale-<id>` / `dnd-alchemy-<id>`: always pass a distinct `id:` on character pages (for the lab it lives in the `alchemy:` block, and the build throws without it).
 - Every character, personality and creature gets a 320×320 head crop: `swift tools/headcrop.swift <portrait> <dir>/head.jpg`. The home page and «В бой» use the computed `previewImage`.
 - Icons come from Sergey Chikin's free set (`https://sergeychikin.ru/365/<category>/<name>.svg`), black ones only, rendered at 40px or larger.
 - Link previews (Open Graph tags in `base.njk`) need absolute URLs: the domain lives in `src/_data/site.json`, update it if the Pages host changes. A page can override the auto-extracted text with `description:` in front matter.

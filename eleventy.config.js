@@ -225,7 +225,7 @@ module.exports = async function (eleventyConfig) {
   const weaponById = new Map(equipment.weapons.map((w) => [w.id, w]));
   const armorById = new Map(equipment.armor.map((a) => [a.id, a]));
   const weaponGroupById = new Map(equipment.groups.map((g) => [g.id, g]));
-  const tierById2 = new Map(equipment.tiers.map((t) => [t.id, t]));
+  const weaponTierById = new Map(equipment.tiers.map((t) => [t.id, t]));
   const damageTypeById = new Map(equipment.damageTypes.map((t) => [t.id, t]));
   const propById = new Map(equipment.props.map((p) => [p.id, p]));
   const slotById = new Map(equipment.slots.map((s) => [s.id, s]));
@@ -293,7 +293,7 @@ module.exports = async function (eleventyConfig) {
   // без неё карточка справочная (реестр), с ней — считает меткость и урон.
   function weaponCardHtml(weapon, { pick = null, link = false } = {}) {
     const group = weaponGroupById.get(weapon.group);
-    const tier = tierById2.get(weapon.tier);
+    const tier = weaponTierById.get(weapon.tier);
     const type = damageTypeById.get(weapon.type);
     const name = link ? `<a href="${equipmentUrl()}#weapon-${weapon.id}">${weapon.name}</a>` : weapon.name;
     const rangeText = weapon.range
@@ -490,8 +490,9 @@ module.exports = async function (eleventyConfig) {
   // Алхимия (src/_data/alchemy.js): ступени, эффекты, ингредиенты и основы.
   // Доза собирается из ингредиентов; эффект попадает в неё, если есть хотя бы
   // у двух, а сила — число таких ингредиентов минус один, отсюда три строки
-  // у карточки эффекта. Ступень ограничивает только число ингредиентов. Карточка ингредиента перечисляет его четыре эффекта
-  // со знаком: «−» вред, «+» польза. Каноническое место карточек — /Feats/#alchemy.
+  // у карточки эффекта. Ступень задаёт число ингредиентов, а у тяжёлых эффектов
+  // (tier) — ещё и надбавку к Сл варки. Карточка ингредиента перечисляет его четыре
+  // эффекта со знаком: «−» вред, «+» польза. Каноническое место карточек — /Feats/#alchemy.
   const alchemy = require("./src/_data/alchemy.js");
   const effectById = new Map(alchemy.effects.map((e) => [e.id, e]));
   const ingredientById = new Map(alchemy.ingredients.map((i) => [i.id, i]));
@@ -507,7 +508,7 @@ module.exports = async function (eleventyConfig) {
     ).join("");
     const tier = effect.tier ? tierById.get(effect.tier) : null;
     if (effect.tier && !tier) throw new Error(`effectCards: effect "${effect.id}" — unknown tier "${effect.tier}"`);
-    const meta = [kind.title, effect.save ? `спасбросок ${effect.save}` : null, tier ? `порог — ${tier.title}, ниже +5 к <a href="#brewing">Сл варки</a> за ступень` : null].filter(Boolean).join(", ");
+    const meta = [kind.title, effect.save ? `спасбросок ${effect.save}` : null, tier ? `порог — ${tier.title}, ниже +${alchemy.TIER_GAP_DC} к <a href="#brewing">Сл варки</a> за ступень` : null].filter(Boolean).join(", ");
     return [
       `<article class="feat-card recipe-card recipe-card--${kind.id}" id="effect-${effect.id}">`,
       `<header class="feat-card-header"><h4 class="feat-card-name">${effect.name}</h4>${featIcon(kind)}</header>`,
@@ -550,7 +551,7 @@ module.exports = async function (eleventyConfig) {
     return `<div class="feat-cards recipe-cards">${cards.join("")}</div>`;
   });
 
-  // Ингредиенты одного региона — для страницы класса
+  // Ингредиенты одного края с каноническими якорями #ingredient-<id> — для /Feats/
   eleventyConfig.addShortcode("ingredientCards", function (regionId) {
     if (!regionById.has(regionId)) throw new Error(`ingredientCards: unknown region "${regionId}"`);
     const cards = alchemy.ingredients.filter((i) => i.region === regionId).map((i) => ingredientCardHtml(i));
@@ -573,9 +574,14 @@ module.exports = async function (eleventyConfig) {
   //     items: { black-powder: 3 }            # поштучные ингредиенты (регионы с item)
   //     recipes:
   //       - { name: Крепкий, base: blade, ingredients: [burning-root, burning-root, ...], remove: [heal], note: ... }
+  // Ключ alchemy совпадает с глобальными данными src/_data/alchemy.js, и каскад
+  // данных сливает блок страницы с реестром: на странице без блока здесь лежит
+  // один реестр. Свой блок узнаётся по ключам, которых в реестре нет.
+  const PAGE_ALCHEMY_KEYS = ["id", "tier", "int", "still", "retort", "packs", "items", "recipes"];
   function pageAlchemy(ctx, where) {
     const a = pageData(ctx, "alchemy");
-    if (!a) return null;
+    if (!a || !PAGE_ALCHEMY_KEYS.some((key) => a[key] !== undefined)) return null;
+    if (!a.id) throw new Error(`${where}: alchemy block without id`);
     const tier = tierById.get(a.tier ?? alchemy.tiers[0].id);
     if (!tier) throw new Error(`${where}: unknown tier "${a.tier}"`);
     for (const id of Object.keys(a.packs ?? {})) {
@@ -588,6 +594,11 @@ module.exports = async function (eleventyConfig) {
     }
     const still = Number(a.still ?? 0);
     const retort = Number(a.retort ?? 0);
+    const int = Number(a.int ?? 0);
+    const intelligence = pageData(ctx, "stats")?.["Интеллект"];
+    if (intelligence !== undefined && abilityMod(intelligence) !== int) {
+      console.warn(`${where}: alchemy.int ${int}, а модификатор Интеллекта ${intelligence} — ${abilityMod(intelligence)}`);
+    }
     const recipes = (a.recipes ?? []).map((r) => {
       if (!r.name) throw new Error(`${where}: recipe without a name`);
       const base = alchemy.bases.find((b) => b.id === (r.base ?? "blade"));
@@ -609,9 +620,9 @@ module.exports = async function (eleventyConfig) {
       return { name: String(r.name), base: base.id, ingredients, remove, note: r.note ?? null, rows, brewDc: alchemy.brewDc(rows, remove, alchemy.tierGap(rows, remove, tier.id, alchemy.tiers)) };
     });
     return {
-      id: a.id ?? null,
+      id: a.id,
       tier,
-      int: Number(a.int ?? 0),
+      int,
       still,
       retort,
       packs: a.packs ?? {},
@@ -625,7 +636,7 @@ module.exports = async function (eleventyConfig) {
     const page = this.page?.inputPath ?? "";
     const a = pageAlchemy(this.ctx, `recipeCards (${page})`);
     if (!a) throw new Error(`recipeCards (${page}): page has no alchemy front matter`);
-    const dc = 8 + a.tier.bonus + a.int;
+    const dc = alchemy.SAVE_DC_BASE + a.tier.bonus + a.int;
     const cards = a.recipes.map((r) => {
       const base = alchemy.bases.find((b) => b.id === r.base);
       const portions = new Map();
@@ -673,7 +684,8 @@ module.exports = async function (eleventyConfig) {
   // Трекер шкалы Тени и Куража: кнопка и диалог для src/scripts/scale-tracker.js.
   // Аргумент — настройки "ключ:значение; ...": id (ключ хранения, по умолчанию
   // адрес страницы), name (чьё имя показать), feats (id черт плута через запятую —
-  // трекер подскажет, что доступно на текущем делении).
+  // трекер подскажет, что доступно на текущем делении, и учтёт черты, что меняют
+  // саму шкалу: owned в данных).
   eleventyConfig.addShortcode("scaleTracker", function (options = "") {
     const opts = {};
     for (const pair of String(options).split(";")) {
@@ -695,7 +707,7 @@ module.exports = async function (eleventyConfig) {
         req: f.req ?? null,
         desc: f.desc.replace(/href="#/g, `href="${url("/Feats/")}#`),
       }));
-    const payload = { sides: feats.sides, feats: sideFeats, options: opts, href: url("/Feats/") };
+    const payload = { sides: feats.sides, feats: sideFeats, owned: picked, options: opts, href: url("/Feats/") };
     const encoded = Buffer.from(JSON.stringify(payload), "utf8").toString("base64");
     return [
       `<p class="alchemy-lab-launch"><button type="button" class="scale-tracker-open">Открыть шкалу</button></p>`,

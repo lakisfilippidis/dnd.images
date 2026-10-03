@@ -34,7 +34,7 @@ alchemy:
       base: blade
       ingredients: [burning-root, burning-root, snow-hellebore, urchin-spine]
       remove: [heal]
-      note: "На клинке или болте: 3d6 ядом при первом попадании и помеха на следующую атаку. Лечение, что приходит от корня с иглой, убирает перегонный куб."
+      note: "На клинке или болте: 3d6 ядом при первом попадании и помеха на следующую атаку. Лечение, что приходит от двух порций корня, убирает перегонный куб."
     - name: Тихий груз
       base: contact
       ingredients: [poppy, poppy, owl-fern]
@@ -83,7 +83,7 @@ alchemy:
 
 ### Оружие
 
-{% weaponPicks "short-sword: владение 2: С «Крепким» на клинке — ещё <roll-dice>2d6</roll-dice> ядом при первом попадании; dagger: владение 2; hand-crossbow: владение 2" %}
+{% weaponPicks "short-sword: владение 2: С «Крепким» на клинке — ещё <roll-dice>3d6</roll-dice> ядом при первом попадании; dagger: владение 2; hand-crossbow: владение 2" %}
 
 ### Доспехи
 
