@@ -2,7 +2,7 @@
 name: Клевец
 group: mace
 tier: martial
-damage: 1d8
+damage: 1d8/1d10
 type: колющий
 props: [versatile]
 ---
