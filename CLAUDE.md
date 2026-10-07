@@ -18,7 +18,7 @@ npm run build    # builds to _site/ (gitignored); data validation runs here, wat
 
 ## Content layout
 
-`src/` → `_site/`. One folder per section (Characters, Personalities, Races, Classes, Creatures, Maps, Stories), each with `src/<Section>/<Section>.json` directory data and an index page on the `list.njk` layout. Stories carry a `date:` and are sorted newest first. Standalone pages (`Glossary`, `Rules`, `Feats`, `Equipment`) have self-contained front matter and are excluded from collections.
+`src/` → `_site/`. One folder per section (Characters, Personalities, Races, Classes, Creatures, Maps, Stories, Adventures), each with `src/<Section>/<Section>.json` directory data and an index page on the `list.njk` layout. Stories carry a `date:` and are sorted newest first. Adventures are game-master material (spoilers) on the `adventure.njk` layout; their stat blocks are ordinary Creatures pages, and a creature without a `portrait:` renders without an image. Standalone pages (`Glossary`, `Rules`, `Feats`, `Equipment`) have self-contained front matter and are excluded from collections.
 
 ## Conventions that are not derivable from the code
 

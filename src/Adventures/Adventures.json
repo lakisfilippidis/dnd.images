@@ -1,0 +1,7 @@
+{
+  "layout": "adventure.njk",
+  "tags": "adventure",
+  "bodyClass": "class-page",
+  "breadcrumbSection": "Приключения",
+  "breadcrumbSectionUrl": "/Adventures/"
+}

@@ -785,6 +785,12 @@ module.exports = async function (eleventyConfig) {
       .sort((a, b) => (b.data.date - a.data.date) || a.data.title.localeCompare(b.data.title, "ru"));
   });
 
+  eleventyConfig.addCollection("adventures", function (collectionApi) {
+    return collectionApi
+      .getFilteredByTag("adventure")
+      .sort((a, b) => a.data.title.localeCompare(b.data.title, "ru"));
+  });
+
   const ruDateFormat = new Intl.DateTimeFormat("ru-RU", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
   eleventyConfig.addFilter("ruDate", (d) => ruDateFormat.format(new Date(d)).replace(/\s*г\.$/, ""));
   eleventyConfig.addFilter("isoDate", (d) => new Date(d).toISOString().slice(0, 10));
