@@ -1,6 +1,6 @@
 ---
 name: Двуручный молот
-group: axe
+group: mace
 tier: martial
 damage: 2d6
 type: дробящий
