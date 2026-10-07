@@ -1,6 +1,6 @@
 ---
 name: Палица
-group: axe
+group: mace
 tier: simple
 damage: 1d12
 type: дробящий
