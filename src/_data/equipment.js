@@ -23,7 +23,8 @@ const { parseFrontMatter, md } = require("./feats.js");
 const groups = [
   { id: "sword", title: "Мечи и сабли", icon: "sword2.svg" },
   { id: "dagger", title: "Кинжалы и ножи", icon: "combat-knife.svg" },
-  { id: "axe", title: "Топоры и молоты", icon: "tomahawk.svg" },
+  { id: "axe", title: "Топоры", icon: "tomahawk.svg" },
+  { id: "mace", title: "Булавы и молоты", icon: "mace.svg" },
   { id: "polearm", title: "Копья и посохи", icon: "halberd.svg" },
   { id: "bow", title: "Луки и пращи", icon: "bow2.svg" },
   { id: "crossbow", title: "Арбалеты", icon: "crossbow.svg" },
