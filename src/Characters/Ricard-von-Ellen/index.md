@@ -11,11 +11,11 @@ stats:
   Харизма: 14
 combat:
   КБ:
-    value: "17"
-    note: "14 (Бригантина) + 1 (Ловкость) + 2 (Баклер)"
+    value: "15"
+    note: "14 (Бригантина) + 1 (Ловкость)"
   КЗ:
-    value: "28"
-    note: "1-lvl-10, 2-lvl-7, 3-lvl-8, телосложение +3"
+    value: "34"
+    note: "1-lvl-10, 2-lvl-7, 3-lvl-8, телосложение +9"
   Инициатива:
     value: "+1"
   Скорость:
@@ -41,7 +41,7 @@ combat:
 
 ### Оружие
 
-{% weaponPicks "greatsword: владение 2; shield-bash: владение 2: Баклером" %}
+{% weaponPicks "greatsword: владение 2 %}
 
 ### Доп. снаряжение
 
@@ -55,7 +55,7 @@ combat:
 
 ### Доспехи
 
-{% armorPicks "brigandine; buckler" %}
+{% armorPicks "brigandine" %}
 
 ### Навыки
 
