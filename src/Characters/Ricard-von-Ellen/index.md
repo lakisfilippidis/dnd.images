@@ -41,7 +41,7 @@ combat:
 
 ### Оружие
 
-{% weaponPicks "greatsword: владение 2 %}
+{% weaponPicks "greatsword: владение 2" %}
 
 ### Доп. снаряжение
 
