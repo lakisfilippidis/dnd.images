@@ -1902,6 +1902,10 @@ html:has(.alchemy-lab-dialog[open]) {
   font-size: 0.88em;
 }
 
+.alchemy-lab-dose-effects {
+  margin: 8px 0;
+}
+
 .alchemy-lab-mini.is-removed {
   text-decoration: line-through;
   opacity: 0.55;

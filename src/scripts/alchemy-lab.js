@@ -788,6 +788,17 @@ function initLab(root) {
     return `<span class="alchemy-lab-mini alchemy-lab-mini--${effect.kind}${removed ? " is-removed" : ""}">${effect.kind === "harm" ? "−" : "+"}${effect.name} ${stacks}${save}</span>`;
   }
 
+  // Эффект готовой дозы целиком: доли, спасбросок и текст ступени. Убранный кубом или ретортой — только зачёркнутый заголовок
+  function effectDetail(row, saveDc) {
+    const effect = effectById.get(row.id);
+    const extra = row.extra ?? 0;
+    const save = effect.kind === "harm" ? ` · спасбросок ${effect.save}, Сл ${saveDc + extra}` : "";
+    return `<div class="alchemy-lab-effect alchemy-lab-effect--${effect.kind}${row.removed ? " is-removed" : ""}">
+          <p class="alchemy-lab-effect-head"><span class="alchemy-lab-effect-sign">${effect.kind === "harm" ? "−" : "+"}</span><strong>${effect.name}</strong> <span class="alchemy-lab-effect-meta">${row.stacks} ${dolesWord(row.stacks)}${row.removed ? " · убран" : save}</span></p>
+          ${row.removed ? "" : `<p class="alchemy-lab-effect-text">${effect.stacks[row.stacks - 1]}</p>`}
+        </div>`;
+  }
+
   function ingredientsLine(ids) {
     const portions = new Map();
     for (const id of ids) portions.set(id, (portions.get(id) ?? 0) + 1);
@@ -912,7 +923,7 @@ function initLab(root) {
       const base = baseById.get(d.base);
       return `<div class="alchemy-lab-card alchemy-lab-card--dose">
         <p class="alchemy-lab-card-head"><input type="text" class="alchemy-lab-name alchemy-lab-name--dose" data-dose-name="${index}" value="${escapeHtml(d.name)}" maxlength="60" aria-label="Название дозы"><span class="alchemy-lab-card-meta">${base?.name ?? d.base} · Сл ${d.dc} · ${ingredientsLine(d.ingredients ?? [])}</span></p>
-        <p class="alchemy-lab-card-effects">${d.effects.map((e) => effectLine(e, e.removed, d.dc)).join("")}</p>
+        <div class="alchemy-lab-dose-effects">${d.effects.map((e) => effectDetail(e, d.dc)).join("")}</div>
         <p class="alchemy-lab-card-actions">
           <button type="button" class="alchemy-lab-button alchemy-lab-button--primary" data-dose="${index}" data-act="use">Использовать</button>
           <button type="button" class="alchemy-lab-button alchemy-lab-button--quiet" data-dose="${index}" data-act="drop">Выбросить</button>
