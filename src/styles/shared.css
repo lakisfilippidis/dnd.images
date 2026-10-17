@@ -1395,6 +1395,15 @@ body.map-page {
   border-radius: var(--radius-content);
   background: var(--color-bg-white);
   box-shadow: var(--shadow-card-hover);
+  overscroll-behavior: contain;
+}
+
+/* Пока конструктор открыт, страница под ним не скроллится. overflow: hidden на html
+   сохраняет scrollTop (в отличие от position: fixed на body), а scrollbar-gutter
+   держит место под полосой прокрутки, чтобы контент не съезжал вбок */
+html:has(.alchemy-lab-dialog[open]) {
+  overflow: hidden;
+  scrollbar-gutter: stable;
 }
 
 .alchemy-lab-dialog::backdrop {
