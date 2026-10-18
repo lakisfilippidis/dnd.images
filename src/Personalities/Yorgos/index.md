@@ -28,6 +28,8 @@ alchemy:
   int: 3
   still: 0
   retort: 0
+  kit: 5
+  nature: 5
   items: { black-powder: 6, naphtha: 4, brimstone: 3 }
   recipes:
     - name: Греческий огонь

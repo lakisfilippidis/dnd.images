@@ -18,6 +18,10 @@
 // dnd-alchemy-<id>; стартовое содержимое приходит в data.start из front matter.
 // Травы добавляет сбор по проверке Природы (лестница data.gather), сумку можно
 // перенести на другое устройство экспортом и импортом JSON.
+// Проверки набора и Природы бросаются кубиком <roll-dice> у поля (бонусы kit и
+// nature из блока alchemy, с Пробирщиком набор — с преимуществом), бросок только
+// вписывает результат; авария с несколькими эффектами даёт кубик dN в журнале.
+// Модуль roll-dice грузит battle-config.js; без него кубики скрыты, ввод — руками.
 // Без options.id (страница Черт) конструктор эфемерный — все травы, ничего не хранится.
 
 // Числа правил — те же, что в src/_data/alchemy.js; копии должны совпадать,
@@ -154,6 +158,20 @@ function brewDcOf(rows, removedIds, gap = 0) {
   return dc;
 }
 
+// Модификатор для формулы кубика: +5, -1, пусто для нуля
+function signed(n) {
+  return n > 0 ? `+${n}` : n < 0 ? `${n}` : "";
+}
+
+// Кубик dice-roller: значок, по клику — анимированный бросок, итог уходит в onTotal
+function rollChip(formula, onTotal) {
+  const chip = document.createElement("roll-dice");
+  chip.setAttribute("formula", formula);
+  chip.setAttribute("compact", "");
+  chip.addEventListener("roll", (event) => onTotal(event.detail.total));
+  return chip;
+}
+
 function escapeHtml(text) {
   return String(text).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
 }
@@ -178,6 +196,9 @@ function initLab(root) {
     intMod: Number(options.int ?? 2) || 0,
     still: Number(options.still ?? 0) || 0,   // Перегонный куб — сколько полезных эффектов можно убрать
     retort: Number(options.retort ?? 0) || 0, // Реторта — сколько вредных
+    kit: Number.isInteger(options.kit) ? options.kit : null,       // бонус проверки набора алхимика
+    nature: Number.isInteger(options.nature) ? options.nature : null, // бонус Природы
+    assay: options.assay === true,                                 // Пробирщик: набор с преимуществом
     scope: bagId ? "bag" : "all",
     selected: new Map(), // id ингредиента → число порций
     removed: new Set(),
@@ -239,7 +260,7 @@ function initLab(root) {
         <select data-gather="region">${packRegions.map((r) => `<option value="${r.id}">${r.title}</option>`).join("")}</select>
       </label>
       <label class="alchemy-lab-field">Проверка Природы
-        <input type="number" data-gather="result" min="1" max="40" step="1" placeholder="17">
+        <span class="alchemy-lab-roll"><input type="number" data-gather="result" min="1" max="40" step="1" placeholder="17"></span>
       </label>
       <button type="submit" class="alchemy-lab-button">Собрать</button>
       <span class="alchemy-lab-gather-hint" data-gather="hint"></span>
@@ -257,6 +278,12 @@ function initLab(root) {
       commit();
     });
     gatherForm.addEventListener("input", updateGatherHint);
+    if (state.nature !== null) {
+      gatherForm.querySelector("[data-gather=result]").after(rollChip(`1d20${signed(state.nature)}`, (total) => {
+        gatherForm.querySelector("[data-gather=result]").value = total;
+        updateGatherHint();
+      }));
+    }
     bagBox.append(gatherForm);
 
     const addItem = document.createElement("div");
@@ -321,13 +348,14 @@ function initLab(root) {
   let recipesBox = null;
   let dosesBox = null;
   let logBox = null;
+  let pendingMishap = null; // { name, kept: [{ name, stacks }] } — авария ждёт броска dN
   if (state.bag) {
     actions = document.createElement("div");
     actions.className = "alchemy-lab-actions";
     actions.innerHTML = `
       <input type="text" class="alchemy-lab-name" data-field="doseName" placeholder="Название" maxlength="60">
       <label class="alchemy-lab-field">Проверка набора
-        <input type="number" data-check min="1" max="40" step="1" placeholder="14">
+        <span class="alchemy-lab-roll"><input type="number" data-check min="1" max="40" step="1" placeholder="14"></span>
       </label>
       <button type="button" class="alchemy-lab-button alchemy-lab-button--primary" data-act="brew">Сварить</button>
       <button type="button" class="alchemy-lab-button" data-act="save-recipe">Записать рецепт</button>
@@ -348,6 +376,13 @@ function initLab(root) {
     actions.addEventListener("input", (event) => {
       if (event.target.matches("[data-check]")) render();
     });
+    if (state.kit !== null) {
+      const formula = `${state.assay ? "2d20kh1" : "1d20"}${signed(state.kit)}`;
+      actions.querySelector("[data-check]").after(rollChip(formula, (total) => {
+        actions.querySelector("[data-check]").value = total;
+        render();
+      }));
+    }
     root.append(actions);
 
     recipesBox = document.createElement("section");
@@ -393,10 +428,20 @@ function initLab(root) {
 
     logBox = document.createElement("div");
     logBox.className = "alchemy-lab-log-box";
+    // Кубик аварии: какой из оставшихся эффектов сработал на алхимике
+    logBox.addEventListener("roll", (event) => {
+      if (!event.target.matches("[data-mishap]") || !pendingMishap) return;
+      const k = event.detail.total;
+      const hit = pendingMishap.kept[k - 1];
+      if (hit) note(`Авария с «${pendingMishap.name}»: на d${pendingMishap.kept.length} выпало ${k} — на тебе ${hit.name} ${hit.stacks}, как выпитый`);
+      pendingMishap = null;
+      commit();
+    });
     logBox.addEventListener("click", (event) => {
       if (!event.target.closest("[data-act=reset]")) return;
       if (!confirm("Вернуть сумку к начальному запасу со страницы? Сваренные дозы и записанные рецепты пропадут.")) return;
       state.bag = fromStart(data.start);
+      pendingMishap = null;
       commit();
     });
     root.append(logBox);
@@ -714,6 +759,7 @@ function initLab(root) {
       : kept.length === 1
         ? `на тебе ${kept[0].effect.name} ${kept[0].stacks}, как выпитый`
         : `брось d${kept.length} — на тебе как выпитый: ${kept.map((r, i) => `${i + 1} ${r.effect.name} ${r.stacks}`).join(", ")}`;
+    if (kept.length > 1) pendingMishap = { name, kept: kept.map((r) => ({ name: r.effect.name, stacks: r.stacks })) };
     note(`Авария с «${name}»: ${total} против Сл ${target}, ингредиенты пропали — ${what}`);
     return false;
   }
@@ -933,7 +979,10 @@ function initLab(root) {
   }
 
   function renderLog() {
-    logBox.innerHTML = `${state.bag.log.length ? `<ul class="alchemy-lab-log">${state.bag.log.map((l) => `<li>${escapeHtml(l)}</li>`).join("")}</ul>` : ""}
+    const mishap = pendingMishap
+      ? `<p class="alchemy-lab-mishap">Что сработало на тебе после аварии с «${escapeHtml(pendingMishap.name)}»: <span class="alchemy-lab-roll"><roll-dice data-mishap formula="1d${pendingMishap.kept.length}" compact></roll-dice></span></p>`
+      : "";
+    logBox.innerHTML = `${mishap}${state.bag.log.length ? `<ul class="alchemy-lab-log">${state.bag.log.map((l) => `<li>${escapeHtml(l)}</li>`).join("")}</ul>` : ""}
       <p class="alchemy-lab-foot"><button type="button" class="alchemy-lab-reset" data-act="reset">Сбросить сумку к начальному запасу</button></p>`;
   }
 

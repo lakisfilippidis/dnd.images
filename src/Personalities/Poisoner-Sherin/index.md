@@ -28,6 +28,8 @@ alchemy:
   int: 2
   still: 1
   retort: 0
+  kit: 5
+  nature: 5
   packs: { everywhere: 8, rum: 8, coast: 4, gurdia: 2 }
   recipes:
     - name: Гарь

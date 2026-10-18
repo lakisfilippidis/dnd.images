@@ -577,7 +577,7 @@ module.exports = async function (eleventyConfig) {
   // Ключ alchemy совпадает с глобальными данными src/_data/alchemy.js, и каскад
   // данных сливает блок страницы с реестром: на странице без блока здесь лежит
   // один реестр. Свой блок узнаётся по ключам, которых в реестре нет.
-  const PAGE_ALCHEMY_KEYS = ["id", "tier", "int", "still", "retort", "packs", "items", "recipes"];
+  const PAGE_ALCHEMY_KEYS = ["id", "tier", "int", "still", "retort", "kit", "nature", "assay", "packs", "items", "recipes"];
   function pageAlchemy(ctx, where) {
     const a = pageData(ctx, "alchemy");
     if (!a || !PAGE_ALCHEMY_KEYS.some((key) => a[key] !== undefined)) return null;
@@ -595,6 +595,10 @@ module.exports = async function (eleventyConfig) {
     const still = Number(a.still ?? 0);
     const retort = Number(a.retort ?? 0);
     const int = Number(a.int ?? 0);
+    // Бонусы проверок для кубиков конструктора: нет поля — нет кубика, только ручной ввод
+    for (const key of ["kit", "nature"]) {
+      if (a[key] !== undefined && !Number.isInteger(a[key])) throw new Error(`${where}: alchemy.${key} must be an integer, got "${a[key]}"`);
+    }
     const intelligence = pageData(ctx, "stats")?.["Интеллект"];
     if (intelligence !== undefined && abilityMod(intelligence) !== int) {
       console.warn(`${where}: alchemy.int ${int}, а модификатор Интеллекта ${intelligence} — ${abilityMod(intelligence)}`);
@@ -625,6 +629,9 @@ module.exports = async function (eleventyConfig) {
       int,
       still,
       retort,
+      kit: a.kit ?? null,
+      nature: a.nature ?? null,
+      assay: a.assay === true,
       packs: a.packs ?? {},
       items: a.items ?? {},
       recipes,
@@ -731,7 +738,7 @@ module.exports = async function (eleventyConfig) {
       bases: alchemy.bases.map(({ id, name, slots, area }) => ({ id, name, slots, area: Boolean(area) })),
       gather: alchemy.gather,
       mishap: alchemy.MISHAP_MARGIN,
-      options: a ? { id: a.id, tier: a.tier.id, int: a.int, still: a.still, retort: a.retort } : {},
+      options: a ? { id: a.id, tier: a.tier.id, int: a.int, still: a.still, retort: a.retort, kit: a.kit, nature: a.nature, assay: a.assay } : {},
       start: a ? { packs: a.packs, items: a.items, recipes: a.recipes.map(({ name, base, ingredients, remove }) => ({ name, base, ingredients, remove })) } : null,
     };
     // Страница — markdown, и типограф правит кавычки даже внутри <script>,

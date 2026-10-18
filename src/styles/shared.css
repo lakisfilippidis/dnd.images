@@ -1398,10 +1398,11 @@ body.map-page {
   overscroll-behavior: contain;
 }
 
-/* Пока конструктор открыт, страница под ним не скроллится. overflow: hidden на html
-   сохраняет scrollTop (в отличие от position: fixed на body), а scrollbar-gutter
-   держит место под полосой прокрутки, чтобы контент не съезжал вбок */
-html:has(.alchemy-lab-dialog[open]) {
+/* Пока открыто любое окно (конструктор, трекер шкал), страница под ним не скроллится.
+   overflow: hidden на html сохраняет scrollTop (в отличие от position: fixed на body),
+   а scrollbar-gutter держит место под полосой прокрутки, чтобы контент не съезжал вбок.
+   Боевой экран и окно кубиков dice-roller блокируют скролл сами (scroll-lock.js) */
+html:has(dialog[open]) {
   overflow: hidden;
   scrollbar-gutter: stable;
 }
@@ -1530,6 +1531,23 @@ html:has(.alchemy-lab-dialog[open]) {
   gap: 4px;
   font-size: 0.85em;
   color: var(--color-text-muted);
+}
+
+/* поле проверки и кубик dice-roller рядом с ним */
+.alchemy-lab-roll {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* модуль roll-dice не загрузился — кубиков нет, проверку вписывают руками */
+.alchemy-lab roll-dice:not(:defined) {
+  display: none;
+}
+
+.alchemy-lab-mishap {
+  margin: 0 0 8px;
+  color: var(--color-text-subtle);
 }
 
 .alchemy-lab-field select,

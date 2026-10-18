@@ -28,6 +28,8 @@ alchemy:
   int: 3
   still: 1
   retort: 1
+  kit: 5
+  nature: 5
   packs: { everywhere: 8, gurdia: 6, rum: 4, coast: 2 }
   recipes:
     - name: Крепкий
