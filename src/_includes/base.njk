@@ -45,6 +45,13 @@
     {% if scaleTracker %}
     <script type="module" src="{{ '/scripts/scale-tracker.js' | url }}"></script>
     {% endif %}
+    {# characterId — персонажи и личности: блок «Кто играет» (character-access.njk) #}
+    {% if characterId %}
+    <script type="module" src="{{ '/scripts/character-access.js' | url }}"></script>
+    {% endif %}
+    {% if gamesBoard %}
+    <script type="module" src="{{ '/scripts/games.js' | url }}"></script>
+    {% endif %}
   </head>
   <body{% if bodyClass %} class="{{ bodyClass }}"{% endif %}>
     <nav class="top-menu">
@@ -60,7 +67,8 @@
       <a href="{{ '/Stories/' | url }}">Истории</a>
       <a href="{{ '/Glossary/' | url }}">Глоссарий</a>
       <a href="{{ '/Rules/' | url }}">Правила</a>
-      <tg-login bot-id="8995479777"></tg-login>
+      {# server — dice-roller-sync (вход с проверкой подписи, выдача персонажей), см. src/_data/site.json #}
+      <tg-login bot-id="8995479777" server="{{ site.api }}" characters="{{ '/characters.json' | url }}" games="{{ '/Games/' | url }}"></tg-login>
     </nav>
     <div class="content-wrapper">
       {% if breadcrumbSection %}

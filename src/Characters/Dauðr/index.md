@@ -1,4 +1,5 @@
 ---
+id: daudr
 title: "Dauðr Мертвец"
 class: "fighter"
 portrait: character_image.jpg

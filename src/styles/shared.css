@@ -690,6 +690,9 @@ tg-login {
   --tg-muted: var(--color-text-muted);
   --tg-accent: var(--color-error);
   --tg-border: var(--color-border-light);
+  --tg-bg: var(--color-bg-white);
+  --tg-shadow: var(--shadow-card-hover);
+  --tg-hover: var(--color-bg-light);
 }
 
 .top-menu tg-login {
@@ -2332,4 +2335,230 @@ html:has(dialog[open]) {
 .scale-tracker-reset:hover {
   color: var(--color-text);
   border-color: var(--color-border-table-dark);
+}
+
+/* ===== Выдача персонажей игрокам (character-access.js, games.js, assign-ui.js) ===== */
+games-board {
+  display: block;
+}
+
+/* в сайдбаре — как «В бой»: сайдбар центрирует детей, ширину задаём сами */
+character-access {
+  display: block;
+  width: calc(100% - 32px);
+  margin: 0 16px 16px;
+}
+
+.character-access {
+  box-sizing: border-box;
+  padding: 12px 14px;
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-item);
+  background: var(--color-bg-white);
+}
+
+.character-access-title {
+  margin: 0 0 6px;
+  font-family: var(--font-fantasy);
+  font-size: 1.1em;
+}
+
+.character-access-empty,
+.games-note {
+  margin: 0 0 8px;
+  color: var(--color-text-muted);
+}
+
+.assign-list {
+  margin: 0 0 10px;
+  padding: 0;
+  list-style: none;
+}
+
+.assign-list:last-child {
+  margin-bottom: 0;
+}
+
+.assign-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--color-border-table);
+}
+
+.assign-row:last-child {
+  border-bottom: none;
+}
+
+.assign-character {
+  font-weight: bold;
+}
+
+.assign-player {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.assign-player--invite {
+  color: var(--color-text-muted);
+}
+
+.assign-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.assign-kind {
+  font-size: 0.85em;
+  color: var(--color-text-muted);
+}
+
+.assign-actions {
+  display: inline-flex;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.assign-button {
+  padding: 5px 12px;
+  font: inherit;
+  font-size: 0.92em;
+  color: var(--color-text);
+  background: var(--color-bg-white);
+  border: 1px solid var(--color-border-table-dark);
+  border-radius: var(--radius-item);
+  cursor: pointer;
+}
+
+.assign-button--primary {
+  font-family: var(--font-fantasy);
+  font-size: 1.05em;
+  color: var(--color-bg-white);
+  background: var(--color-text-heading);
+  border-color: var(--color-text-heading);
+}
+
+.assign-button--quiet {
+  color: var(--color-text-muted);
+  border-color: var(--color-border-table);
+}
+
+.assign-button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.assign-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 10px 14px;
+}
+
+.assign-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.85em;
+  color: var(--color-text-muted);
+}
+
+.assign-field[hidden] {
+  display: none;
+}
+
+.assign-field select,
+.assign-field input {
+  font: inherit;
+  font-size: 1rem;
+  color: var(--color-text);
+  padding: 4px 6px;
+  border: 1px solid var(--color-border-table-dark);
+  border-radius: var(--radius-code);
+  background: var(--color-bg-white);
+}
+
+.assign-form-actions {
+  margin: 0;
+}
+
+.assign-status {
+  flex-basis: 100%;
+  margin: 0;
+  font-size: 0.9em;
+  color: var(--color-text-subtle);
+  overflow-wrap: anywhere;
+}
+
+.assign-status:empty {
+  display: none;
+}
+
+.assign-dialog {
+  width: min(560px, calc(100vw - 32px));
+  padding: 16px 18px;
+  border: 1px solid var(--color-border-table-dark);
+  border-radius: var(--radius-content);
+  background: var(--color-bg-white);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.assign-dialog::backdrop {
+  background: rgb(from var(--color-text-dark) r g b / 0.45);
+}
+
+.assign-dialog-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.assign-dialog-title {
+  margin: 0;
+  font-family: var(--font-fantasy);
+  font-size: 1.25em;
+}
+
+.games-board {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.games-card {
+  padding: 14px 16px;
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-item);
+  background: var(--color-bg-white);
+}
+
+.games-card-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.games-card-title {
+  margin: 0;
+  font-size: 1.2em;
+}
+
+.games-past summary {
+  cursor: pointer;
+  color: var(--color-text-muted);
+}
+
+.games-past-list {
+  margin: 8px 0 0;
+  color: var(--color-text-subtle);
 }

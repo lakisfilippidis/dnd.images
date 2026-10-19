@@ -31,6 +31,15 @@ module.exports = async function (eleventyConfig) {
   // задаёт preview: head.jpg по умолчанию, а голову рисуют не всем — без
   // проверки главная падала на первом персонаже без head.jpg.
   eleventyConfig.addGlobalData("eleventyComputed", {
+    // id персонажа или личности для выдачи игрокам (сервер dice-roller-sync,
+    // /characters.json): id: из front matter, иначе имя папки в нижнем регистре
+    characterId: (data) => {
+      const inputPath = data.page?.inputPath;
+      const tags = Array.isArray(data.tags) ? data.tags : [data.tags];
+      if (typeof inputPath !== "string" || data.eleventyExcludeFromCollections === true) return null;
+      if (!tags.some((t) => t === "character" || t === "personalities")) return null;
+      return (typeof data.id === "string" ? data.id : path.basename(path.dirname(inputPath))).toLowerCase();
+    },
     previewImage: (data) => {
       if (!data.page?.inputPath) return "";
       const dir = path.dirname(data.page.inputPath);
@@ -787,6 +796,35 @@ module.exports = async function (eleventyConfig) {
     return collectionApi
       .getFilteredByTag("personalities")
       .sort((a, b) => a.data.title.localeCompare(b.data.title, "ru"));
+  });
+
+  // Персонажи и личности — всех их мастер может выдать игроку
+  eleventyConfig.addCollection("playable", function (collectionApi) {
+    const pages = [...collectionApi.getFilteredByTag("character"), ...collectionApi.getFilteredByTag("personalities")]
+      .sort((a, b) => a.data.title.localeCompare(b.data.title, "ru"));
+    const seen = new Map();
+    for (const p of pages) {
+      const id = p.data.characterId;
+      if (!/^[a-z0-9][a-z0-9-]{0,63}$/.test(id)) throw new Error(`${p.inputPath}: character id "${id}" — нужны латиница в нижнем регистре, цифры и дефис`);
+      if (seen.has(id)) throw new Error(`${p.inputPath}: character id "${id}" уже у ${seen.get(id)}`);
+      seen.set(id, p.inputPath);
+    }
+    return pages;
+  });
+
+  // /characters.json: id → название, адрес и превью — для «Моих персонажей» и выдачи
+  eleventyConfig.addFilter("playableJson", (pages) => {
+    const url = eleventyConfig.getFilter("url");
+    const out = {};
+    for (const p of pages) {
+      out[p.data.characterId] = {
+        title: p.data.title,
+        url: url(p.url),
+        image: p.data.previewImage ? url(p.url + p.data.previewImage) : "",
+        section: [].concat(p.data.tags ?? []).includes("character") ? "character" : "personality",
+      };
+    }
+    return JSON.stringify(out);
   });
 
   eleventyConfig.addCollection("races", function (collectionApi) {
