@@ -33,6 +33,7 @@ npm test         # node --test: the alchemy copies in the registry and the clien
 - Icons come from Sergey Chikin's free set (`https://sergeychikin.ru/365/<category>/<name>.svg`), black ones only, rendered at 40px or larger.
 - Link previews (Open Graph tags in `base.njk`) need absolute URLs: the domain lives in `src/_data/site.json`, update it if the Pages host changes. A page can override the auto-extracted text with `description:` in front matter.
 - Styling is one file, `src/styles/shared.css`; colors, fonts and shadows are `:root` variables.
+- Modal windows are `<dialog>` + `showModal()` (the alchemy lab, the scale tracker, the assign form). Anything that opens from inside one must itself be a modal `<dialog>` (it then stacks on top) or live in that dialog's DOM: a popover or `<div>` appended to `<body>` paints above it but is inert, so it shows and ignores clicks. The dice overlay from dice-roller follows this rule.
 
 ## External pieces
 
