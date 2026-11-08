@@ -85,7 +85,11 @@
       {{ content | safe }}
     </div>
     <nav id="page-toc"></nav>
+    {# sync-worker — same-origin shim SharedWorker'а sync-комнаты, см. src/scripts/battle-mat-sync-worker.js #}
     <battle-toolbar
+      sync-worker="{{ '/scripts/battle-mat-sync-worker.js' | url }}"
+      label-syncoffline="Переподключение к"
+      label-syncpending="Правок в очереди: {n}"
       label-map="Боевое поле"
       label-pool="Пул токенов"
       label-dice="Бросить кубики"
@@ -137,7 +141,31 @@
       label-lock="Закрепить"
       label-unlock="Открепить"
       label-imageremove="Удалить картинку"
-      label-fit="Показать всё"></battle-toolbar>
+      label-fit="Показать всё"
+      label-draw="Рисование"
+      label-terrain="Территория"
+      label-terrainbrush="Кисть территории"
+      label-terrainerase="Стереть территорию"
+      label-brush="Размер кисти"
+      label-strokewidth="Толщина линии"
+      label-sizethin="Тонкая"
+      label-sizemedium="Средняя"
+      label-sizethick="Толстая"
+      label-matwall="Стена"
+      label-matdoor="Дверь"
+      label-matwater="Вода"
+      label-mattree="Деревья"
+      label-matfloor="Каменный пол"
+      label-matgrass="Трава"
+      label-matdirt="Земля"
+      label-matsand="Песок"
+      label-matroad="Дорога"
+      label-matrock="Камень"
+      label-matlava="Лава"
+      label-matice="Лёд и снег"
+      label-matswamp="Болото"
+      label-matpit="Пропасть"
+      label-matdifficult="Труднопроходимая местность"></battle-toolbar>
     <script>
       (function() {
         var body = document.body;

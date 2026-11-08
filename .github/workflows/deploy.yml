@@ -1,16 +1,19 @@
-name: Deploy to GitHub Pages
+# Сборка и выкладка на ecumene.ramilkarimov.me (сервер universal, nginx,
+# /var/www/ecumene). Ключ DEPLOY_SSH_KEY — секрет репозитория; на сервере он
+# лежит у пользователя web с принудительной командой rrsync /var/www/ecumene,
+# так что умеет только rsync в эту папку.
+name: Deploy to ecumene.ramilkarimov.me
 on:
   push:
     branches: [main]
+  workflow_dispatch:
 permissions:
   contents: read
-  pages: write
-  id-token: write
 concurrency:
-  group: pages
+  group: deploy-ecumene
   cancel-in-progress: false
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -20,15 +23,15 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npx @11ty/eleventy
-      - uses: actions/upload-pages-artifact@v5
-        with:
-          path: _site
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v5
+      - name: Upload with rsync
+        env:
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          # ключ хоста universal — сверен вручную, keyscan в CI не доверяем
+          echo 'universal.ramilkarimov.me ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAuULjqJVD9FKEpxY1L9w+DE21234z3LaL7+GBPgmiN6' > ~/.ssh/known_hosts
+          rsync -rlptz --delete --checksum -e "ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes" _site/ web@universal.ramilkarimov.me:/
+      - name: Smoke test
+        run: curl -fsS -o /dev/null https://ecumene.ramilkarimov.me/

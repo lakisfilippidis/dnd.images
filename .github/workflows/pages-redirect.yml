@@ -1,0 +1,34 @@
+# Старый адрес lakisfilippidis.github.io/dnd.images/ — только редирект на
+# ecumene.ramilkarimov.me с тем же путём (pages-redirect/404.html). Pages
+# отдаёт последнюю выкладку, пока её не заменят, поэтому workflow запускается
+# лишь при правке самого редиректа или вручную.
+name: GitHub Pages redirect
+on:
+  push:
+    branches: [main]
+    paths: [pages-redirect/**, .github/workflows/pages-redirect.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: pages-redirect
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5
