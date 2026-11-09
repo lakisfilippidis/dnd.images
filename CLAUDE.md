@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Static D&D world wiki (Russian) on Eleventy, served at `https://ecumene.ramilkarimov.me/`: a push to `main` builds it and rsyncs `_site/` to `/var/www/ecumene` on the universal server (`.github/workflows/deploy.yml`, repo secret `DEPLOY_SSH_KEY`; on the server that key belongs to user `web` and is locked to `rrsync /var/www/ecumene`; nginx site `/etc/nginx/sites-available/ecumene`). The old `lakisfilippidis.github.io/dnd.images/` only redirects there, same path (`pages-redirect/`, its own workflow). Game rules live on the site pages, not here: read the page before touching the mechanic it describes.
+Static D&D world wiki (Russian) on Eleventy, deployed to GitHub Pages on push to `main` (`.github/workflows/deploy.yml`). Game rules live on the site pages, not here: read the page before touching the mechanic it describes.
 
 ```bash
 npm run serve    # dev server with hot reload
@@ -10,7 +10,7 @@ npm test         # node --test: the alchemy copies in the registry and the clien
 
 ## Where to look
 
-- **`eleventy.config.js`** is the entry point: collections (one per section, sorted with `localeCompare(..., "ru")`), passthrough copies, the pathPrefix (`/`, the site lives at the domain root), and every shortcode. Each shortcode has a comment above it with its argument syntax; the build throws on unknown ids and warns on inconsistencies.
+- **`eleventy.config.js`** is the entry point: collections (one per section, sorted with `localeCompare(..., "ru")`), passthrough copies, the `/dnd.images/` pathPrefix, and every shortcode. Each shortcode has a comment above it with its argument syntax; the build throws on unknown ids and warns on inconsistencies.
 - **Data registries** in `src/_data/` are self-documented in their header comments: `feats.js` (feats, one markdown file per feat in `feats/NN-id.md`), `equipment.js` (weapons and armor, same pattern under `equipment/weapons/` and `equipment/armor/`), `alchemy.js` (tiers, regions, effects, ingredients, bases, the gather ladder and the brewing maths; a single module with inline arrays, validated on load). For feats and equipment, add an item by adding a file; the numeric prefix is the order, the filename is the id, the front matter fields are described in the module header.
 - **Layouts** in `src/_includes/`: `base.njk` wraps everything (nav, breadcrumbs, auto-TOC from h2/h3, battle toolbar); section layouts chain to it. `stat-block.njk` and `combat-block.njk` render `stats:` and `combat:` front matter, see any `src/Characters/*/index.md` for the format.
 - **Client scripts** in `src/scripts/`: each starts with a comment on what it does and where its data comes from. `battle-config.js` is the only eager loader of the dice-roller widgets; `battle-mat-sync-worker.js` is a one-line same-origin shim for the dice-roller sync SharedWorker (`sync-worker` attribute in `base.njk`; its URL must stay stable); `feat-filter.js`, `alchemy-lab.js`, `scale-tracker.js` load when a page sets the matching front matter flag (`featFilter`, `alchemyLab`, `scaleTracker`); `tg-login.js` loads everywhere, `character-access.js` on every character and personality page, `games.js` on `/Games/` (`gamesBoard`).
@@ -31,7 +31,7 @@ npm test         # node --test: the alchemy copies in the registry and the clien
 - `scaleTracker` and `alchemyLab` persist in localStorage under `dnd-scale-<id>` / `dnd-alchemy-<id>`: always pass a distinct `id:` on character pages (for the lab it lives in the `alchemy:` block, and the build throws without it).
 - Every character, personality and creature gets a 320×320 head crop: `swift tools/headcrop.swift <portrait> <dir>/head.jpg`. The home page and «В бой» use the computed `previewImage`.
 - Icons come from Sergey Chikin's free set (`https://sergeychikin.ru/365/<category>/<name>.svg`), black ones only, rendered at 40px or larger.
-- Link previews (Open Graph tags in `base.njk`) need absolute URLs: the domain lives in `src/_data/site.json`, update it if the host changes. `ivRhash` there is the Telegram Instant View template, which is bound to a domain. A page can override the auto-extracted text with `description:` in front matter.
+- Link previews (Open Graph tags in `base.njk`) need absolute URLs: the domain lives in `src/_data/site.json`, update it if the Pages host changes. A page can override the auto-extracted text with `description:` in front matter.
 - Styling is one file, `src/styles/shared.css`; colors, fonts and shadows are `:root` variables.
 - Modal windows are `<dialog>` + `showModal()` (the alchemy lab, the scale tracker, the assign form). Anything that opens from inside one must itself be a modal `<dialog>` (it then stacks on top) or live in that dialog's DOM: a popover or `<div>` appended to `<body>` paints above it but is inert, so it shows and ignores clicks. The dice overlay from dice-roller follows this rule.
 

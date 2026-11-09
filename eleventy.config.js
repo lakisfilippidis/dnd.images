@@ -10,7 +10,7 @@ module.exports = async function (eleventyConfig) {
     // The transform plugin is pathPrefix-unaware: img src attributes must stay
     // prefix-free, the prefix lives only in urlPath
     outputDir: "_site/img/",
-    urlPath: "/img/",
+    urlPath: "/dnd.images/img/",
     widths: [800, 1200],
     // The on-request dev endpoint emits URLs without the pathPrefix and 404s;
     // generating for real in serve mode is cheap since existing files are reused
@@ -850,7 +850,7 @@ module.exports = async function (eleventyConfig) {
   eleventyConfig.addFilter("isoDate", (d) => new Date(d).toISOString().slice(0, 10));
 
   return {
-    pathPrefix: "/",
+    pathPrefix: "/dnd.images/",
     dir: {
       input: "src",
       output: "_site",
