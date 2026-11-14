@@ -11,10 +11,10 @@ stats:
   Харизма: 13
 combat:
   КБ:
-    value: "16"
-    note: "13 (Агрияторакс) + 1 (Ловкость) + 2 (Первобытная броня)"
+    value: "17"
+    note: "13 (Агрияторакс) + 1 (Ловкость) + 2 (Первобытная броня) + 1(Налегке)"
   КЗ:
-    value: "44"
+    value: "54"
     note: "1-lvl-10, 2-lvl-12, 3-lvl-8, 4-lvl-6, телосложение +8"
   Инициатива:
     value: "+1"
@@ -77,7 +77,7 @@ combat:
 
 <h2 id="feats">Черты</h2>
 
-{% featPicks "survival-instinct:1; giant:1; berserk:1:Боевой стиль дикаря; legendary-hero:4:Три легенды — +3 к меткости любым оружием" %}
+{% featPicks "survival-instinct:1; giant:1; berserk:1:Боевой стиль дикаря; legendary-hero:4:Три легенды — +3 к меткости любым оружием; unarmored:1" %}
 
 ---
 
