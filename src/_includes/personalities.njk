@@ -6,8 +6,8 @@ breadcrumbSectionUrl: /Personalities/
 ---
 <div class="container">
   <div class="sidebar">
-    {% if portrait %}
-    <img class="portrait" eleventy:widths="800,1200" sizes="(orientation: portrait) 98vw, 30vw" src="{{ portrait }}" alt="Портрет">
+    {% if portraitFile %}
+    <img class="portrait" eleventy:widths="800,1200" sizes="(orientation: portrait) 98vw, 30vw" src="{{ portraitFile }}" alt="Портрет">
     {% endif %}
     {% include "stat-block.njk" %}
     {% include "combat-block.njk" %}

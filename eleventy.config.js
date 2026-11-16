@@ -1,6 +1,9 @@
 const fs = require("node:fs");
 const path = require("node:path");
 
+// Computed data runs more than once per page: warn about each missing portrait once
+const warnedMissingPortraits = new Set();
+
 module.exports = async function (eleventyConfig) {
   const { eleventyImageTransformPlugin } = await import("@11ty/eleventy-img");
 
@@ -45,6 +48,21 @@ module.exports = async function (eleventyConfig) {
       const dir = path.dirname(data.page.inputPath);
       const candidates = [data.preview, data.portrait, data.gallery?.[0], data.illustrations?.[0]];
       return candidates.find((f) => typeof f === "string" && f !== "" && fs.existsSync(path.join(dir, f))) ?? "";
+    },
+    // Портрет для шаблонов: portrait:, только если файл лежит рядом с
+    // index.md. Иначе пусто и предупреждение: без проверки eleventy-img
+    // ронял всю сборку, когда в вебе удаляли старый портрет раньше, чем
+    // загружали новый.
+    portraitFile: (data) => {
+      const inputPath = data.page?.inputPath;
+      if (!inputPath || typeof data.portrait !== "string" || data.portrait === "") return "";
+      if (fs.existsSync(path.join(path.dirname(inputPath), data.portrait))) return data.portrait;
+      const key = `${inputPath}:${data.portrait}`;
+      if (!warnedMissingPortraits.has(key)) {
+        warnedMissingPortraits.add(key);
+        console.warn(`[portrait] ${inputPath}: файла ${data.portrait} нет, страница соберётся без портрета`);
+      }
+      return "";
     },
     // Иллюстрации историй (src/Stories): в шаблон попадают только те файлы
     // из illustrations:, которые реально лежат рядом с index.md.
